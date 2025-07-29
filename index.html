@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Najeed's Car & Bike Info Website</title>
+<style>
+  body {
+    margin: 0; padding: 0;
+    font-family: 'Georgia', serif;
+    background: url('https://images.pexels.com/photos/919073/pexels-photo-919073.jpeg') no-repeat center center fixed;
+    background-size: cover;
+    color: #f2f2f2;
+  }
+  body::before {
+    content: '';
+    position: fixed; top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: -1;
+  }
+  header {
+    position: fixed; top: 0; left: 0;
+    width: 100%;
+    height: 70px;
+    background: rgba(0,0,0,0.7);
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    box-sizing: border-box;
+    z-index: 10000;
+  }
+  nav {
+    display: flex;
+    gap: 20px;
+    flex: 1;
+  }
+  nav a {
+    color: #f2f2f2;
+    text-decoration: none;
+    font-weight: 600;
+    padding: 10px 15px;
+    border-radius: 6px;
+    user-select: none;
+    transition: background-color 0.3s ease;
+  }
+  nav a:hover, nav a:focus {
+    background-color: #8B5E3C;
+    color: white;
+    outline: none;
+  }
+  nav a[aria-current="page"] {
+    background-color: #8B5E3C;
+    cursor: default;
+  }
+  .search-container {
+    position: relative;
+    margin-left: 20px;
+    display: flex;
+    align-items: center;
+  }
+  .search-container input {
+    padding: 8px 12px;
+    border-radius: 5px;
+    border: 2px solid #8B5E3C;
+    font-size: 1rem;
+    width: 200px;
+    background-color: #2b2b2b;
+    color: #f2f2f2;
+    outline: none;
+    transition: border-color 0.3s ease;
+  }
+  .search-container input::placeholder {
+    color: #bba88d;
+  }
+  .search-container input:focus {
+    border-color: #c49e65;
+    background-color: #3c3c3c;
+  }
+  #signInBtn {
+    background-color: #3b5998;
+    color: white;
+    border: none;
+    padding: 8px 14px;
+    margin-right: 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    user-select: none;
+    transition: background-color 0.3s ease;
+  }
+  #signInBtn:hover, #signInBtn:focus {
+    background-color: #2d4373;
+    outline: none;
+  }
+  #signInOptions {
+    position: fixed;
+    top: 70px; right: 20px;
+    background: rgba(0,0,0,0.85);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 10px;
+    display: none;
+    z-index: 11000;
+    width: 220px;
+  }
+  #signInOptions button {
+    width: 100%;
+    margin: 8px 0;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1rem;
+  }
+  #googleBtn {
+    background: #db4437;
+    color: white;
+  }
+  #facebookBtn {
+    background: #3b5998;
+    color: white;
+  }
+  #signInOptions button:hover {
+    opacity: 0.9;
+  }
+
+  main {
+    margin-top: 90px;
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+    background: rgba(0,0,0,0.6);
+    border-radius: 10px;
+    padding: 20px;
+    box-sizing: border-box;
+    color: #e0e0e0;
+    user-select: none;
+  }
+
+  /* Game container */
+  #gameContainer {
+    position: relative;
+    margin-top: 20px;
+  }
+  #gameCanvas {
+    background: #333;
+    border-radius: 10px;
+    display: block;
+    margin: 0 auto;
+  }
+  #playPauseBtn {
+    margin: 10px auto 0;
+    display: block;
+    padding: 10px 25px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    background: #8B5E3C;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    user-select: none;
+    transition: background-color 0.3s ease;
+  }
+  #playPauseBtn:hover {
+    background: #b2854d;
+  }
+  #score {
+    color: #c49e65;
+    font-size: 1.3rem;
+    font-weight: bold;
+    margin-top: 8px;
+    text-align: center;
+  }
+  #gameOverMessage {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(255,0,0,0.85);
+    color: white;
+    padding: 20px 40px;
+    border-radius: 12px;
+    font-size: 1.8rem;
+    font-weight: bold;
+    display: none;
+    text-align: center;
+    user-select: none;
+    width: 90%;
+    max-width: 350px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <nav role="navigation" aria-label="Main Navigation">
+    <a href="index.html" aria-current="page">Home</a>
+    <a href="contact.html">Contact</a>
+    <a href="review.html">Review</a>
+    <a href="about.html">About</a>
+  </nav>
+
+  <button id="signInBtn" aria-haspopup="true" aria-expanded="false" aria-controls="signInOptions" aria-label="Sign in options">Sign In</button>
+
+  <div class="search-container" role="search">
+    <form onsubmit="return doSearch(event)">
+      <input type="text" id="searchQuery" placeholder="Search the car or bike..." aria-label="Search the car or bike" />
+    </form>
+  </div>
+</header>
+
+<div id="signInOptions" role="menu" aria-hidden="true" tabindex="-1">
+  <button id="googleBtn" role="menuitem">Sign in with Google</button>
+  <button id="facebookBtn" role="menuitem">Sign in with Facebook</button>
+</div>
+
+<main>
+  <h2>Welcome to Najeed's Car & Bike Info Website</h2>
+  <p>Stay updated with the latest news, specifications, and reviews about cars and bikes. Play our simple car game below to enjoy some fun while you browse!</p>
+
+  <div id="gameContainer">
+    <button id="playPauseBtn">Play</button>
+    <canvas id="gameCanvas" width="500" height="300" aria-label="Simple car game"></canvas>
+    <div id="gameOverMessage">Game Over!<br>Click Retry to play again.</div>
+    <div id="score">Score: 0</div>
+  </div>
+</main>
+
+<script>
+  // Search function
+  function doSearch(event){
+    event.preventDefault();
+    const query = document.getElementById('searchQuery').value.trim();
+    if(query) {
+      window.open('https://www.google.com/search?q=' + encodeURIComponent(query), '_blank');
+    }
+  }
+
+  // Sign In button toggle
+  const signInBtn = document.getElementById('signInBtn');
+  const signInOptions = document.getElementById('signInOptions');
+
+  signInBtn.addEventListener('click', () => {
+    const expanded = signInBtn.getAttribute('aria-expanded') === 'true';
+    signInBtn.setAttribute('aria-expanded', String(!expanded));
+    if(!expanded){
+      signInOptions.style.display = 'block';
+      signInOptions.setAttribute('aria-hidden', 'false');
+      signInOptions.focus();
+    } else {
+      signInOptions.style.display = 'none';
+      signInOptions.setAttribute('aria-hidden', 'true');
+    }
+  });
+
+  // Simple handlers for mock sign in buttons
+  document.getElementById('googleBtn').addEventListener('click', () => {
+    alert('Google Sign In clicked! (Mockup)');
+    signInOptions.style.display = 'none';
+    signInBtn.setAttribute('aria-expanded', 'false');
+  });
+  document.getElementById('facebookBtn').addEventListener('click', () => {
+    alert('Facebook Sign In clicked! (Mockup)');
+    signInOptions.style.display = 'none';
+    signInBtn.setAttribute('aria-expanded', 'false');
+  });
+
+  // Game code
+  const canvas = document.getElementById('gameCanvas');
+  const ctx = canvas.getContext('2d');
+
+  const carWidth = 50;
+  const carHeight = 80;
+  let carX = canvas.width / 2 - carWidth / 2;
+  const carY = canvas.height - carHeight - 20;
+  const carSpeed = 6;
+
+  let enemyCars = [];
+  let enemyWidth = 50;
+  let enemyHeight = 80;
+
+  let enemySpeed = 2;   // starts slow
+  let enemySpawnRate = 0.01;  // chance per frame to spawn
+
+  let score = 0;
+  let isPlaying = false;
+  let gameOverFlag = false;
+
+  const playPauseBtn = document.getElementById('playPauseBtn');
+  const scoreDisplay = document.getElementById('score');
+  const gameOverMessage = document.getElementById('gameOverMessage');
+
+  let framesElapsed = 0;
+
+  // Movement controls
+  let leftPressed = false;
+  let rightPressed = false;
+
+  window.addEventListener('keydown', e => {
+    if (e.key === 'ArrowLeft') leftPressed = true;
+    if (e.key === 'ArrowRight') rightPressed = true;
+  });
+  window.addEventListener('keyup', e => {
+    if (e.key === 'ArrowLeft') leftPressed = false;
+    if (e.key === 'ArrowRight') rightPressed = false;
+  });
+
+  playPauseBtn.addEventListener('click', () => {
+    if(gameOverFlag){
+      resetGame();
+      startGame();
+    } else {
+      if(isPlaying) pauseGame();
+      else startGame();
+    }
+  });
+
+  function startGame(){
+    isPlaying = true;
+    gameOverFlag = false;
+    playPauseBtn.textContent = 'Pause';
+    gameOverMessage.style.display = 'none';
+    requestAnimationFrame(gameLoop);
+  }
+  function pauseGame(){
+    isPlaying = false;
+    playPauseBtn.textContent = 'Play';
+  }
+  function resetGame(){
+    enemyCars = [];
+    score = 0;
+    enemySpeed = 2;
+    enemySpawnRate = 0.01;
+    framesElapsed = 0;
+    carX = canvas.width / 2 - carWidth / 2;
+    scoreDisplay.textContent = 'Score: 0';
+    gameOverMessage.style.display = 'none';
+    playPauseBtn.textContent = 'Play';
+  }
+
+  function drawCar(x, y){
+    ctx.fillStyle = 'red';
+    ctx.fillRect(x, y, carWidth, carHeight);
+    // wheels
+    ctx.fillStyle = 'black';
+    ctx.fillRect(x + 8, y + carHeight - 20, 15, 15);
+    ctx.fillRect(x + carWidth - 23, y + carHeight - 20, 15, 15);
+  }
+
+  function drawEnemyCar(x, y){
+    ctx.fillStyle = 'blue';
+    ctx.fillRect(x, y, enemyWidth, enemyHeight);
+    ctx.fillStyle = 'black';
+    ctx.fillRect(x + 8, y + enemyHeight - 20, 15, 15);
+    ctx.fillRect(x + enemyWidth - 23, y + enemyHeight - 20, 15, 15);
+  }
+
+  function isColliding(r1, r2){
+    return !(r1.x > r2.x + r2.width ||
+             r1.x + r1.width < r2.x ||
+             r1.y > r2.y + r2.height ||
+             r1.y + r1.height < r2.y);
+  }
+
+  function spawnEnemy(){
+    let laneWidth = canvas.width - enemyWidth - 40; // keep margin
+    let x = Math.random() * laneWidth + 20;
+    enemyCars.push({ x, y: -enemyHeight });
+  }
+
+  function updateEnemies(){
+    for(let i = enemyCars.length - 1; i >= 0; i--){
+      enemyCars[i].y += enemySpeed;
+      if(enemyCars[i].y > canvas.height){
+        enemyCars.splice(i,1);
+        score++;
+      }
+    }
+  }
+
+  function gameLoop(){
+    if(!isPlaying) return;
+
+    framesElapsed++;
+
+    // Increase difficulty every 300 frames (~5 seconds at 60fps)
+    if(framesElapsed % 300 === 0){
+      enemySpeed += 0.5; // increase speed
+      enemySpawnRate += 0.005; // increase spawn rate
+      if(enemySpawnRate > 0.15) enemySpawnRate = 0.15; // max cap
+    }
+
+    // Move car left/right
+    if(leftPressed && carX > 20) carX -= carSpeed;
+    if(rightPressed && carX < canvas.width - carWidth - 20) carX += carSpeed;
+
+    // Clear canvas
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Draw road (simple gray bg)
+    ctx.fillStyle = '#555';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // Draw player car
+    drawCar(carX, carY);
+
+    // Spawn enemies randomly based on current spawn rate
+    if(Math.random() < enemySpawnRate) spawnEnemy();
+
+    // Update enemies position
+    updateEnemies();
+
+    // Draw enemies
+    enemyCars.forEach(enemy => drawEnemyCar(enemy.x, enemy.y));
+
+    // Collision detection
+    const playerRect = { x: carX, y: carY, width: carWidth, height: carHeight };
+    for(let enemy of enemyCars){
+      const enemyRect = { x: enemy.x, y: enemy.y, width: enemyWidth, height: enemyHeight };
+      if(isColliding(playerRect, enemyRect)){
+        endGame();
+        return;
+      }
+    }
+
+    scoreDisplay.textContent = 'Score: ' + score;
+
+    requestAnimationFrame(gameLoop);
+  }
+
+  function endGame(){
+    isPlaying = false;
+    gameOverFlag = true;
+    gameOverMessage.style.display = 'block';
+    playPauseBtn.textContent = 'Retry';
+  }
+
+  // Initialize
+  resetGame();
+
+</script>
+</body>
+</html>
