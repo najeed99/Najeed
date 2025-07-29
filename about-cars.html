@@ -2,78 +2,50 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>About Cars - Car Companies</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About Cars</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
       background-color: #121212;
       color: #eee;
-      margin: 0;
-      padding: 20px;
+      font-family: Arial, sans-serif;
+      padding: 40px;
     }
-    nav {
-      background: #1f1f1f;
-      padding: 10px 20px;
-      margin-bottom: 30px;
-    }
-    nav a {
-      color: #ffcc70;
-      text-decoration: none;
-      font-weight: bold;
-      font-size: 18px;
-    }
-    nav a:hover {
-      color: #fff;
-    }
-
     h1 {
-      margin-bottom: 15px;
       color: #ffcc70;
+      margin-bottom: 20px;
     }
-
     ul.companies {
       list-style: decimal inside;
-      max-width: 400px;
-      padding: 0;
-      margin-bottom: 40px;
+      padding-left: 0;
     }
-    ul.companies li {
-      margin-bottom: 12px;
+    .companies li {
+      margin-bottom: 15px;
     }
-    ul.companies li a {
+    .companies li a {
       color: #f5a623;
-      font-size: 1.1rem;
+      font-size: 1.2rem;
       text-decoration: none;
-      user-select: none;
-      display: inline-block;
-      padding: 8px 12px;
+      background-color: #1e1e1e;
+      padding: 10px 16px;
       border-radius: 6px;
-      transition: background-color 0.3s ease;
+      display: inline-block;
+      transition: background-color 0.3s ease, color 0.3s ease;
     }
-    ul.companies li a:hover,
-    ul.companies li a:focus {
+    .companies li a:hover {
       background-color: #333;
-      outline: none;
       color: #fff;
     }
   </style>
 </head>
 <body>
-
-<nav>
-  <a href="index.html">Home</a>
-</nav>
-
-<h1>Car Companies</h1>
-
-<ul class="companies" role="list">
-  <li><a href="tesla.html" class="company-link">Tesla</a></li>
-  <li><a href="bmw.html" class="company-link">BMW</a></li>
-  <li><a href="toyota.html" class="company-link">Toyota</a></li>
-  <li><a href="audi.html" class="company-link">Audi</a></li>
-  <li><a href="ford.html" class="company-link">Ford</a></li>
-</ul>
-
+  <h1>Select a Car Company</h1>
+  <ul class="companies">
+    <li><a href="tesla.html">Tesla</a></li>
+    <li><a href="bmw.html">BMW</a></li>
+    <li><a href="toyota.html">Toyota</a></li>
+    <li><a href="audi.html">Audi</a></li>
+    <li><a href="ford.html">Ford</a></li>
+  </ul>
 </body>
 </html>
