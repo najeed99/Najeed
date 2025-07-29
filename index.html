@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Najeed's Car & Bike Info Website</title>
 <style>
+  /* [Same CSS as before — unchanged] */
   body {
     margin: 0; padding: 0;
     font-family: 'Georgia', serif;
@@ -139,7 +140,6 @@
     user-select: none;
   }
 
-  /* Game container */
   #gameContainer {
     position: relative;
     margin-top: 20px;
@@ -200,6 +200,7 @@
     <a href="contact.html">Contact</a>
     <a href="review.html">Review</a>
     <a href="about.html">About</a>
+    <a href="about-cars.html">About Cars</a> <!-- ✅ New button added -->
   </nav>
 
   <button id="signInBtn" aria-haspopup="true" aria-expanded="false" aria-controls="signInOptions" aria-label="Sign in options">Sign In</button>
@@ -229,7 +230,7 @@
 </main>
 
 <script>
-  // Search function
+  // [Same JavaScript — unchanged]
   function doSearch(event){
     event.preventDefault();
     const query = document.getElementById('searchQuery').value.trim();
@@ -238,7 +239,6 @@
     }
   }
 
-  // Sign In button toggle
   const signInBtn = document.getElementById('signInBtn');
   const signInOptions = document.getElementById('signInOptions');
 
@@ -255,7 +255,6 @@
     }
   });
 
-  // Simple handlers for mock sign in buttons
   document.getElementById('googleBtn').addEventListener('click', () => {
     alert('Google Sign In clicked! (Mockup)');
     signInOptions.style.display = 'none';
@@ -267,7 +266,6 @@
     signInBtn.setAttribute('aria-expanded', 'false');
   });
 
-  // Game code
   const canvas = document.getElementById('gameCanvas');
   const ctx = canvas.getContext('2d');
 
@@ -281,8 +279,8 @@
   let enemyWidth = 50;
   let enemyHeight = 80;
 
-  let enemySpeed = 2;   // starts slow
-  let enemySpawnRate = 0.01;  // chance per frame to spawn
+  let enemySpeed = 2;
+  let enemySpawnRate = 0.01;
 
   let score = 0;
   let isPlaying = false;
@@ -294,7 +292,6 @@
 
   let framesElapsed = 0;
 
-  // Movement controls
   let leftPressed = false;
   let rightPressed = false;
 
@@ -343,7 +340,6 @@
   function drawCar(x, y){
     ctx.fillStyle = 'red';
     ctx.fillRect(x, y, carWidth, carHeight);
-    // wheels
     ctx.fillStyle = 'black';
     ctx.fillRect(x + 8, y + carHeight - 20, 15, 15);
     ctx.fillRect(x + carWidth - 23, y + carHeight - 20, 15, 15);
@@ -365,7 +361,7 @@
   }
 
   function spawnEnemy(){
-    let laneWidth = canvas.width - enemyWidth - 40; // keep margin
+    let laneWidth = canvas.width - enemyWidth - 40;
     let x = Math.random() * laneWidth + 20;
     enemyCars.push({ x, y: -enemyHeight });
   }
@@ -385,37 +381,24 @@
 
     framesElapsed++;
 
-    // Increase difficulty every 300 frames (~5 seconds at 60fps)
     if(framesElapsed % 300 === 0){
-      enemySpeed += 0.5; // increase speed
-      enemySpawnRate += 0.005; // increase spawn rate
-      if(enemySpawnRate > 0.15) enemySpawnRate = 0.15; // max cap
+      enemySpeed += 0.5;
+      enemySpawnRate += 0.005;
+      if(enemySpawnRate > 0.15) enemySpawnRate = 0.15;
     }
 
-    // Move car left/right
     if(leftPressed && carX > 20) carX -= carSpeed;
     if(rightPressed && carX < canvas.width - carWidth - 20) carX += carSpeed;
 
-    // Clear canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    // Draw road (simple gray bg)
     ctx.fillStyle = '#555';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    // Draw player car
     drawCar(carX, carY);
 
-    // Spawn enemies randomly based on current spawn rate
     if(Math.random() < enemySpawnRate) spawnEnemy();
-
-    // Update enemies position
     updateEnemies();
-
-    // Draw enemies
     enemyCars.forEach(enemy => drawEnemyCar(enemy.x, enemy.y));
 
-    // Collision detection
     const playerRect = { x: carX, y: carY, width: carWidth, height: carHeight };
     for(let enemy of enemyCars){
       const enemyRect = { x: enemy.x, y: enemy.y, width: enemyWidth, height: enemyHeight };
@@ -426,7 +409,6 @@
     }
 
     scoreDisplay.textContent = 'Score: ' + score;
-
     requestAnimationFrame(gameLoop);
   }
 
@@ -437,9 +419,8 @@
     playPauseBtn.textContent = 'Retry';
   }
 
-  // Initialize
   resetGame();
-
 </script>
+
 </body>
 </html>
