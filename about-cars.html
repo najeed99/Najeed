@@ -2,50 +2,56 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>About Cars</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>About Car Companies</title>
   <style>
     body {
-      background-color: #121212;
-      color: #eee;
+      background-color: #111;
+      color: #fff;
       font-family: Arial, sans-serif;
-      padding: 40px;
+      padding: 20px;
+      text-align: center;
     }
     h1 {
-      color: #ffcc70;
-      margin-bottom: 20px;
+      color: #ffa500;
+      margin-top: 60px;
+      margin-bottom: 30px;
     }
-    ul.companies {
-      list-style: decimal inside;
-      padding-left: 0;
-    }
-    .companies li {
-      margin-bottom: 15px;
-    }
-    .companies li a {
-      color: #f5a623;
-      font-size: 1.2rem;
-      text-decoration: none;
-      background-color: #1e1e1e;
-      padding: 10px 16px;
-      border-radius: 6px;
-      display: inline-block;
-      transition: background-color 0.3s ease, color 0.3s ease;
-    }
-    .companies li a:hover {
-      background-color: #333;
+    .home-btn {
+      position: fixed;
+      top: 15px;
+      left: 15px;
+      background-color: #000;
       color: #fff;
+      padding: 8px 16px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+      z-index: 1000;
+    }
+    .home-btn:hover {
+      background-color: #222;
+    }
+    .logo-button {
+      display: inline-block;
+      cursor: pointer;
+      transition: opacity 0.3s ease;
+      width: 150px;
+      height: auto;
+    }
+    .logo-button:hover {
+      opacity: 0.7;
     }
   </style>
 </head>
 <body>
-  <h1>Select a Car Company</h1>
-  <ul class="companies">
-    <li><a href="tesla.html">Tesla</a></li>
-    <li><a href="bmw.html">BMW</a></li>
-    <li><a href="toyota.html">Toyota</a></li>
-    <li><a href="audi.html">Audi</a></li>
-    <li><a href="ford.html">Ford</a></li>
-  </ul>
+  <a href="index.html" class="home-btn">← Return to Home</a>
+
+  <h1>Popular Car Companies</h1>
+
+  <a href="bmw.html" aria-label="BMW Car Company">
+    <img src="https://www.bmw.com/etc.clientlibs/settings/wcm/designs/bmwcom/base/resources/ci2020/img/logo-bmw-com-gray.svg" alt="BMW Logo" class="logo-button" />
+  </a>
 </body>
 </html>
