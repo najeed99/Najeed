@@ -2,10 +2,9 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 <title>Najeed's Car & Bike Info Website</title>
 <style>
-  /* [Same CSS as before — unchanged] */
   body {
     margin: 0; padding: 0;
     font-family: 'Georgia', serif;
@@ -78,55 +77,6 @@
     border-color: #c49e65;
     background-color: #3c3c3c;
   }
-  #signInBtn {
-    background-color: #3b5998;
-    color: white;
-    border: none;
-    padding: 8px 14px;
-    margin-right: 15px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: 600;
-    user-select: none;
-    transition: background-color 0.3s ease;
-  }
-  #signInBtn:hover, #signInBtn:focus {
-    background-color: #2d4373;
-    outline: none;
-  }
-  #signInOptions {
-    position: fixed;
-    top: 70px; right: 20px;
-    background: rgba(0,0,0,0.85);
-    color: white;
-    padding: 10px 20px;
-    border-radius: 10px;
-    display: none;
-    z-index: 11000;
-    width: 220px;
-  }
-  #signInOptions button {
-    width: 100%;
-    margin: 8px 0;
-    padding: 10px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: 600;
-    font-size: 1rem;
-  }
-  #googleBtn {
-    background: #db4437;
-    color: white;
-  }
-  #facebookBtn {
-    background: #3b5998;
-    color: white;
-  }
-  #signInOptions button:hover {
-    opacity: 0.9;
-  }
-
   main {
     margin-top: 90px;
     max-width: 900px;
@@ -139,56 +89,44 @@
     color: #e0e0e0;
     user-select: none;
   }
-
   #gameContainer {
     position: relative;
     margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
   #gameCanvas {
-    background: #333;
+    background: #222;
     border-radius: 10px;
+    touch-action: none;
     display: block;
-    margin: 0 auto;
+    max-width: 100%;
+    height: auto;
   }
-  #playPauseBtn {
-    margin: 10px auto 0;
-    display: block;
-    padding: 10px 25px;
-    font-size: 1.2rem;
-    cursor: pointer;
-    background: #8B5E3C;
-    border: none;
-    border-radius: 8px;
+  #mobileControls {
+    margin-top: 10px;
+    display: flex;
+    gap: 40px;
+  }
+  .controlBtn {
+    background-color: #8B5E3C;
     color: white;
+    border: none;
+    padding: 15px 25px;
+    border-radius: 8px;
+    font-size: 1.2rem;
     user-select: none;
+    cursor: pointer;
     transition: background-color 0.3s ease;
   }
-  #playPauseBtn:hover {
-    background: #b2854d;
+  .controlBtn:active {
+    background-color: #b2854d;
   }
-  #score {
-    color: #c49e65;
-    font-size: 1.3rem;
-    font-weight: bold;
-    margin-top: 8px;
-    text-align: center;
-  }
-  #gameOverMessage {
-    position: absolute;
-    top: 40%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: rgba(255,0,0,0.85);
-    color: white;
-    padding: 20px 40px;
-    border-radius: 12px;
-    font-size: 1.8rem;
-    font-weight: bold;
-    display: none;
-    text-align: center;
-    user-select: none;
-    width: 90%;
-    max-width: 350px;
+  @media (min-width: 768px) {
+    #mobileControls {
+      display: none;
+    }
   }
 </style>
 </head>
@@ -198,12 +136,9 @@
   <nav role="navigation" aria-label="Main Navigation">
     <a href="index.html" aria-current="page">Home</a>
     <a href="contact.html">Contact</a>
-    <a href="review.html">Review</a>
     <a href="about.html">About</a>
-    <a href="about-cars.html">About Cars</a> <!-- ✅ New button added -->
+    <a href="about-cars.html">About Cars</a>
   </nav>
-
-  <button id="signInBtn" aria-haspopup="true" aria-expanded="false" aria-controls="signInOptions" aria-label="Sign in options">Sign In</button>
 
   <div class="search-container" role="search">
     <form onsubmit="return doSearch(event)">
@@ -212,25 +147,20 @@
   </div>
 </header>
 
-<div id="signInOptions" role="menu" aria-hidden="true" tabindex="-1">
-  <button id="googleBtn" role="menuitem">Sign in with Google</button>
-  <button id="facebookBtn" role="menuitem">Sign in with Facebook</button>
-</div>
-
 <main>
   <h2>Welcome to Najeed's Car & Bike Info Website</h2>
   <p>Stay updated with the latest news, specifications, and reviews about cars and bikes. Play our simple car game below to enjoy some fun while you browse!</p>
 
   <div id="gameContainer">
-    <button id="playPauseBtn">Play</button>
-    <canvas id="gameCanvas" width="500" height="300" aria-label="Simple car game"></canvas>
-    <div id="gameOverMessage">Game Over!<br>Click Retry to play again.</div>
-    <div id="score">Score: 0</div>
+    <canvas id="gameCanvas" width="400" height="600" aria-label="Simple car game"></canvas>
+    <div id="mobileControls">
+      <button id="leftBtn" class="controlBtn" aria-label="Move Left">⬅️ Left</button>
+      <button id="rightBtn" class="controlBtn" aria-label="Move Right">Right ➡️</button>
+    </div>
   </div>
 </main>
 
 <script>
-  // [Same JavaScript — unchanged]
   function doSearch(event){
     event.preventDefault();
     const query = document.getElementById('searchQuery').value.trim();
@@ -239,118 +169,130 @@
     }
   }
 
-  const signInBtn = document.getElementById('signInBtn');
-  const signInOptions = document.getElementById('signInOptions');
-
-  signInBtn.addEventListener('click', () => {
-    const expanded = signInBtn.getAttribute('aria-expanded') === 'true';
-    signInBtn.setAttribute('aria-expanded', String(!expanded));
-    if(!expanded){
-      signInOptions.style.display = 'block';
-      signInOptions.setAttribute('aria-hidden', 'false');
-      signInOptions.focus();
-    } else {
-      signInOptions.style.display = 'none';
-      signInOptions.setAttribute('aria-hidden', 'true');
-    }
-  });
-
-  document.getElementById('googleBtn').addEventListener('click', () => {
-    alert('Google Sign In clicked! (Mockup)');
-    signInOptions.style.display = 'none';
-    signInBtn.setAttribute('aria-expanded', 'false');
-  });
-  document.getElementById('facebookBtn').addEventListener('click', () => {
-    alert('Facebook Sign In clicked! (Mockup)');
-    signInOptions.style.display = 'none';
-    signInBtn.setAttribute('aria-expanded', 'false');
-  });
-
   const canvas = document.getElementById('gameCanvas');
   const ctx = canvas.getContext('2d');
 
+  const road = {
+    x: canvas.width / 4,
+    y: 0,
+    width: canvas.width / 2,
+    height: canvas.height
+  };
+
+  const laneWidth = road.width / 3;
+  const laneLineHeight = 40;
+  const laneLineGap = 30;
+  let laneLineOffset = 0;
+
   const carWidth = 50;
   const carHeight = 80;
-  let carX = canvas.width / 2 - carWidth / 2;
-  const carY = canvas.height - carHeight - 20;
-  const carSpeed = 6;
+  let currentLane = 1;
+  let carY = canvas.height - carHeight - 20;
+  const lanesX = [
+    road.x + (laneWidth - carWidth) / 2,
+    road.x + laneWidth + (laneWidth - carWidth) / 2,
+    road.x + 2*laneWidth + (laneWidth - carWidth) / 2
+  ];
 
+  const enemyWidth = 50;
+  const enemyHeight = 80;
   let enemyCars = [];
-  let enemyWidth = 50;
-  let enemyHeight = 80;
-
   let enemySpeed = 2;
-  let enemySpawnRate = 0.01;
+  let enemySpawnRate = 0.005;
 
   let score = 0;
   let isPlaying = false;
   let gameOverFlag = false;
 
-  const playPauseBtn = document.getElementById('playPauseBtn');
-  const scoreDisplay = document.getElementById('score');
-  const gameOverMessage = document.getElementById('gameOverMessage');
-
   let framesElapsed = 0;
 
-  let leftPressed = false;
-  let rightPressed = false;
+  let moveLeft = false;
+  let moveRight = false;
 
+  // Mobile buttons
+  document.getElementById('leftBtn').addEventListener('touchstart', e => {
+    e.preventDefault();
+    moveLeft = true;
+    moveRight = false;
+  }, {passive:false});
+  document.getElementById('leftBtn').addEventListener('touchend', e => {
+    e.preventDefault();
+    moveLeft = false;
+  }, {passive:false});
+  document.getElementById('rightBtn').addEventListener('touchstart', e => {
+    e.preventDefault();
+    moveRight = true;
+    moveLeft = false;
+  }, {passive:false});
+  document.getElementById('rightBtn').addEventListener('touchend', e => {
+    e.preventDefault();
+    moveRight = false;
+  }, {passive:false});
+
+  // Keyboard controls
   window.addEventListener('keydown', e => {
-    if (e.key === 'ArrowLeft') leftPressed = true;
-    if (e.key === 'ArrowRight') rightPressed = true;
+    if(e.key === 'ArrowLeft') moveLeft = true;
+    if(e.key === 'ArrowRight') moveRight = true;
   });
   window.addEventListener('keyup', e => {
-    if (e.key === 'ArrowLeft') leftPressed = false;
-    if (e.key === 'ArrowRight') rightPressed = false;
+    if(e.key === 'ArrowLeft') moveLeft = false;
+    if(e.key === 'ArrowRight') moveRight = false;
   });
 
-  playPauseBtn.addEventListener('click', () => {
-    if(gameOverFlag){
-      resetGame();
-      startGame();
-    } else {
-      if(isPlaying) pauseGame();
-      else startGame();
+  function drawRoad() {
+    ctx.fillStyle = '#444';
+    ctx.fillRect(road.x, road.y, road.width, road.height);
+
+    ctx.strokeStyle = '#fff';
+    ctx.lineWidth = 5;
+    ctx.beginPath();
+    ctx.moveTo(road.x, road.y);
+    ctx.lineTo(road.x, road.y + road.height);
+    ctx.moveTo(road.x + road.width, road.y);
+    ctx.lineTo(road.x + road.width, road.y + road.height);
+    ctx.stroke();
+
+    ctx.strokeStyle = '#fff';
+    ctx.lineWidth = 3;
+    ctx.setLineDash([laneLineHeight, laneLineGap]);
+    for(let i=1; i<=2; i++){
+      ctx.beginPath();
+      const x = road.x + laneWidth * i;
+      ctx.moveTo(x, laneLineOffset);
+      ctx.lineTo(x, road.height + laneLineOffset);
+      ctx.stroke();
     }
-  });
-
-  function startGame(){
-    isPlaying = true;
-    gameOverFlag = false;
-    playPauseBtn.textContent = 'Pause';
-    gameOverMessage.style.display = 'none';
-    requestAnimationFrame(gameLoop);
-  }
-  function pauseGame(){
-    isPlaying = false;
-    playPauseBtn.textContent = 'Play';
-  }
-  function resetGame(){
-    enemyCars = [];
-    score = 0;
-    enemySpeed = 2;
-    enemySpawnRate = 0.01;
-    framesElapsed = 0;
-    carX = canvas.width / 2 - carWidth / 2;
-    scoreDisplay.textContent = 'Score: 0';
-    gameOverMessage.style.display = 'none';
-    playPauseBtn.textContent = 'Play';
+    ctx.setLineDash([]);
   }
 
   function drawCar(x, y){
-    ctx.fillStyle = 'red';
+    ctx.fillStyle = '#d62828';
     ctx.fillRect(x, y, carWidth, carHeight);
+    ctx.fillStyle = '#87ceeb';
+    ctx.fillRect(x + 10, y + 15, carWidth - 20, carHeight / 3);
     ctx.fillStyle = 'black';
-    ctx.fillRect(x + 8, y + carHeight - 20, 15, 15);
-    ctx.fillRect(x + carWidth - 23, y + carHeight - 20, 15, 15);
+    ctx.beginPath();
+    ctx.ellipse(x + 12, y + carHeight - 15, 8, 12, 0, 0, 2 * Math.PI);
+    ctx.ellipse(x + carWidth - 12, y + carHeight - 15, 8, 12, 0, 0, 2 * Math.PI);
+    ctx.fill();
+    ctx.fillStyle = '#fffacd';
+    ctx.fillRect(x + 5, y + 10, 10, 10);
+    ctx.fillRect(x + carWidth - 15, y + 10, 10, 10);
   }
 
   function drawEnemyCar(x, y){
-    ctx.fillStyle = 'blue';
+    ctx.fillStyle = '#004080';
     ctx.fillRect(x, y, enemyWidth, enemyHeight);
+    ctx.fillStyle = '#a0c4ff';
+    ctx.fillRect(x + 10, y + 15, enemyWidth - 20, enemyHeight / 3);
     ctx.fillStyle = 'black';
-    ctx.fillRect(x + 8, y + enemyHeight - 20, 15, 15);
-    ctx.fillRect(x + enemyWidth - 23, y + enemyHeight - 20, 15, 15);
+    ctx.beginPath();
+    ctx.ellipse(x + 12, y + enemyHeight - 15, 8, 12, 0, 0, 2 * Math.PI);
+    ctx.ellipse(x + enemyWidth - 12, y + enemyHeight - 15, 8, 12, 0, 0, 2 * Math.PI);
+    ctx.fill();
+    ctx.fillStyle = '#fffacd';
+    ctx.fillRect(x + 5, y + 10, 10, 10);
+    ctx.fillRect(x + enemyWidth - 15, y + 10, 10, 10);
   }
 
   function isColliding(r1, r2){
@@ -361,8 +303,8 @@
   }
 
   function spawnEnemy(){
-    let laneWidth = canvas.width - enemyWidth - 40;
-    let x = Math.random() * laneWidth + 20;
+    const lane = Math.floor(Math.random() * 3);
+    const x = lanesX[lane];
     enemyCars.push({ x, y: -enemyHeight });
   }
 
@@ -380,19 +322,31 @@
     if(!isPlaying) return;
 
     framesElapsed++;
+    laneLineOffset += 10;
+    if(laneLineOffset > laneLineHeight + laneLineGap) laneLineOffset = 0;
 
-    if(framesElapsed % 300 === 0){
-      enemySpeed += 0.5;
-      enemySpawnRate += 0.005;
-      if(enemySpawnRate > 0.15) enemySpawnRate = 0.15;
+    if(moveLeft && currentLane > 0){
+      currentLane--;
+      moveLeft = false;
+    }
+    if(moveRight && currentLane < 2){
+      currentLane++;
+      moveRight = false;
     }
 
-    if(leftPressed && carX > 20) carX -= carSpeed;
-    if(rightPressed && carX < canvas.width - carWidth - 20) carX += carSpeed;
+    carX = lanesX[currentLane];
+
+    if(framesElapsed % 600 === 0){
+      enemySpeed += 0.2;
+      enemySpawnRate += 0.001;
+      if(enemySpawnRate > 0.03) enemySpawnRate = 0.03;
+    }
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = '#555';
+    ctx.fillStyle = '#222';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    drawRoad();
     drawCar(carX, carY);
 
     if(Math.random() < enemySpawnRate) spawnEnemy();
@@ -408,18 +362,48 @@
       }
     }
 
-    scoreDisplay.textContent = 'Score: ' + score;
+    ctx.fillStyle = '#c49e65';
+    ctx.font = '24px Georgia';
+    ctx.fillText('Score: ' + score, 20, 40);
+
     requestAnimationFrame(gameLoop);
+  }
+
+  function startGame(){
+    isPlaying = true;
+    gameOverFlag = false;
+    score = 0;
+    enemySpeed = 2;
+    enemySpawnRate = 0.005;
+    enemyCars = [];
+    framesElapsed = 0;
+    currentLane = 1;
+    carX = lanesX[currentLane];
+    gameLoop();
   }
 
   function endGame(){
     isPlaying = false;
     gameOverFlag = true;
-    gameOverMessage.style.display = 'block';
-    playPauseBtn.textContent = 'Retry';
+    ctx.fillStyle = 'rgba(255,0,0,0.8)';
+    ctx.fillRect(0, canvas.height / 2 - 50, canvas.width, 100);
+    ctx.fillStyle = 'white';
+    ctx.font = '36px Georgia';
+    ctx.textAlign = 'center';
+    ctx.fillText('Game Over!', canvas.width / 2, canvas.height / 2);
+    ctx.font = '24px Georgia';
+    ctx.fillText('Tap or Press Enter to Restart', canvas.width / 2, canvas.height / 2 + 40);
+    ctx.textAlign = 'start';
   }
 
-  resetGame();
+  canvas.addEventListener('click', () => {
+    if(gameOverFlag) startGame();
+  });
+  window.addEventListener('keydown', e => {
+    if(gameOverFlag && (e.key === 'Enter' || e.key === ' ')) startGame();
+  });
+
+  startGame();
 </script>
 
 </body>
