@@ -2,17 +2,15 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 <title>Najeed's Car & Bike Info Website</title>
 <style>
-  /* ====== Body & Background ====== */
   body {
     margin: 0; padding: 0;
     font-family: 'Georgia', serif;
     background: url('https://images.pexels.com/photos/919073/pexels-photo-919073.jpeg') no-repeat center center fixed;
     background-size: cover;
     color: #f2f2f2;
-    overflow-x: hidden;
   }
   body::before {
     content: '';
@@ -21,8 +19,6 @@
     background: rgba(0,0,0,0.5);
     z-index: -1;
   }
-
-  /* ====== Header & Nav ====== */
   header {
     position: fixed; top: 0; left: 0;
     width: 100%;
@@ -82,7 +78,6 @@
     background-color: #3c3c3c;
   }
 
-  /* ====== Main & Game Container ====== */
   main {
     margin-top: 90px;
     max-width: 900px;
@@ -99,24 +94,18 @@
   #gameContainer {
     position: relative;
     margin-top: 20px;
-    user-select: none;
+    text-align: center;
   }
-
-  /* Canvas styling */
   #gameCanvas {
     background: #555;
     border-radius: 10px;
-    display: block;
     margin: 0 auto;
+    display: block;
     touch-action: none;
-    max-width: 100%;
-    height: auto;
   }
-
-  /* Buttons */
-  #playPauseBtn, #muteBtn {
+  #playPauseBtn {
     margin: 10px auto 0;
-    display: inline-block;
+    display: block;
     padding: 10px 25px;
     font-size: 1.2rem;
     cursor: pointer;
@@ -127,24 +116,15 @@
     user-select: none;
     transition: background-color 0.3s ease;
   }
-  #playPauseBtn:hover, #muteBtn:hover {
+  #playPauseBtn:hover {
     background: #b2854d;
   }
-
-  #controlsWrapper {
-    text-align: center;
-    margin-top: 10px;
-  }
-
   #score, #highScore {
     color: #c49e65;
     font-size: 1.3rem;
     font-weight: bold;
     margin-top: 8px;
-    text-align: center;
   }
-
-  /* Game Over message */
   #gameOverMessage {
     position: absolute;
     top: 40%;
@@ -161,59 +141,7 @@
     user-select: none;
     width: 90%;
     max-width: 350px;
-    z-index: 10002;
-  }
-
-  /* Pause overlay */
-  #pauseOverlay {
-    position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background: rgba(0,0,0,0.7);
-    color: #fff;
-    font-size: 3rem;
-    font-weight: bold;
-    display: none;
-    align-items: center;
-    justify-content: center;
-    border-radius: 10px;
-    user-select: none;
     z-index: 10001;
-  }
-
-  /* Start screen overlay */
-  #startScreen {
-    position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background: rgba(0,0,0,0.85);
-    color: #c49e65;
-    font-size: 2rem;
-    font-weight: bold;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    border-radius: 10px;
-    user-select: none;
-    z-index: 10003;
-  }
-
-  /* Level up notification */
-  #levelUpNotification {
-    position: absolute;
-    top: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: #8B5E3C;
-    color: white;
-    padding: 8px 20px;
-    border-radius: 20px;
-    font-weight: bold;
-    opacity: 0;
-    transition: opacity 0.5s ease;
-    user-select: none;
-    z-index: 10004;
   }
 
   /* Mobile controls */
@@ -225,10 +153,10 @@
     display: flex;
     gap: 20px;
     user-select: none;
-    z-index: 10005;
+    z-index: 10002;
   }
   #mobileControls button {
-    font-size: 2.5rem;
+    font-size: 3rem; /* bigger buttons */
     padding: 15px 30px;
     border-radius: 12px;
     border: none;
@@ -240,6 +168,14 @@
   }
   #mobileControls button:active {
     background-color: #b2854d;
+  }
+
+  /* Responsive canvas size */
+  @media (max-width: 600px) {
+    #gameCanvas {
+      width: 100% !important;
+      height: auto !important;
+    }
   }
 </style>
 </head>
@@ -261,39 +197,15 @@
 </header>
 
 <main>
-  <h2>Welcome to Najeed's Car & Bike Info Website</h2>
-  <p>Stay updated with the latest news, specifications, and reviews about cars and bikes. Play our simple car game below to enjoy some fun while you browse!</p>
+  <!-- Removed game instructions per your request -->
 
-  <div id="gameContainer" style="position:relative;">
+  <div id="gameContainer" role="main" aria-label="Car game">
+    <button id="playPauseBtn" aria-pressed="false" aria-label="Start or pause game">Play</button>
     <canvas id="gameCanvas" width="500" height="300" aria-label="Simple car game"></canvas>
-
-    <div id="gameOverMessage" role="alert" aria-hidden="true">Game Over!<br>Click Retry to play again.</div>
-    <div id="pauseOverlay">Paused</div>
-    <div id="startScreen" aria-live="polite" aria-atomic="true" style="display:none;">
-      <div id="instructions" style="margin-bottom: 20px; max-width: 90%; text-align: center;">
-        <p><strong>Instructions:</strong></p>
-        <ul style="text-align:left; font-size: 1.1rem;">
-          <li>Use Left ◀️ and Right ▶️ arrows or buttons below to switch lanes.</li>
-          <li>Avoid enemy cars (blue).</li>
-          <li>Collect power-ups: Shield (cyan circle) & Speed Boost (yellow bolt).</li>
-          <li>Score increases as you avoid cars; difficulty rises over time.</li>
-          <li>Press Play to start or pause.</li>
-          <li>Mute/unmute sound with 🔊 button.</li>
-        </ul>
-      </div>
-      <div id="countdown">Starting in 3...</div>
-    </div>
-
-    <div id="levelUpNotification" aria-live="assertive" aria-atomic="true">Level Up!</div>
+    <div id="gameOverMessage" aria-hidden="true">Game Over!<br>Click Retry to play again.</div>
+    <div id="score" aria-live="polite">Score: 0</div>
+    <div id="highScore" aria-live="polite">High Score: 0</div>
   </div>
-
-  <div id="controlsWrapper">
-    <button id="playPauseBtn" aria-pressed="false" aria-label="Start or pause the game">Play</button>
-    <button id="muteBtn" aria-pressed="false" aria-label="Mute or unmute sounds">🔊</button>
-  </div>
-
-  <div id="score">Score: 0</div>
-  <div id="highScore">High Score: 0</div>
 
   <div id="mobileControls" aria-label="Mobile game controls">
     <button id="leftBtn" aria-label="Move car left">◀️</button>
@@ -302,32 +214,96 @@
 </main>
 
 <script>
-(() => {
   // Search function
-  function doSearch(event){
+  function doSearch(event) {
     event.preventDefault();
     const query = document.getElementById('searchQuery').value.trim();
-    if(query) {
+    if (query) {
       window.open('https://www.google.com/search?q=' + encodeURIComponent(query), '_blank');
     }
   }
-  window.doSearch = doSearch;
 
-  // Sounds setup
+  // Game variables & constants
+  const canvas = document.getElementById('gameCanvas');
+  const ctx = canvas.getContext('2d');
+
+  // Responsive adjustments
+  const isMobile = window.matchMedia("(max-width: 600px)").matches;
+
+  // Sizes
+  const lanesCount = 3;
+  let carWidth = isMobile ? 30 : 50;
+  let carHeight = isMobile ? 50 : 80;
+  let enemyWidth = isMobile ? 30 : 50;
+  let enemyHeight = isMobile ? 50 : 80;
+
+  // Lanes X positions calculated dynamically based on canvas width
+  const lanesX = [];
+  function calculateLanesX() {
+    lanesX.length = 0;
+    const laneWidth = canvas.width / lanesCount;
+    for (let i = 0; i < lanesCount; i++) {
+      // Center car in lane
+      lanesX.push(i * laneWidth + (laneWidth - carWidth) / 2);
+    }
+  }
+  calculateLanesX();
+
+  // Car position & movement
+  let currentLane = 1; // Start middle lane
+  let targetLane = 1;
+  let carY = canvas.height - carHeight - 20;
+  let carBounce = 0;
+  let wheelRotation = 0;
+
+  // Enemy cars
+  let enemyCars = [];
+  let enemySpeed = 2;
+  let enemySpawnRate = 0.01;
+
+  // Power-ups
+  let powerUps = [];
+  let powerUpSpawnRate = 0.002;
+  const powerUpSize = isMobile ? 20 : 30;
+
+  // Game state
+  let score = 0;
+  let highScore = localStorage.getItem('carGameHighScore') || 0;
+  let scoreMultiplier = 1;
+  let level = 1;
+  let framesElapsed = 0;
+  let isPlaying = false;
+  let paused = false;
+  let gameOverFlag = false;
+  let countdownActive = false;
+  let shieldActive = false;
+  let speedBoostActive = false;
+  let shieldTimer = 0;
+  let speedBoostTimer = 0;
+  let muted = false;
+
+  // DOM Elements
+  const playPauseBtn = document.getElementById('playPauseBtn');
+  const scoreDisplay = document.getElementById('score');
+  const highScoreDisplay = document.getElementById('highScore');
+  const gameOverMessage = document.getElementById('gameOverMessage');
+  const mobileControls = document.getElementById('mobileControls');
+  const leftBtn = document.getElementById('leftBtn');
+  const rightBtn = document.getElementById('rightBtn');
+
+  // Sounds
   const sounds = {
     leftRight: new Audio('https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg'),
     gameStart: new Audio('https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg'),
-    crash1: new Audio('https://actions.google.com/sounds/v1/impacts/crash_3.ogg'),
-    crash2: new Audio('https://actions.google.com/sounds/v1/impacts/crash_2.ogg'),
-    shieldOn: new Audio('https://actions.google.com/sounds/v1/cartoon/boing.ogg'),
-    powerUp: new Audio('https://actions.google.com/sounds/v1/cartoon/pop.ogg'),
-    backgroundMusic: new Audio('https://actions.google.com/sounds/v1/ambiences/underwater_bubbles.ogg'),
-    carEngine: new Audio('https://actions.google.com/sounds/v1/transportation/car_accelerate.ogg')
+    crash1: new Audio('https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg'),
+    crash2: new Audio('https://actions.google.com/sounds/v1/cartoon/pop.ogg'),
+    powerUp: new Audio('https://actions.google.com/sounds/v1/cartoon/slide_whistle_to_drum_hit.ogg'),
+    shieldOn: new Audio('https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg'),
+    carEngine: new Audio('https://actions.google.com/sounds/v1/transportation/car_accelerate.ogg'),
+    backgroundMusic: new Audio('https://actions.google.com/sounds/v1/ambiences/forest_rain.ogg'),
   };
-  sounds.backgroundMusic.loop = true;
-  sounds.backgroundMusic.volume = 0.15;
   sounds.carEngine.loop = true;
-  sounds.carEngine.volume = 0.3;
+  sounds.backgroundMusic.loop = true;
 
   function playSound(sound) {
     if (!muted) {
@@ -336,157 +312,56 @@
     }
   }
 
-  // Canvas and game variables
-  const canvas = document.getElementById('gameCanvas');
-  const ctx = canvas.getContext('2d');
-
-  let lanesCount = 3;
-  let laneWidth = canvas.width / lanesCount;
-
-  // Car dimensions (relative to lane width)
-  let carWidth = laneWidth * 0.6;
-  let carHeight = carWidth * 1.6;
-
-  // Enemy & power-up sizes
-  let enemyWidth = carWidth;
-  let enemyHeight = carHeight;
-  const powerUpSizeRatio = 0.5;
-  let powerUpSize = carWidth * powerUpSizeRatio;
-
-  // Lane X positions (centered)
-  let lanesX = Array.from({ length: lanesCount }, (_, i) =>
-    i * laneWidth + laneWidth / 2 - carWidth / 2
-  );
-
-  // Player car variables
-  let currentLane = 1;  // middle lane start
-  let targetLane = 1;   // for smooth animation
-  let carY = canvas.height - carHeight - 20;
-  let wheelRotation = 0;
-  let carBounce = 0;
-
-  // Gameplay variables
-  let enemyCars = [];
-  let powerUps = [];
-
-  let enemySpeed = 2;
-  let enemySpawnRate = 0.01;
-  let powerUpSpawnRate = 0.002;
-
-  let score = 0;
-  let scoreMultiplier = 1;
-
-  let shieldActive = false;
-  let shieldTimer = 0;
-  let speedBoostActive = false;
-  let speedBoostTimer = 0;
-
-  let level = 1;
-
-  // State flags
-  let isPlaying = false;
-  let gameOverFlag = false;
-  let paused = false;
-  let countdownActive = false;
-  let countdownValue = 3;
-
-  let framesElapsed = 0;
-
-  // Input states
-  let leftPressed = false;
-  let rightPressed = false;
-
-  // High score from localStorage
-  let highScore = parseInt(localStorage.getItem('carGameHighScore')) || 0;
-
-  // DOM elements for updates
-  const playPauseBtn = document.getElementById('playPauseBtn');
-  const muteBtn = document.getElementById('muteBtn');
-  const scoreDisplay = document.getElementById('score');
-  const highScoreDisplay = document.getElementById('highScore');
-  const gameOverMessage = document.getElementById('gameOverMessage');
-  const pauseOverlay = document.getElementById('pauseOverlay');
-  const startScreen = document.getElementById('startScreen');
-  const countdownDisplay = document.getElementById('countdown');
-  const levelUpNotification = document.getElementById('levelUpNotification');
-
-  // Mute state
-  let muted = false;
-
-  // Mobile controls
-  const leftBtn = document.getElementById('leftBtn');
-  const rightBtn = document.getElementById('rightBtn');
-
-  // Resize canvas and recalc variables (responsive)
-  function resizeCanvas() {
-    // max width 90vw or 500px max (maintain ratio)
-    const maxWidth = Math.min(window.innerWidth * 0.9, 500);
-    canvas.width = maxWidth;
-    canvas.height = (maxWidth * 3) / 5; // 5:3 ratio
-
-    laneWidth = canvas.width / lanesCount;
-    carWidth = laneWidth * 0.6;
-    carHeight = carWidth * 1.6;
-    enemyWidth = carWidth;
-    enemyHeight = carHeight;
-    powerUpSize = carWidth * powerUpSizeRatio;
-
-    lanesX = Array.from({ length: lanesCount }, (_, i) =>
-      i * laneWidth + laneWidth / 2 - carWidth / 2
-    );
-
-    carY = canvas.height - carHeight - 20;
-  }
-
-  // Initial resize
-  resizeCanvas();
-
-  // Event listeners for resizing window
-  window.addEventListener('resize', resizeCanvas);
-
-  // Keyboard input
+  // Keyboard controls
   window.addEventListener('keydown', e => {
-    if (e.key === 'ArrowLeft') {
-      leftPressed = true;
+    if (!isPlaying || paused) return;
+    if (e.key === 'ArrowLeft' && targetLane > 0) {
+      targetLane--;
       playSound(sounds.leftRight);
     }
-    if (e.key === 'ArrowRight') {
-      rightPressed = true;
+    if (e.key === 'ArrowRight' && targetLane < lanesCount - 1) {
+      targetLane++;
       playSound(sounds.leftRight);
     }
-  });
-  window.addEventListener('keyup', e => {
-    if (e.key === 'ArrowLeft') leftPressed = false;
-    if (e.key === 'ArrowRight') rightPressed = false;
   });
 
-  // Mobile buttons input
+  // Mobile buttons
   leftBtn.addEventListener('touchstart', e => {
     e.preventDefault();
-    leftPressed = true;
-    playSound(sounds.leftRight);
-  });
-  leftBtn.addEventListener('touchend', e => {
-    e.preventDefault();
-    leftPressed = false;
+    if (!isPlaying || paused) return;
+    if (targetLane > 0) {
+      targetLane--;
+      playSound(sounds.leftRight);
+    }
   });
   rightBtn.addEventListener('touchstart', e => {
     e.preventDefault();
-    rightPressed = true;
-    playSound(sounds.leftRight);
-  });
-  rightBtn.addEventListener('touchend', e => {
-    e.preventDefault();
-    rightPressed = false;
+    if (!isPlaying || paused) return;
+    if (targetLane < lanesCount - 1) {
+      targetLane++;
+      playSound(sounds.leftRight);
+    }
   });
 
-  // Draw road with realistic lane dividers
+  // Responsive canvas resize on window resize (only width)
+  function resizeCanvas() {
+    const containerWidth = Math.min(window.innerWidth - 40, 600);
+    canvas.width = containerWidth;
+    canvas.height = containerWidth * 0.6; // Keep aspect ratio 5:3
+    carY = canvas.height - carHeight - 20;
+    calculateLanesX();
+  }
+  window.addEventListener('resize', () => {
+    resizeCanvas();
+  });
+  resizeCanvas();
+
+  // Draw road with lane dividers
   function drawRoad() {
-    // Road base
     ctx.fillStyle = '#555';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // Side white lines
+    // Side lines
     ctx.strokeStyle = 'white';
     ctx.lineWidth = 5;
     ctx.beginPath();
@@ -496,10 +371,11 @@
     ctx.lineTo(canvas.width - 10, canvas.height);
     ctx.stroke();
 
-    // Lane dividers: 3 lanes → 2 lane lines with dashed pattern
+    // Lane dividers (dashed)
+    const laneWidth = canvas.width / lanesCount;
     ctx.strokeStyle = 'white';
     ctx.lineWidth = 3;
-    ctx.setLineDash([30, 30]);
+    ctx.setLineDash([20, 20]);
     for (let i = 1; i < lanesCount; i++) {
       const x = i * laneWidth;
       ctx.beginPath();
@@ -510,19 +386,17 @@
     ctx.setLineDash([]);
   }
 
-  // Draw player's car with shadow, gradient & wheels rotating & bounce effect
+  // Draw car with shadow, gradient, rotating wheels & bounce effect
   function drawCar() {
     const x = lanesX[currentLane] + carBounce;
     const y = carY;
 
-    // Car shadow
     ctx.save();
     ctx.shadowColor = 'rgba(0,0,0,0.7)';
     ctx.shadowBlur = 8;
     ctx.shadowOffsetX = 3;
     ctx.shadowOffsetY = 5;
 
-    // Gradient fill for car body (red)
     const grad = ctx.createLinearGradient(x, y, x, y + carHeight);
     grad.addColorStop(0, '#d32f2f');
     grad.addColorStop(1, '#8b0000');
@@ -531,11 +405,9 @@
 
     ctx.restore();
 
-    // Windows (lighter blue)
     ctx.fillStyle = '#87ceeb';
     ctx.fillRect(x + 10, y + 10, carWidth - 20, carHeight / 3);
 
-    // Wheels with rotation animation
     const wheelRadiusX = 8;
     const wheelRadiusY = 12;
     const wheelY = y + carHeight - 15;
@@ -557,7 +429,6 @@
     ctx.fill();
     ctx.restore();
 
-    // Shield glow if active
     if (shieldActive) {
       ctx.save();
       ctx.strokeStyle = 'cyan';
@@ -574,14 +445,12 @@
     const x = lanesX[enemy.lane];
     const y = enemy.y;
 
-    // Shadow
     ctx.save();
     ctx.shadowColor = 'rgba(0,0,0,0.7)';
     ctx.shadowBlur = 8;
     ctx.shadowOffsetX = 3;
     ctx.shadowOffsetY = 5;
 
-    // Gradient fill (blue)
     const grad = ctx.createLinearGradient(x, y, x, y + enemyHeight);
     grad.addColorStop(0, '#1565c0');
     grad.addColorStop(1, '#003c8f');
@@ -590,11 +459,9 @@
 
     ctx.restore();
 
-    // Windows (light blue)
     ctx.fillStyle = '#90caf9';
     ctx.fillRect(x + 10, y + 10, enemyWidth - 20, enemyHeight / 3);
 
-    // Wheels rotating
     const wheelRadiusX = 8;
     const wheelRadiusY = 12;
     const wheelY = y + enemyHeight - 15;
@@ -617,45 +484,7 @@
     ctx.restore();
   }
 
-  // Draw power-ups: shield and speed boost
-  function drawPowerUp(pu) {
-    const x = lanesX[pu.lane] + carWidth/2;
-    const y = pu.y;
-
-    ctx.save();
-    ctx.shadowColor = 'rgba(255,255,255,0.7)';
-    ctx.shadowBlur = 10;
-
-    if (pu.type === 'shield') {
-      // Cyan glowing circle
-      ctx.fillStyle = 'cyan';
-      ctx.beginPath();
-      ctx.ellipse(x, y, powerUpSize / 2, powerUpSize / 2, 0, 0, 2 * Math.PI);
-      ctx.fill();
-      // Inner white circle
-      ctx.fillStyle = 'white';
-      ctx.beginPath();
-      ctx.ellipse(x, y, powerUpSize / 3, powerUpSize / 3, 0, 0, 2 * Math.PI);
-      ctx.fill();
-    } else if (pu.type === 'speed') {
-      // Yellow lightning bolt (simple polygon)
-      ctx.fillStyle = 'yellow';
-      ctx.beginPath();
-      const boltSize = powerUpSize / 2;
-      ctx.moveTo(x - boltSize / 2, y - boltSize / 1.5);
-      ctx.lineTo(x + boltSize / 6, y - boltSize / 6);
-      ctx.lineTo(x - boltSize / 10, y - boltSize / 6);
-      ctx.lineTo(x + boltSize / 2, y + boltSize / 1.5);
-      ctx.lineTo(x - boltSize / 6, y + boltSize / 6);
-      ctx.lineTo(x + boltSize / 10, y + boltSize / 6);
-      ctx.closePath();
-      ctx.fill();
-    }
-
-    ctx.restore();
-  }
-
-  // Collision check rectangles
+  // Collision check
   function isColliding(r1, r2) {
     return !(r1.x > r2.x + r2.width ||
              r1.x + r1.width < r2.x ||
@@ -663,90 +492,63 @@
              r1.y + r1.height < r2.y);
   }
 
-  // Spawn enemy car on random lane
+  // Spawn enemy car in random lane
   function spawnEnemy() {
     const lane = Math.floor(Math.random() * lanesCount);
     enemyCars.push({ lane, y: -enemyHeight });
   }
 
-  // Spawn power-up randomly
+  // Spawn power-up in random lane
   function spawnPowerUp() {
     const lane = Math.floor(Math.random() * lanesCount);
-    const types = ['shield', 'speed'];
-    const type = types[Math.floor(Math.random() * types.length)];
-    powerUps.push({ lane, y: -powerUpSize * 1.5, type });
+    const type = Math.random() < 0.5 ? 'shield' : 'speed';
+    powerUps.push({ lane, y: -powerUpSize, type });
   }
 
-  // Update enemy cars
+  // Update enemies position, remove off screen, increase score
   function updateEnemies() {
     for (let i = enemyCars.length - 1; i >= 0; i--) {
-      enemyCars[i].y += enemySpeed * (speedBoostActive ? 1.5 : 1);
+      enemyCars[i].y += enemySpeed;
       if (enemyCars[i].y > canvas.height) {
         enemyCars.splice(i, 1);
-        // Increase score when enemy passed
-        score += 1 * scoreMultiplier;
+        if (!speedBoostActive) score += 1 * scoreMultiplier;
+        else score += 2 * scoreMultiplier;
       }
     }
   }
 
-  // Update power-ups
+  // Update power-ups position, remove off screen, check collision
   function updatePowerUps() {
     for (let i = powerUps.length - 1; i >= 0; i--) {
-      powerUps[i].y += enemySpeed * (speedBoostActive ? 1.5 : 1);
+      powerUps[i].y += enemySpeed;
       if (powerUps[i].y > canvas.height) {
         powerUps.splice(i, 1);
+        continue;
       }
-    }
-  }
 
-  // Handle collisions with enemy cars and power-ups
-  function handleCollisions() {
-    const playerRect = {
-      x: lanesX[currentLane],
-      y: carY,
-      width: carWidth,
-      height: carHeight
-    };
-
-    // Enemy collision
-    for (let enemy of enemyCars) {
-      const enemyRect = {
-        x: lanesX[enemy.lane],
-        y: enemy.y,
-        width: enemyWidth,
-        height: enemyHeight
+      // Check collision with player car
+      const playerRect = {
+        x: lanesX[currentLane],
+        y: carY,
+        width: carWidth,
+        height: carHeight
       };
-      if (isColliding(playerRect, enemyRect)) {
-        if (shieldActive) {
-          shieldActive = false;
-          playSound(sounds.crash1);
-          // Remove the enemy car on shield hit
-          enemyCars = enemyCars.filter(e => e !== enemy);
-          carBounce = 10; // bounce effect
-        } else {
-          endGame();
-          return;
-        }
-      }
-    }
-
-    // Power-up collision
-    for (let i = powerUps.length - 1; i >= 0; i--) {
-      const pu = powerUps[i];
-      const puRect = {
-        x: lanesX[pu.lane] + carWidth / 4,
-        y: pu.y - powerUpSize / 2,
+      const powerUpRect = {
+        x: lanesX[powerUps[i].lane],
+        y: powerUps[i].y,
         width: powerUpSize,
         height: powerUpSize
       };
-      if (isColliding(playerRect, puRect)) {
-        if (pu.type === 'shield') {
+
+      if (isColliding(playerRect, powerUpRect)) {
+        // Activate power-up
+        if (powerUps[i].type === 'shield') {
           shieldActive = true;
-          shieldTimer = 300; // frames ~5 seconds at 60fps
+          shieldTimer = 600; // lasts 10 seconds at 60fps
           playSound(sounds.shieldOn);
-        } else if (pu.type === 'speed') {
+        } else if (powerUps[i].type === 'speed') {
           speedBoostActive = true;
-          speedBoostTimer = 300;
+          speedBoostTimer = 600;
           playSound(sounds.powerUp);
         }
         powerUps.splice(i, 1);
@@ -754,302 +556,283 @@
     }
   }
 
-  // Update game state per frame
-  function updateGame() {
-    if (!isPlaying || paused || countdownActive) return;
+  // Draw power-ups
+  function drawPowerUps() {
+    powerUps.forEach(pu => {
+      const x = lanesX[pu.lane] + (carWidth - powerUpSize) / 2;
+      const y = pu.y;
+
+      if (pu.type === 'shield') {
+        ctx.fillStyle = 'cyan';
+      } else {
+        ctx.fillStyle = 'gold';
+      }
+      ctx.beginPath();
+      ctx.arc(x + powerUpSize/2, y + powerUpSize/2, powerUpSize/2, 0, 2 * Math.PI);
+      ctx.fill();
+    });
+  }
+
+  // Level up notification
+  let levelUpTimer = 0;
+  function showLevelUp() {
+    ctx.save();
+    ctx.font = 'bold 40px Georgia';
+    ctx.fillStyle = 'gold';
+    ctx.textAlign = 'center';
+    ctx.shadowColor = 'rgba(255,215,0,0.7)';
+    ctx.shadowBlur = 20;
+    ctx.fillText('Level ' + level + '!', canvas.width / 2, canvas.height / 2);
+    ctx.restore();
+  }
+
+  // Game loop
+  function gameLoop() {
+    if (!isPlaying || paused) return;
 
     framesElapsed++;
 
-    // Increase difficulty every 300 frames (~5 seconds)
-    if (framesElapsed % 300 === 0) {
+    // Increase difficulty every 10 seconds (~600 frames)
+    if (framesElapsed % 600 === 0) {
+      level++;
       enemySpeed += 0.5;
       enemySpawnRate += 0.005;
-      powerUpSpawnRate += 0.001;
       if (enemySpawnRate > 0.15) enemySpawnRate = 0.15;
-      if (powerUpSpawnRate > 0.03) powerUpSpawnRate = 0.03;
-      level++;
-      showLevelUp();
-      scoreMultiplier = 1 + (level - 1) * 0.2;
+      scoreMultiplier = 1 + level * 0.1;
+      levelUpTimer = 180; // show level up for 3 seconds
     }
 
-    // Handle lane changes smoothly (lerp)
-    if (currentLane !== targetLane) {
-      const diff = lanesX[targetLane] - lanesX[currentLane];
-      if (Math.abs(diff) < 5) currentLane = targetLane;
-      else {
-        lanesX[currentLane] += diff * 0.2;
-      }
-    }
+    if (levelUpTimer > 0) levelUpTimer--;
 
-    // Handle input for lane switching
-    if (leftPressed && targetLane > 0) {
-      targetLane--;
-      leftPressed = false;
-      playSound(sounds.leftRight);
-    }
-    if (rightPressed && targetLane < lanesCount -1) {
-      targetLane++;
-      rightPressed = false;
-      playSound(sounds.leftRight);
-    }
-
-    // Update wheel rotation & bounce animation
-    wheelRotation += 0.15;
-    if (carBounce > 0) carBounce *= 0.8;
-    else carBounce = 0;
-
-    // Spawn enemies randomly
+    // Spawn enemies and power-ups randomly
     if (Math.random() < enemySpawnRate) spawnEnemy();
-
-    // Spawn power-ups randomly
     if (Math.random() < powerUpSpawnRate) spawnPowerUp();
 
+    // Move car towards target lane smoothly
+    if (currentLane < targetLane) {
+      currentLane += 0.05;
+      if (currentLane > targetLane) currentLane = targetLane;
+    } else if (currentLane > targetLane) {
+      currentLane -= 0.05;
+      if (currentLane < targetLane) currentLane = targetLane;
+    }
+
+    // Bounce effect on car position for animation
+    carBounce = Math.sin(framesElapsed * 0.3) * 2;
+    wheelRotation += 0.3;
+
+    // Update enemy & power-ups positions
     updateEnemies();
     updatePowerUps();
 
-    // Handle collisions
-    handleCollisions();
+    // Check collisions with enemies
+    const playerRect = {
+      x: lanesX[Math.round(currentLane)],
+      y: carY,
+      width: carWidth,
+      height: carHeight
+    };
+    for (let enemy of enemyCars) {
+      const enemyRect = {
+        x: lanesX[enemy.lane],
+        y: enemy.y,
+        width: enemyWidth,
+        height: enemyHeight
+      };
 
-    // Decrease shield timer
+      if (isColliding(playerRect, enemyRect)) {
+        if (shieldActive) {
+          shieldActive = false;
+          shieldTimer = 0;
+          // Bounce car back a bit on hit with shield
+          playSound(sounds.crash2);
+          carBounce = -15;
+          enemy.y = canvas.height + 100; // remove enemy by pushing offscreen
+        } else {
+          endGame();
+          return;
+        }
+      }
+    }
+
+    // Power-up timers
     if (shieldActive) {
       shieldTimer--;
       if (shieldTimer <= 0) shieldActive = false;
     }
-
-    // Decrease speed boost timer
     if (speedBoostActive) {
       speedBoostTimer--;
       if (speedBoostTimer <= 0) speedBoostActive = false;
     }
-  }
 
-  // Draw all game elements
-  function drawGame() {
-    // Clear canvas
+    // Clear canvas & redraw
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-
     drawRoad();
-
-    enemyCars.forEach(drawEnemyCar);
-    powerUps.forEach(drawPowerUp);
+    drawPowerUps();
     drawCar();
+    enemyCars.forEach(drawEnemyCar);
 
-    // Draw score & shield/speed boost indicators
-    ctx.save();
-    ctx.font = 'bold 16px Georgia';
-    ctx.fillStyle = 'white';
-    ctx.textAlign = 'left';
-    ctx.fillText('Score: ' + Math.floor(score), 15, 25);
-    ctx.fillText('Level: ' + level, 15, 45);
-    if (shieldActive) {
-      ctx.fillStyle = 'cyan';
-      ctx.fillText('Shield Active', 15, 65);
+    // Draw score and high score
+    scoreDisplay.textContent = 'Score: ' + Math.floor(score);
+    if (score > highScore) {
+      highScore = Math.floor(score);
+      localStorage.setItem('carGameHighScore', highScore);
     }
-    if (speedBoostActive) {
-      ctx.fillStyle = 'yellow';
-      ctx.fillText('Speed Boost', 15, 85);
-    }
-    ctx.restore();
-  }
+    highScoreDisplay.textContent = 'High Score: ' + highScore;
 
-  // Show level up notification briefly
-  let levelUpTimeout = null;
-  function showLevelUp() {
-    levelUpNotification.style.opacity = '1';
-    clearTimeout(levelUpTimeout);
-    levelUpTimeout = setTimeout(() => {
-      levelUpNotification.style.opacity = '0';
-    }, 2000);
-  }
-
-  // Main game loop
-  function gameLoop() {
-    if (isPlaying && !paused && !countdownActive) {
-      updateGame();
-      drawGame();
+    // Level up notification display
+    if (levelUpTimer > 0) {
+      showLevelUp();
     }
+
     requestAnimationFrame(gameLoop);
   }
 
-  // Start countdown before game start
-  function startCountdown() {
-    countdownValue = 3;
-    countdownDisplay.textContent = `Starting in ${countdownValue}...`;
+  // Game control functions
+  function startGame() {
+    if (countdownActive) return;
     countdownActive = true;
-    startScreen.style.display = 'flex';
-    countdownDisplay.style.display = 'block';
+    playPauseBtn.disabled = true;
+    let count = 3;
+    playPauseBtn.textContent = count;
 
     const countdownInterval = setInterval(() => {
-      countdownValue--;
-      if (countdownValue <= 0) {
-        clearInterval(countdownInterval);
-        countdownActive = false;
-        startScreen.style.display = 'none';
-        startGame();
+      count--;
+      if (count > 0) {
+        playPauseBtn.textContent = count;
+        playSound(sounds.gameStart);
       } else {
-        countdownDisplay.textContent = `Starting in ${countdownValue}...`;
+        clearInterval(countdownInterval);
+        playPauseBtn.textContent = 'Pause';
+        isPlaying = true;
+        paused = false;
+        countdownActive = false;
+        framesElapsed = 0;
+        score = 0;
+        enemySpeed = 2;
+        enemySpawnRate = 0.01;
+        level = 1;
+        scoreMultiplier = 1;
+        enemyCars = [];
+        powerUps = [];
+        shieldActive = false;
+        speedBoostActive = false;
+        shieldTimer = 0;
+        speedBoostTimer = 0;
+        gameOverFlag = false;
+        playPauseBtn.disabled = false;
+        sounds.backgroundMusic.play().catch(() => {});
+        sounds.carEngine.play().catch(() => {});
+        gameLoop();
       }
     }, 1000);
   }
 
-  // Start game proper
-  function startGame() {
-    if (gameOverFlag) resetGame();
-    isPlaying = true;
-    paused = false;
-    playPauseBtn.textContent = 'Pause';
-    playPauseBtn.setAttribute('aria-pressed', 'true');
-    gameOverMessage.style.display = 'none';
-    pauseOverlay.style.display = 'none';
-    sounds.gameStart.play().catch(() => {});
-    sounds.carEngine.play().catch(() => {});
-  }
-
-  // Pause game
   function pauseGame() {
-    if (!isPlaying || paused) return;
+    if (!isPlaying) return;
     paused = true;
+    isPlaying = false;
     playPauseBtn.textContent = 'Play';
     playPauseBtn.setAttribute('aria-pressed', 'false');
-    pauseOverlay.style.display = 'flex';
     sounds.carEngine.pause();
-    sounds.carEngine.currentTime = 0;
+    sounds.backgroundMusic.pause();
   }
 
-  // Resume game after pause
   function resumeGame() {
-    if (!isPlaying || !paused) return;
+    if (!paused) return;
     paused = false;
+    isPlaying = true;
     playPauseBtn.textContent = 'Pause';
     playPauseBtn.setAttribute('aria-pressed', 'true');
-    pauseOverlay.style.display = 'none';
-    sounds.carEngine.play().catch(() => {});
+    sounds.carEngine.play();
+    sounds.backgroundMusic.play();
+    gameLoop();
   }
 
-  // Reset game variables
   function resetGame() {
-    enemyCars = [];
-    powerUps = [];
     score = 0;
-    scoreMultiplier = 1;
     enemySpeed = 2;
     enemySpawnRate = 0.01;
-    powerUpSpawnRate = 0.002;
+    framesElapsed = 0;
+    level = 1;
+    scoreMultiplier = 1;
+    enemyCars = [];
+    powerUps = [];
     shieldActive = false;
     speedBoostActive = false;
     shieldTimer = 0;
     speedBoostTimer = 0;
-    level = 1;
-    framesElapsed = 0;
     currentLane = 1;
     targetLane = 1;
-    carBounce = 0;
     gameOverFlag = false;
     paused = false;
     isPlaying = false;
+    countdownActive = false;
     playPauseBtn.textContent = 'Play';
-    playPauseBtn.setAttribute('aria-pressed', 'false');
+    playPauseBtn.disabled = false;
+    gameOverMessage.style.display = 'none';
     scoreDisplay.textContent = 'Score: 0';
     highScoreDisplay.textContent = 'High Score: ' + highScore;
-    gameOverMessage.style.display = 'none';
-    pauseOverlay.style.display = 'none';
-    startScreen.style.display = 'flex';
-    countdownDisplay.style.display = 'none';
-  }
-
-  // End game: show game over screen & update high score
-  function endGame() {
-    isPlaying = false;
-    gameOverFlag = true;
-    gameOverMessage.style.display = 'block';
-    gameOverMessage.setAttribute('aria-hidden', 'false');
-    playPauseBtn.textContent = 'Retry';
-    playPauseBtn.setAttribute('aria-pressed', 'false');
-    pauseOverlay.style.display = 'none';
     sounds.carEngine.pause();
     sounds.carEngine.currentTime = 0;
-    // Play random crash sound
-    if (!muted) {
-      if (Math.random() > 0.5) playSound(sounds.crash1);
-      else playSound(sounds.crash2);
-    }
-    // Update high score if beaten
-    if (score > highScore) {
-      highScore = Math.floor(score);
-      localStorage.setItem('carGameHighScore', highScore);
-      highScoreDisplay.textContent = 'High Score: ' + highScore;
-    }
+    sounds.backgroundMusic.pause();
+    sounds.backgroundMusic.currentTime = 0;
   }
 
-  // Play/pause button click handler
-  playPauseBtn.addEventListener('click', () => {
-    if (countdownActive) return; // ignore while countdown running
-    if (gameOverFlag) {
-      resetGame();
-      startCountdown();
-      return;
-    }
-    if (!isPlaying) {
-      startCountdown();
-    } else if (paused) {
-      resumeGame();
-    } else {
-      pauseGame();
-    }
-  });
-
-  // Mute button toggle
-  muteBtn.addEventListener('click', () => {
-    muted = !muted;
-    muteBtn.textContent = muted ? '🔇' : '🔊';
-    muteBtn.setAttribute('aria-pressed', muted.toString());
-    if (muted) {
-      sounds.carEngine.pause();
-      sounds.backgroundMusic.pause();
-    } else {
-      if (isPlaying && !paused) {
-        sounds.carEngine.play().catch(() => {});
-        sounds.backgroundMusic.play().catch(() => {});
-      }
-    }
-  });
-
-  // Vibration on crash (mobile only)
-  function vibrateCrash() {
-    if ('vibrate' in navigator) {
+  function endGame() {
+    isPlaying = false;
+    paused = false;
+    gameOverFlag = true;
+    gameOverMessage.style.display = 'block';
+    playPauseBtn.textContent = 'Retry';
+    sounds.carEngine.pause();
+    sounds.carEngine.currentTime = 0;
+    sounds.backgroundMusic.pause();
+    sounds.backgroundMusic.currentTime = 0;
+    // Play random crash sound
+    const crashSound = Math.random() < 0.5 ? sounds.crash1 : sounds.crash2;
+    playSound(crashSound);
+    // Mobile vibration on crash (if supported)
+    if (navigator.vibrate) {
       navigator.vibrate([200, 100, 200]);
     }
   }
 
-  // Animate bounce effect
-  function animateBounce() {
-    carBounce = 15;
-  }
+  // Play/pause button handler
+  playPauseBtn.addEventListener('click', () => {
+    if (gameOverFlag) {
+      resetGame();
+      startGame();
+    } else if (!isPlaying && !paused) {
+      startGame();
+      playPauseBtn.setAttribute('aria-pressed', 'true');
+    } else if (isPlaying) {
+      pauseGame();
+    } else if (paused) {
+      resumeGame();
+      playPauseBtn.setAttribute('aria-pressed', 'true');
+    }
+  });
 
-  // Game initialization
-  function init() {
-    resetGame();
-    drawRoad();
-    drawCar();
-    drawGame();
+  // Mute/unmute with keyboard 'M' key (optional)
+  window.addEventListener('keydown', e => {
+    if (e.key.toLowerCase() === 'm') {
+      muted = !muted;
+      if (muted) {
+        sounds.carEngine.pause();
+        sounds.backgroundMusic.pause();
+      } else if (isPlaying) {
+        sounds.carEngine.play();
+        sounds.backgroundMusic.play();
+      }
+    }
+  });
 
-    // Show start screen with instructions
-    startScreen.style.display = 'flex';
-    countdownDisplay.style.display = 'none';
+  // Initialize UI with high score
+  highScoreDisplay.textContent = 'High Score: ' + highScore;
 
-    // Start background music muted initially (can toggle)
-    sounds.backgroundMusic.volume = 0.1;
-    sounds.backgroundMusic.loop = true;
-    if (!muted) sounds.backgroundMusic.play().catch(() => {});
-
-    // Start main loop
-    gameLoop();
-  }
-
-  // Start everything
-  init();
-
-})();
+  // Initial reset
+  resetGame();
 </script>
 
 </body>
