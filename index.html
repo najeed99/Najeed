@@ -1,685 +1,76 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Najeed's Car & Bike Info Website</title>
-<style>
-  body {
-    margin: 0; padding: 0;
-    font-family: 'Georgia', serif;
-    background: url('https://images.pexels.com/photos/919073/pexels-photo-919073.jpeg') no-repeat center center fixed;
-    background-size: cover;
-    color: #f2f2f2;
-    user-select: none;
-  }
-  body::before {
-    content: '';
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.5);
-    z-index: -1;
-  }
+  <meta charset="UTF-8" />
+  <title>AuraNest Admin Login</title>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-app.js";
+    import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-auth.js";
 
-  /* Navigation bar */
-  nav {
-    background-color: rgba(0,0,0,0.75);
-    padding: 12px 20px;
-    display: flex;
-    justify-content: center;
-    gap: 30px;
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    z-index: 10;
-    font-weight: bold;
-    font-size: 1.15rem;
-    user-select:none;
-  }
-  nav a {
-    color: #c49e65;
-    text-decoration: none;
-    padding: 6px 10px;
-    border-radius: 7px;
-    transition: background-color 0.3s ease;
-  }
-  nav a:hover, nav a:focus {
-    background-color: #c49e65;
-    color: #1a1a1a;
-    outline: none;
-  }
+    const firebaseConfig = {
+      apiKey: "AIzaSyBXgWRBsa9UktazqlpgF1Mp_XAkjtHySzY",
+      authDomain: "homedecor-77a8a.firebaseapp.com",
+      projectId: "homedecor-77a8a",
+      storageBucket: "homedecor-77a8a.appspot.com",
+      messagingSenderId: "12260990883",
+      appId: "1:12260990883:web:b625ba6d13517a3b874416",
+      measurementId: "G-R0YMQ9GHPW"
+    };
 
-  main {
-    max-width: 340px;
-    margin: 70px auto 20px;
-    background: rgba(0,0,0,0.7);
-    padding: 15px 15px 25px;
-    border-radius: 12px;
-    box-sizing: border-box;
-    text-align: center;
-  }
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const provider = new GoogleAuthProvider();
 
-  #scoreContainer {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 8px;
-    user-select:none;
-  }
-  #score, #highScore {
-    font-size: 1.3rem;
-    color: #c49e65;
-    font-weight: 700;
-    width: 48%;
-    text-align: center;
-  }
-  #gameContainer {
-    position: relative;
-    margin: 10px auto 0;
-  }
-  #gameCanvas {
-    background: #555;
-    border-radius: 10px;
-    display: block;
-    margin: 0 auto;
-    touch-action: none;
-  }
-  #gameOverMessage, #levelUpMessage, #pauseOverlay {
-    position: absolute;
-    top: 40%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: white;
-    padding: 18px 28px;
-    border-radius: 14px;
-    font-size: 1.7rem;
-    font-weight: 700;
-    display: none;
-    width: 90%;
-    max-width: 280px;
-    background: rgba(0,0,0,0.85);
-    user-select:none;
-  }
-  #gameOverMessage {
-    background-color: rgba(255, 0, 0, 0.85);
-  }
-  #levelUpMessage {
-    background-color: rgba(139, 94, 60, 0.9);
-  }
-  #pauseOverlay {
-    background-color: rgba(0,0,0,0.85);
-  }
+    window.onload = () => {
+      const loginBtn = document.getElementById("loginBtn");
+      const logoutBtn = document.getElementById("logoutBtn");
+      const status = document.getElementById("status");
 
-  /* Arrow buttons and control layout */
-  #controlsTop {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    margin-top: 6px;
-    user-select:none;
-  }
-  #controlsTop button {
-    font-size: 1.2rem;
-    padding: 4px 10px;
-    border-radius: 10px;
-    border: none;
-    background-color: #8B5E3C;
-    color: white;
-    cursor: pointer;
-    width: 38px;
-    height: 38px;
-    line-height: 30px;
-    user-select:none;
-  }
+      // Login
+      loginBtn.addEventListener("click", () => {
+        signInWithPopup(auth, provider)
+          .then((result) => {
+            status.textContent = `Welcome ${result.user.displayName}`;
+            loginBtn.style.display = "none";
+            logoutBtn.style.display = "inline";
+          })
+          .catch((error) => {
+            status.textContent = `Login error: ${error.message}`;
+          });
+      });
 
-  #bottomControls {
-    display: flex;
-    justify-content: center;
-    gap: 14px;
-    margin-top: 12px;
-  }
-  #bottomControls button {
-    padding: 10px 28px;
-    font-size: 1.15rem;
-    cursor: pointer;
-    background: #8B5E3C;
-    border: none;
-    border-radius: 8px;
-    color: white;
-    user-select:none;
-    min-width: 90px;
-  }
-  #muteBtn {
-    width: 60px;
-    padding: 10px 0;
-    font-size: 1.4rem;
-  }
-</style>
+      // Logout
+      logoutBtn.addEventListener("click", () => {
+        signOut(auth)
+          .then(() => {
+            status.textContent = "Logged out";
+            loginBtn.style.display = "inline";
+            logoutBtn.style.display = "none";
+          })
+          .catch((error) => {
+            status.textContent = `Logout error: ${error.message}`;
+          });
+      });
+
+      // Auth state change
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          status.textContent = `Welcome back, ${user.displayName}`;
+          loginBtn.style.display = "none";
+          logoutBtn.style.display = "inline";
+        } else {
+          status.textContent = "Please login";
+          loginBtn.style.display = "inline";
+          logoutBtn.style.display = "none";
+        }
+      });
+    };
+  </script>
 </head>
 <body>
-
-<nav aria-label="Primary navigation">
-  <a href="#" tabindex="0">Home</a>
-  <a href="#" tabindex="0">Contact</a>
-  <a href="#" tabindex="0">Review</a>
-  <a href="#" tabindex="0">About</a>
-  <a href="#" tabindex="0">About Cars</a>
-</nav>
-
-<main>
-  <div id="scoreContainer">
-    <div id="score" aria-live="polite">Score: 0</div>
-    <div id="highScore" aria-live="polite">High Score: 0</div>
-  </div>
-
-  <div id="gameContainer" aria-label="Car dodging game">
-    <canvas id="gameCanvas" width="300" height="500" aria-label="Game canvas"></canvas>
-
-    <div id="gameOverMessage" role="alert">Game Over!<br>Click Retry to play again.</div>
-    <div id="levelUpMessage" aria-live="polite">Level Up!</div>
-    <div id="pauseOverlay" role="alert">Paused</div>
-  </div>
-
-  <div id="controlsTop" aria-label="Mobile lane controls">
-    <button id="leftBtn" aria-label="Move Left">◀</button>
-    <button id="rightBtn" aria-label="Move Right">▶</button>
-  </div>
-
-  <div id="bottomControls">
-    <button id="playPauseBtn" aria-label="Play or Pause the game">Play</button>
-    <button id="muteBtn" aria-label="Mute or unmute sound">🔈</button>
-  </div>
-</main>
-
-<script>
-  const canvas = document.getElementById('gameCanvas');
-  const ctx = canvas.getContext('2d');
-
-  const scoreEl = document.getElementById('score');
-  const highScoreEl = document.getElementById('highScore');
-  const gameOverMessage = document.getElementById('gameOverMessage');
-  const levelUpMessage = document.getElementById('levelUpMessage');
-  const pauseOverlay = document.getElementById('pauseOverlay');
-
-  const leftBtn = document.getElementById('leftBtn');
-  const rightBtn = document.getElementById('rightBtn');
-  const playPauseBtn = document.getElementById('playPauseBtn');
-  const muteBtn = document.getElementById('muteBtn');
-
-  // Sounds
-  const sounds = {
-    leftRight: new Audio('https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg'),
-    gameStart: new Audio('https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg'),
-    gameOver: new Audio('https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg'),
-    shieldOn: new Audio('https://actions.google.com/sounds/v1/cartoon/clang.ogg'),
-    powerUp: new Audio('https://actions.google.com/sounds/v1/cartoon/pop.ogg'),
-    backgroundMusic: new Audio('https://actions.google.com/sounds/v1/ambiences/traffic.ogg')
-  };
-  sounds.backgroundMusic.loop = true;
-
-  let muted = false;
-  function playSound(sound){
-    if(!muted){
-      sound.currentTime = 0;
-      sound.play();
-    }
-  }
-  function toggleMute(){
-    muted = !muted;
-    muteBtn.textContent = muted ? '🔇' : '🔈';
-    if(muted){
-      sounds.backgroundMusic.pause();
-    } else {
-      if(isPlaying) sounds.backgroundMusic.play();
-    }
-  }
-  muteBtn.addEventListener('click', toggleMute);
-  muteBtn.textContent = muted ? '🔇' : '🔈';
-
-  // Game variables
-  const lanesCount = 3;
-  const laneWidth = canvas.width / lanesCount;
-  const carWidth = 45;
-  const carHeight = 75;
-  const enemyWidth = 45;
-  const enemyHeight = 75;
-  const powerUpSize = 30;
-
-  // Lane centers for car drawing
-  const lanesX = [
-    laneWidth * 0.5 - carWidth / 2,
-    laneWidth * 1.5 - carWidth / 2,
-    laneWidth * 2.5 - carWidth / 2
-  ];
-
-  let currentLane = 1;
-  let targetLane = 1;
-  let carX = lanesX[currentLane];
-  const carY = canvas.height - carHeight - 20;
-
-  let enemyCars = [];
-  let powerUps = [];
-
-  let enemySpeed = 1.5;
-  let score = 0;
-  let scoreMultiplier = 1;
-  const maxMultiplier = 3;
-  let framesElapsed = 0;
-
-  let shieldActive = false;
-  let shieldTimer = 0;
-
-  let speedBoostActive = false;
-  let speedBoostTimer = 0;
-
-  let isPlaying = false;
-  let gameOverFlag = false;
-  let paused = false;
-
-  // Wheel rotation animation
-  let wheelRotation = 0;
-  let carBounce = 0;
-
-  // Input state
-  let leftPressed = false;
-  let rightPressed = false;
-
-  // Load high score
-  let highScore = 0;
-  try {
-    const storedScore = localStorage.getItem('carGameHighScore');
-    if(storedScore !== null) {
-      highScore = parseInt(storedScore) || 0;
-    }
-  } catch(e) { highScore = 0; }
-  highScoreEl.textContent = `High Score: ${highScore}`;
-
-  // Keyboard control
-  window.addEventListener('keydown', e => {
-    if(e.key === 'ArrowLeft' || e.key.toLowerCase() === 'a'){
-      leftPressed = true;
-      playSound(sounds.leftRight);
-    } else if(e.key === 'ArrowRight' || e.key.toLowerCase() === 'd'){
-      rightPressed = true;
-      playSound(sounds.leftRight);
-    } else if(e.key.toLowerCase() === 'p'){
-      if(isPlaying) pauseGame();
-      else startGame();
-    } else if(e.key.toLowerCase() === 'm'){
-      toggleMute();
-    }
-  });
-  window.addEventListener('keyup', e => {
-    if(e.key === 'ArrowLeft' || e.key.toLowerCase() === 'a'){
-      leftPressed = false;
-    } else if(e.key === 'ArrowRight' || e.key.toLowerCase() === 'd'){
-      rightPressed = false;
-    }
-  });
-
-  // Mobile controls
-  leftBtn.addEventListener('touchstart', e => {
-    e.preventDefault();
-    if(!leftPressed){
-      leftPressed = true;
-      playSound(sounds.leftRight);
-    }
-  });
-  leftBtn.addEventListener('touchend', e => {
-    e.preventDefault();
-    leftPressed = false;
-  });
-  rightBtn.addEventListener('touchstart', e => {
-    e.preventDefault();
-    if(!rightPressed){
-      rightPressed = true;
-      playSound(sounds.leftRight);
-    }
-  });
-  rightBtn.addEventListener('touchend', e => {
-    e.preventDefault();
-    rightPressed = false;
-  });
-
-  playPauseBtn.addEventListener('click', () => {
-    if(gameOverFlag){
-      resetGame();
-      startGame();
-      requestAnimationFrame(gameLoop);
-    } else {
-      if(isPlaying) pauseGame();
-      else {
-        startGame();
-        requestAnimationFrame(gameLoop);
-      }
-    }
-  });
-
-  // Road drawing with lane dividers
-  function drawRoad(){
-    ctx.fillStyle = '#555';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    // Road edges
-    ctx.strokeStyle = 'white';
-    ctx.lineWidth = 6;
-    ctx.beginPath();
-    ctx.moveTo(10, 0);
-    ctx.lineTo(10, canvas.height);
-    ctx.moveTo(canvas.width - 10, 0);
-    ctx.lineTo(canvas.width - 10, canvas.height);
-    ctx.stroke();
-
-    // Lane dividers
-    ctx.strokeStyle = 'white';
-    ctx.lineWidth = 4;
-    ctx.setLineDash([30, 30]);
-    for(let i=1; i<lanesCount; i++){
-      let x = i * laneWidth;
-      ctx.beginPath();
-      ctx.moveTo(x, 0);
-      ctx.lineTo(x, canvas.height);
-      ctx.stroke();
-    }
-    ctx.setLineDash([]);
-  }
-
-  // Draw the player car with gradient, wheels, bounce effect, shield circle
-  function drawCar() {
-    let x = carX;
-    let y = carY + (carBounce > 0 ? Math.sin(carBounce/2) * 5 : 0);
-
-    let grad = ctx.createLinearGradient(x, y, x, y + carHeight);
-    grad.addColorStop(0, '#d32f2f');
-    grad.addColorStop(1, '#7b0000');
-    ctx.fillStyle = grad;
-    ctx.fillRect(x, y, carWidth, carHeight);
-
-    // Window
-    ctx.fillStyle = '#87ceeb';
-    ctx.fillRect(x + 10, y + 10, carWidth - 20, carHeight / 3);
-
-    // Wheels with rotation
-    ctx.fillStyle = 'black';
-    ctx.save();
-    ctx.translate(x + 15, y + carHeight - 20);
-    ctx.rotate(wheelRotation);
-    ctx.beginPath();
-    ctx.ellipse(0, 0, 8, 12, 0, 0, 2 * Math.PI);
-    ctx.fill();
-    ctx.restore();
-
-    ctx.save();
-    ctx.translate(x + carWidth - 15, y + carHeight - 20);
-    ctx.rotate(wheelRotation);
-    ctx.beginPath();
-    ctx.ellipse(0, 0, 8, 12, 0, 0, 2 * Math.PI);
-    ctx.fill();
-    ctx.restore();
-
-    if(shieldActive){
-      ctx.strokeStyle = 'cyan';
-      ctx.lineWidth = 5;
-      ctx.beginPath();
-      ctx.arc(x + carWidth/2, y + carHeight/2, carWidth, 0, 2*Math.PI);
-      ctx.stroke();
-    }
-  }
-
-  // Draw enemy cars
-  function drawEnemyCar(enemy) {
-    const x = lanesX[enemy.lane];
-    const y = enemy.y;
-
-    const grad = ctx.createLinearGradient(x, y, x, y + enemyHeight);
-    grad.addColorStop(0, '#303f9f');
-    grad.addColorStop(1, '#1a237e');
-    ctx.fillStyle = grad;
-    ctx.fillRect(x, y, enemyWidth, enemyHeight);
-
-    ctx.fillStyle = '#a9a9a9';
-    ctx.fillRect(x + 10, y + 10, enemyWidth - 20, enemyHeight / 3);
-
-    ctx.fillStyle = 'black';
-    ctx.beginPath();
-    ctx.ellipse(x + 15, y + enemyHeight - 20, 8, 12, 0, 0, 2 * Math.PI);
-    ctx.fill();
-
-    ctx.beginPath();
-    ctx.ellipse(x + enemyWidth - 15, y + enemyHeight - 20, 8, 12, 0, 0, 2 * Math.PI);
-    ctx.fill();
-  }
-
-  // Draw power-ups
-  function drawPowerUp(powerUp) {
-    const x = lanesX[powerUp.lane] + (carWidth - powerUpSize)/2;
-    const y = powerUp.y;
-
-    if(powerUp.type === 'shield'){
-      ctx.fillStyle = 'cyan';
-      ctx.beginPath();
-      ctx.arc(x + powerUpSize/2, y + powerUpSize/2, powerUpSize/2, 0, 2*Math.PI);
-      ctx.fill();
-      ctx.fillStyle = 'white';
-      ctx.font = 'bold 18px Arial';
-      ctx.fillText('S', x + powerUpSize/4, y + powerUpSize * 0.75);
-    } else if(powerUp.type === 'speed'){
-      ctx.fillStyle = 'orange';
-      ctx.beginPath();
-      ctx.arc(x + powerUpSize/2, y + powerUpSize/2, powerUpSize/2, 0, 2*Math.PI);
-      ctx.fill();
-      ctx.fillStyle = 'white';
-      ctx.font = 'bold 18px Arial';
-      ctx.fillText('⚡', x + powerUpSize/4, y + powerUpSize * 0.75);
-    }
-  }
-
-  // Update car lane smoothly
-  function updateCarPosition() {
-    if(currentLane < targetLane){
-      carX += 8;
-      if(carX > lanesX[targetLane]) {
-        carX = lanesX[targetLane];
-        currentLane = targetLane;
-      }
-    } else if(currentLane > targetLane){
-      carX -= 8;
-      if(carX < lanesX[targetLane]) {
-        carX = lanesX[targetLane];
-        currentLane = targetLane;
-      }
-    }
-  }
-
-  function spawnEnemyCar(){
-    const lane = Math.floor(Math.random() * lanesCount);
-    enemyCars.push({lane: lane, y: -enemyHeight});
-  }
-
-  function spawnPowerUp(){
-    const lane = Math.floor(Math.random() * lanesCount);
-    const type = Math.random() < 0.5 ? 'shield' : 'speed';
-    powerUps.push({lane: lane, y: -powerUpSize, type: type});
-  }
-
-  function drawScore(){
-    scoreEl.textContent = `Score: ${score}`;
-    highScoreEl.textContent = `High Score: ${highScore}`;
-  }
-
-  function gameOver(){
-    gameOverFlag = true;
-    isPlaying = false;
-    playPauseBtn.textContent = 'Retry';
-    gameOverMessage.style.display = 'block';
-    pauseOverlay.style.display = 'none';
-    sounds.backgroundMusic.pause();
-    playSound(sounds.gameOver);
-  }
-
-  function resetGame(){
-    enemyCars = [];
-    powerUps = [];
-    score = 0;
-    scoreMultiplier = 1;
-    enemySpeed = 1.5;
-    framesElapsed = 0;
-    shieldActive = false;
-    shieldTimer = 0;
-    speedBoostActive = false;
-    speedBoostTimer = 0;
-    gameOverFlag = false;
-    isPlaying = false;
-    currentLane = 1;
-    targetLane = 1;
-    carX = lanesX[currentLane];
-    gameOverMessage.style.display = 'none';
-    pauseOverlay.style.display = 'none';
-    levelUpMessage.style.display = 'none';
-    playPauseBtn.textContent = 'Play';
-    drawScore();
-  }
-
-  function startGame(){
-    if(gameOverFlag){
-      resetGame();
-    }
-    isPlaying = true;
-    paused = false;
-    playPauseBtn.textContent = 'Pause';
-    gameOverMessage.style.display = 'none';
-    pauseOverlay.style.display = 'none';
-    levelUpMessage.style.display = 'none';
-    playSound(sounds.gameStart);
-    if(!muted) sounds.backgroundMusic.play();
-  }
-
-  function pauseGame(){
-    paused = true;
-    isPlaying = false;
-    pauseOverlay.style.display = 'block';
-    playPauseBtn.textContent = 'Play';
-    sounds.backgroundMusic.pause();
-  }
-
-  function levelUp(){
-    enemySpeed += 0.4;
-    if(scoreMultiplier < maxMultiplier) scoreMultiplier++;
-    levelUpMessage.style.display = 'block';
-    setTimeout(() => {levelUpMessage.style.display = 'none';}, 1600);
-    playSound(sounds.powerUp);
-  }
-
-  // Main game loop
-  function gameLoop(){
-    if(!isPlaying){
-      requestAnimationFrame(gameLoop);
-      return;
-    }
-    framesElapsed++;
-
-    if(framesElapsed % 90 === 0){
-      spawnEnemyCar();
-    }
-    if(framesElapsed % 450 === 0){
-      spawnPowerUp();
-    }
-
-    drawRoad();
-
-    updateCarPosition();
-    drawCar();
-
-    for(let i = enemyCars.length - 1; i >= 0; i--){
-      const enemy = enemyCars[i];
-      enemy.y += enemySpeed * (speedBoostActive ? 1.8 : 1);
-
-      if(enemy.y > canvas.height){
-        enemyCars.splice(i,1);
-        score += 1 * scoreMultiplier;
-        if(score > highScore){
-          highScore = score;
-          try {
-            localStorage.setItem('carGameHighScore', highScore);
-          } catch {}
-        }
-        drawScore();
-        if(score % 10 === 0 && score > 0) levelUp();
-      } else {
-        drawEnemyCar(enemy);
-
-        if(enemy.lane === currentLane &&
-           enemy.y + enemyHeight > carY &&
-           enemy.y < carY + carHeight) {
-          if(shieldActive){
-            shieldActive = false;
-            shieldTimer = 0;
-            enemyCars.splice(i,1);
-            playSound(sounds.shieldOn);
-          } else {
-            gameOver();
-          }
-        }
-      }
-    }
-
-    for(let i = powerUps.length - 1; i >= 0; i--){
-      const pu = powerUps[i];
-      pu.y += enemySpeed;
-
-      if(pu.y > canvas.height){
-        powerUps.splice(i,1);
-      } else {
-        drawPowerUp(pu);
-        if(pu.lane === currentLane &&
-           pu.y + powerUpSize > carY &&
-           pu.y < carY + carHeight) {
-          if(pu.type === 'shield'){
-            shieldActive = true;
-            shieldTimer = 600;
-          } else if(pu.type === 'speed'){
-            speedBoostActive = true;
-            speedBoostTimer = 600;
-          }
-          powerUps.splice(i,1);
-          playSound(sounds.powerUp);
-        }
-      }
-    }
-
-    if(shieldActive){
-      shieldTimer--;
-      if(shieldTimer <= 0){
-        shieldActive = false;
-      }
-    }
-    if(speedBoostActive){
-      speedBoostTimer--;
-      if(speedBoostTimer <= 0){
-        speedBoostActive = false;
-      }
-    }
-
-    if(leftPressed){
-      if(targetLane > 0){
-        targetLane--;
-        leftPressed = false;
-        playSound(sounds.leftRight);
-      }
-    }
-    if(rightPressed){
-      if(targetLane < lanesCount - 1){
-        targetLane++;
-        rightPressed = false;
-        playSound(sounds.leftRight);
-      }
-    }
-
-    wheelRotation += 0.3 * (speedBoostActive ? 1.5 : 1);
-    carBounce += 0.15;
-
-    requestAnimationFrame(gameLoop);
-  }
-
-  resetGame();
-</script>
-
+  <h1>AuraNest Admin Panel</h1>
+  <button id="loginBtn">Login with Google</button>
+  <button id="logoutBtn" style="display:none;">Logout</button>
+  <div id="status"></div>
 </body>
 </html>
