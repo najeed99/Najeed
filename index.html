@@ -3,14 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HomeDecor - Premium Home Furnishings</title>
+    <title>AURANest - Bangladeshi Home Decor Marketplace</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         /* Global Styles */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Arial', sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             transition: all 0.3s ease;
         }
         
@@ -26,7 +27,18 @@
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 0 20px;
+            padding: 0 15px;
+        }
+        
+        /* Bangla Font Support */
+        .bangla {
+            font-family: 'SolaimanLipi', 'Siyam Rupali', Arial, sans-serif;
+        }
+        
+        /* Currency */
+        .price::before {
+            content: '৳';
+            margin-right: 2px;
         }
         
         /* Dark Mode Styles */
@@ -38,13 +50,16 @@
         body.dark-mode header,
         body.dark-mode .product-card,
         body.dark-mode .category-item,
-        body.dark-mode .filters-sidebar {
+        body.dark-mode .filters-sidebar,
+        body.dark-mode .review-card {
             background-color: #2d2d2d;
             color: #f0f0f0;
+            border-color: #444;
         }
         
         body.dark-mode .nav-links a,
-        body.dark-mode .footer-column ul li a {
+        body.dark-mode .footer-column ul li a,
+        body.dark-mode .review-author {
             color: #bdc3c7;
         }
         
@@ -66,6 +81,11 @@
             background-color: #2d2d2d;
         }
         
+        body.dark-mode .login-container {
+            background-color: #2d2d2d;
+            border-color: #444;
+        }
+        
         /* Header */
         header {
             background-color: #fff;
@@ -79,16 +99,27 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 20px 0;
+            padding: 15px 0;
         }
         
         .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo img {
+            height: 50px;
+            width: auto;
+        }
+        
+        .logo span {
             font-size: 24px;
             font-weight: bold;
             color: #2c3e50;
         }
         
-        body.dark-mode .logo {
+        body.dark-mode .logo span {
             color: #f0f0f0;
         }
         
@@ -99,19 +130,67 @@
         }
         
         .nav-links li {
-            margin-left: 20px;
+            margin-left: 15px;
         }
         
         .nav-links a {
             text-decoration: none;
             color: #333;
             font-weight: 500;
+            font-size: 15px;
+        }
+        
+        .mobile-menu-btn {
+            display: none;
+            font-size: 24px;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+        
+        /* Mobile Menu */
+        .mobile-menu {
+            position: fixed;
+            top: 70px;
+            left: 0;
+            width: 100%;
+            background: white;
+            box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+            z-index: 999;
+            display: none;
+            padding: 20px;
+        }
+        
+        body.dark-mode .mobile-menu {
+            background-color: #2d2d2d;
+        }
+        
+        .mobile-menu.active {
+            display: block;
+        }
+        
+        .mobile-menu ul {
+            list-style: none;
+        }
+        
+        .mobile-menu ul li {
+            margin-bottom: 15px;
+        }
+        
+        .mobile-menu ul li a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        body.dark-mode .mobile-menu ul li a {
+            color: #f0f0f0;
         }
         
         /* Cart Icon */
         .cart-icon {
             position: relative;
-            font-size: 24px;
+            font-size: 22px;
             cursor: pointer;
             margin-left: 15px;
         }
@@ -127,13 +206,76 @@
             font-size: 12px;
         }
         
+        /* User Profile */
+        .user-profile {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .user-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: #3498db;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-left: 15px;
+        }
+        
+        .user-dropdown {
+            position: absolute;
+            top: 45px;
+            right: 0;
+            background: white;
+            border-radius: 5px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+            padding: 10px;
+            width: 200px;
+            display: none;
+            z-index: 100;
+        }
+        
+        body.dark-mode .user-dropdown {
+            background-color: #2d2d2d;
+        }
+        
+        .user-profile:hover .user-dropdown {
+            display: block;
+        }
+        
+        .user-dropdown a {
+            display: block;
+            padding: 8px 10px;
+            color: #333;
+            text-decoration: none;
+            border-radius: 3px;
+        }
+        
+        .user-dropdown a:hover {
+            background: #f5f5f5;
+        }
+        
+        body.dark-mode .user-dropdown a {
+            color: #f0f0f0;
+        }
+        
+        body.dark-mode .user-dropdown a:hover {
+            background: #444;
+        }
+        
         /* Search Bar */
         .search-bar {
             padding: 10px 15px;
-            border-radius: 20px;
+            border-radius: 30px;
             border: 1px solid #ddd;
             width: 200px;
             outline: none;
+            font-size: 14px;
         }
         
         /* Hero Section */
@@ -141,12 +283,12 @@
             background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1556911220-bff31c812dba?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
             background-size: cover;
             background-position: center;
-            height: 80vh;
+            height: 70vh;
             display: flex;
             align-items: center;
             color: white;
             text-align: center;
-            padding-top: 80px;
+            padding-top: 70px;
         }
         
         .hero-content {
@@ -155,13 +297,13 @@
         }
         
         .hero h1 {
-            font-size: 48px;
-            margin-bottom: 20px;
+            font-size: 36px;
+            margin-bottom: 15px;
         }
         
         .hero p {
-            font-size: 20px;
-            margin-bottom: 30px;
+            font-size: 18px;
+            margin-bottom: 25px;
         }
         
         .btn {
@@ -175,6 +317,7 @@
             border: none;
             cursor: pointer;
             transition: all 0.3s;
+            font-size: 16px;
         }
         
         .btn:hover {
@@ -186,17 +329,19 @@
         .main-content {
             display: flex;
             margin-top: 40px;
+            flex-direction: column;
         }
         
         /* Filters Sidebar */
         .filters-sidebar {
-            width: 250px;
+            width: 100%;
             padding: 20px;
             background-color: white;
             border-radius: 10px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            margin-right: 30px;
+            margin-bottom: 30px;
             height: fit-content;
+            order: 2;
         }
         
         .filters-sidebar h3 {
@@ -223,16 +368,31 @@
         /* Products Section */
         .products {
             flex: 1;
+            order: 1;
         }
         
         .section-title {
             text-align: center;
-            margin-bottom: 50px;
+            margin-bottom: 30px;
         }
         
         .section-title h2 {
-            font-size: 36px;
+            font-size: 28px;
             color: #2c3e50;
+            position: relative;
+            display: inline-block;
+            padding-bottom: 10px;
+        }
+        
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: #e74c3c;
         }
         
         body.dark-mode .section-title h2 {
@@ -241,8 +401,8 @@
         
         .product-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 30px;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
         }
         
         .product-card {
@@ -252,18 +412,20 @@
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
             position: relative;
             transition: transform 0.3s;
+            border: 1px solid #eee;
         }
         
         body.dark-mode .product-card {
             box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            border-color: #444;
         }
         
         .product-card:hover {
-            transform: translateY(-10px);
+            transform: translateY(-5px);
         }
         
         .product-image {
-            height: 250px;
+            height: 200px;
             overflow: hidden;
             position: relative;
         }
@@ -281,12 +443,12 @@
         }
         
         .product-info {
-            padding: 20px;
+            padding: 15px;
             position: relative;
         }
         
         .product-info h3 {
-            font-size: 20px;
+            font-size: 18px;
             margin-bottom: 10px;
         }
         
@@ -294,7 +456,7 @@
             font-size: 18px;
             font-weight: bold;
             color: #e74c3c;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
         }
         
         .product-info .category {
@@ -308,7 +470,7 @@
             position: absolute;
             top: 15px;
             right: 15px;
-            font-size: 24px;
+            font-size: 22px;
             cursor: pointer;
             color: #ccc;
             z-index: 2;
@@ -342,6 +504,7 @@
             cursor: pointer;
             opacity: 0;
             transition: opacity 0.3s;
+            font-size: 14px;
         }
         
         .product-card:hover .quick-view-btn {
@@ -379,14 +542,15 @@
             z-index: 2000;
             justify-content: center;
             align-items: center;
+            padding: 20px;
         }
         
         .modal-content {
             background-color: white;
-            padding: 30px;
+            padding: 20px;
             border-radius: 10px;
             max-width: 800px;
-            width: 90%;
+            width: 100%;
             max-height: 90vh;
             overflow-y: auto;
             position: relative;
@@ -402,7 +566,8 @@
         
         .modal-product-details {
             display: flex;
-            gap: 30px;
+            flex-direction: column;
+            gap: 20px;
         }
         
         .modal-product-image {
@@ -418,52 +583,95 @@
             flex: 1;
         }
         
+        /* Reviews Section */
+        .reviews-section {
+            margin-top: 40px;
+        }
+        
+        .review-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .review-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .review-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #3498db;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 15px;
+        }
+        
+        .review-author {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .review-rating {
+            color: #f39c12;
+            margin-bottom: 5px;
+        }
+        
+        .review-date {
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+        
+        .review-body {
+            line-height: 1.6;
+        }
+        
+        .add-review {
+            margin-top: 30px;
+        }
+        
+        .rating-input {
+            display: flex;
+            margin-bottom: 15px;
+        }
+        
+        .rating-input i {
+            font-size: 24px;
+            color: #ddd;
+            cursor: pointer;
+            margin-right: 5px;
+        }
+        
+        .rating-input i.active {
+            color: #f39c12;
+        }
+        
+        .review-form textarea {
+            width: 100%;
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            margin-bottom: 15px;
+            min-height: 100px;
+        }
+        
         /* Recently Viewed */
         .recently-viewed {
-            margin-top: 80px;
+            margin-top: 50px;
         }
         
         .recently-viewed-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 20px;
-        }
-        
-        /* Categories Section */
-        .categories {
-            padding: 60px 0;
-            background-color: #f1f1f1;
-        }
-        
-        body.dark-mode .categories {
-            background-color: #252525;
-        }
-        
-        .category-list {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-        
-        .category-item {
-            background-color: white;
-            padding: 20px 30px;
-            border-radius: 8px;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-            text-align: center;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-        
-        body.dark-mode .category-item {
-            background-color: #2d2d2d;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.3);
-        }
-        
-        .category-item:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 15px;
         }
         
         /* Comparison Section */
@@ -474,12 +682,14 @@
             background: white;
             border-radius: 10px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow-x: auto;
         }
         
         .comparison-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
+            gap: 15px;
+            min-width: 600px;
         }
         
         .compare-btn {
@@ -524,11 +734,125 @@
             background: #f9f9f9;
         }
         
+        /* Login Modal */
+        .login-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .login-container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+        
+        .login-container h2 {
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+        
+        .login-options {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .login-option {
+            padding: 10px 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        .login-option.active {
+            border-color: #e74c3c;
+            color: #e74c3c;
+        }
+        
+        .login-form {
+            display: none;
+        }
+        
+        .login-form.active {
+            display: block;
+        }
+        
+        .login-form input {
+            width: 100%;
+            padding: 12px 15px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        
+        .login-form button {
+            width: 100%;
+            padding: 12px;
+            background: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .social-login {
+            margin-top: 20px;
+        }
+        
+        .social-login p {
+            margin-bottom: 15px;
+            color: #7f8c8d;
+        }
+        
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+        }
+        
+        .facebook {
+            background: #3b5998;
+        }
+        
+        .google {
+            background: #db4437;
+        }
+        
+        .phone {
+            background: #25D366;
+        }
+        
         /* Footer */
         footer {
             background-color: #2c3e50;
             color: white;
-            padding: 50px 0 20px;
+            padding: 40px 0 20px;
             position: absolute;
             bottom: 0;
             width: 100%;
@@ -538,7 +862,7 @@
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 30px;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
         }
         
         .footer-column h3 {
@@ -576,6 +900,28 @@
             color: white;
         }
         
+        .footer-contact p {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .footer-contact i {
+            margin-right: 10px;
+            color: #e74c3c;
+        }
+        
+        .social-icons-footer {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .social-icons-footer a {
+            color: white;
+            font-size: 20px;
+        }
+        
         .copyright {
             text-align: center;
             padding-top: 20px;
@@ -590,7 +936,7 @@
             bottom: 20px;
             right: 20px;
             cursor: pointer;
-            font-size: 24px;
+            font-size: 22px;
             z-index: 1000;
             background: rgba(255,255,255,0.2);
             width: 50px;
@@ -648,73 +994,99 @@
             border-top: 5px solid #e74c3c;
         }
         
-        /* Skeleton Loading */
-        @keyframes shimmer {
-            0% { background-position: -468px 0; }
-            100% { background-position: 468px 0; }
-        }
-        
-        .skeleton {
-            background: linear-gradient(to right, #eee 8%, #ddd 18%, #eee 33%);
-            background-size: 800px 104px;
-            animation: shimmer 1.5s infinite linear;
-            border-radius: 4px;
-        }
-        
-        .skeleton-image {
-            height: 250px;
-            width: 100%;
-        }
-        
-        .skeleton-text {
-            height: 20px;
-            width: 80%;
-            margin: 10px 0;
-        }
-        
-        .skeleton-button {
-            height: 40px;
-            width: 120px;
-            margin-top: 20px;
-        }
-        
         /* Responsive Design */
-        @media (max-width: 992px) {
+        @media (min-width: 768px) {
             .main-content {
-                flex-direction: column;
+                flex-direction: row;
             }
             
             .filters-sidebar {
-                width: 100%;
-                margin-right: 0;
-                margin-bottom: 30px;
+                width: 250px;
+                margin-right: 30px;
+                margin-bottom: 0;
+                order: 1;
+            }
+            
+            .products {
+                order: 2;
             }
             
             .modal-product-details {
-                flex-direction: column;
+                flex-direction: row;
+            }
+            
+            .hero h1 {
+                font-size: 48px;
+            }
+            
+            .hero p {
+                font-size: 20px;
             }
         }
         
-        @media (max-width: 768px) {
+        @media (max-width: 767px) {
             .nav-links {
                 display: none;
             }
             
-            .hero h1 {
-                font-size: 36px;
-            }
-            
-            .hero p {
-                font-size: 18px;
-            }
-            
-            .product-grid {
-                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            .mobile-menu-btn {
+                display: block;
             }
             
             .search-bar {
                 width: 150px;
-                margin-left: 10px;
+            }
+            
+            .hero {
+                height: 60vh;
+                padding-top: 70px;
+            }
+            
+            .hero h1 {
+                font-size: 28px;
+            }
+            
+            .hero p {
+                font-size: 16px;
+            }
+            
+            .comparison-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .logo img {
+                height: 40px;
+            }
+            
+            .logo span {
+                font-size: 20px;
+            }
+            
+            .search-bar {
+                width: 120px;
+                padding: 8px 12px;
+            }
+            
+            .cart-icon {
+                font-size: 20px;
+            }
+            
+            .hero {
+                height: 50vh;
+            }
+            
+            .product-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .recently-viewed-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -724,17 +1096,52 @@
     <header>
         <div class="container">
             <nav>
-                <div class="logo">HomeDecor</div>
+                <div class="logo">
+                    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgNTAwIDUwMCA1MDAiPjxzdHlsZT4udGV4dHtmb250LWZhbWlseTonQXJpYWwnO2ZvbnQtd2VpZ2h0OjcwMDtmb250LXNpemU6ODBweDtmaWxsOiNlNzRjM2M7fTwvc3R5bGU+PHRleHQgeD0iNTAiIHk9IjI4MCIgY2xhc3M9InRleHQiPkFVUkE8L3RleHQ+PHRleHQgeD0iNTAiIHk9IjM1MCIgY2xhc3M9InRleHQiPk5lc3Q8L3RleHQ+PC9zdmc+" alt="AURANest Logo">
+                    <span>AURANest</span>
+                </div>
+                
                 <ul class="nav-links">
-                    <li><a href="#">Home</a></li>
-                    <li><a href="#">Shop</a></li>
-                    <li><a href="#">Categories</a></li>
-                    <li><a href="#">About</a></li>
-                    <li><a href="#">Contact</a></li>
-                    <li><input type="text" id="search" placeholder="Search products..." class="search-bar"></li>
-                    <li><div class="cart-icon">🛒 <span class="cart-count">0</span></div></li>
+                    <li><a href="#" class="bangla">হোম</a></li>
+                    <li><a href="#" class="bangla">শপ</a></li>
+                    <li><a href="#" class="bangla">ক্যাটাগরি</a></li>
+                    <li><a href="#" class="bangla">আমাদের সম্পর্কে</a></li>
+                    <li><a href="#" class="bangla">যোগাযোগ</a></li>
+                    <li><input type="text" id="search" placeholder="পণ্য খুঁজুন..." class="search-bar bangla"></li>
+                    <li><div class="cart-icon">🛒 <span class="cart-count">০</span></div></li>
+                    <li>
+                        <div class="user-profile">
+                            <div class="user-avatar">U</div>
+                            <div class="user-dropdown">
+                                <a href="#" id="loginBtn" class="bangla">লগইন</a>
+                                <a href="#" class="bangla">আমার অর্ডার</a>
+                                <a href="#" class="bangla">উইশলিস্ট</a>
+                                <a href="#" class="bangla">অ্যাকাউন্ট সেটিংস</a>
+                                <a href="#" class="bangla">লগআউট</a>
+                            </div>
+                        </div>
+                    </li>
                 </ul>
+                
+                <button class="mobile-menu-btn">☰</button>
             </nav>
+        </div>
+        
+        <!-- Mobile Menu -->
+        <div class="mobile-menu" id="mobileMenu">
+            <ul>
+                <li><a href="#" class="bangla">হোম</a></li>
+                <li><a href="#" class="bangla">শপ</a></li>
+                <li><a href="#" class="bangla">ক্যাটাগরি</a></li>
+                <li><a href="#" class="bangla">আমাদের সম্পর্কে</a></li>
+                <li><a href="#" class="bangla">যোগাযোগ</a></li>
+                <li><a href="#" id="mobileLoginBtn" class="bangla">লগইন</a></li>
+                <li><a href="#" class="bangla">আমার অর্ডার</a></li>
+                <li><a href="#" class="bangla">উইশলিস্ট</a></li>
+                <li>
+                    <div class="cart-icon">🛒 <span class="cart-count">০</span></div>
+                </li>
+            </ul>
         </div>
     </header>
 
@@ -742,9 +1149,9 @@
     <section class="hero">
         <div class="container">
             <div class="hero-content">
-                <h1>Give your space a personal touch</h1>
-                <p>Pick and purchase any style and design to your taste. Available for worldwide shipping.</p>
-                <a href="#" class="btn">Browse Now</a>
+                <h1 class="bangla">আপনার বাসাকে করুন আরও সুন্দর</h1>
+                <p class="bangla">আপনার পছন্দ অনুযায়ী স্টাইল এবং ডিজাইন বাছাই করুন। সমস্ত বাংলাদেশে ডেলিভারি উপলব্ধ।</p>
+                <a href="#" class="btn bangla">এখনই ব্রাউজ করুন</a>
             </div>
         </div>
     </section>
@@ -753,29 +1160,29 @@
     <div class="container main-content">
         <!-- Filters Sidebar -->
         <div class="filters-sidebar">
-            <h3>Filters</h3>
+            <h3 class="bangla">ফিল্টার</h3>
             
             <div class="price-range">
-                <h4>Price Range</h4>
-                <input type="range" min="0" max="1000" value="500" id="priceFilter">
-                <span>Max: $<span id="priceValue">500</span></span>
+                <h4 class="bangla">দামের রেঞ্জ</h4>
+                <input type="range" min="0" max="100000" value="50000" id="priceFilter">
+                <span class="bangla">সর্বোচ্চ: ৳<span id="priceValue">50,000</span></span>
             </div>
             
             <div class="category-filter">
-                <h4>Categories</h4>
-                <label><input type="checkbox" name="category" value="furniture" checked> Furniture</label>
-                <label><input type="checkbox" name="category" value="decor" checked> Decor</label>
-                <label><input type="checkbox" name="category" value="plants" checked> Plants</label>
-                <label><input type="checkbox" name="category" value="accessories" checked> Accessories</label>
+                <h4 class="bangla">ক্যাটাগরি</h4>
+                <label><input type="checkbox" name="category" value="furniture" checked> <span class="bangla">ফার্নিচার</span></label>
+                <label><input type="checkbox" name="category" value="decor" checked> <span class="bangla">ডেকোর</span></label>
+                <label><input type="checkbox" name="category" value="plants" checked> <span class="bangla">গাছ</span></label>
+                <label><input type="checkbox" name="category" value="accessories" checked> <span class="bangla">অ্যাকসেসরিজ</span></label>
             </div>
             
-            <button class="btn" id="applyFilters" style="width: 100%; margin-top: 20px;">Apply Filters</button>
+            <button class="btn bangla" id="applyFilters" style="width: 100%; margin-top: 20px;">ফিল্টার প্রয়োগ করুন</button>
         </div>
         
         <!-- Products Section -->
         <div class="products">
             <div class="section-title">
-                <h2>Featured Products</h2>
+                <h2 class="bangla">ফিচার্ড পণ্য</h2>
             </div>
             
             <div class="loader" id="loader"></div>
@@ -786,15 +1193,77 @@
             
             <!-- Comparison Section -->
             <div class="comparison-section" id="comparisonSection">
-                <h3>Compare Products</h3>
+                <h3 class="bangla">পণ্য তুলনা</h3>
                 <div class="comparison-grid" id="comparisonGrid"></div>
-                <button class="btn compare-btn" id="clearComparison">Clear Comparison</button>
+                <button class="btn compare-btn bangla" id="clearComparison">তুলনা মুছুন</button>
+            </div>
+            
+            <!-- Reviews Section -->
+            <div class="reviews-section">
+                <div class="section-title">
+                    <h2 class="bangla">গ্রাহকদের রিভিউ</h2>
+                </div>
+                
+                <div class="review-card">
+                    <div class="review-header">
+                        <div class="review-avatar">এ</div>
+                        <div>
+                            <div class="review-author bangla">আনিকা ইসলাম</div>
+                            <div class="review-rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <div class="review-date">10 June, 2023</div>
+                        </div>
+                    </div>
+                    <div class="review-body bangla">
+                        চেয়ারের কোয়ালিটি খুব ভালো। ডেলিভারি সময়মতো পেয়েছি। সাপোর্টও ভালো দিয়েছে। সবমিলিয়ে ভালো অভিজ্ঞতা হয়েছে।
+                    </div>
+                </div>
+                
+                <div class="review-card">
+                    <div class="review-header">
+                        <div class="review-avatar">র</div>
+                        <div>
+                            <div class="review-author bangla">রাফিদ হাসান</div>
+                            <div class="review-rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="far fa-star"></i>
+                            </div>
+                            <div class="review-date">25 May, 2023</div>
+                        </div>
+                    </div>
+                    <div class="review-body bangla">
+                        পণ্যটি দেখতে ঠিকই আছে কিন্তু প্রাইস একটু বেশি মনে হয়েছে। ডেলিভারি চার্জও বেশি ছিল। তবে কোয়ালিটি ভালো।
+                    </div>
+                </div>
+                
+                <div class="add-review">
+                    <h3 class="bangla">রিভিউ লিখুন</h3>
+                    <div class="rating-input">
+                        <i class="far fa-star" data-rating="1"></i>
+                        <i class="far fa-star" data-rating="2"></i>
+                        <i class="far fa-star" data-rating="3"></i>
+                        <i class="far fa-star" data-rating="4"></i>
+                        <i class="far fa-star" data-rating="5"></i>
+                    </div>
+                    <form class="review-form">
+                        <textarea placeholder="আপনার রিভিউ লিখুন..." class="bangla"></textarea>
+                        <button type="submit" class="btn bangla">সাবমিট করুন</button>
+                    </form>
+                </div>
             </div>
             
             <!-- Recently Viewed -->
             <div class="recently-viewed">
                 <div class="section-title">
-                    <h2>Recently Viewed</h2>
+                    <h2 class="bangla">সম্প্রতি দেখা</h2>
                 </div>
                 <div class="recently-viewed-grid" id="recentlyViewed"></div>
             </div>
@@ -805,20 +1274,20 @@
     <section class="categories">
         <div class="container">
             <div class="section-title">
-                <h2>Shop by Category</h2>
+                <h2 class="bangla">ক্যাটাগরি অনুযায়ী ব্রাউজ করুন</h2>
             </div>
             <div class="category-list">
                 <div class="category-item">
-                    <h3>Furniture</h3>
+                    <h3 class="bangla">ফার্নিচার</h3>
                 </div>
                 <div class="category-item">
-                    <h3>Home Decorations</h3>
+                    <h3 class="bangla">ঘরের সাজসজ্জা</h3>
                 </div>
                 <div class="category-item">
-                    <h3>Plant Decorations</h3>
+                    <h3 class="bangla">গাছের সাজসজ্জা</h3>
                 </div>
                 <div class="category-item">
-                    <h3>Accessories</h3>
+                    <h3 class="bangla">অ্যাকসেসরিজ</h3>
                 </div>
             </div>
         </div>
@@ -838,44 +1307,46 @@
         <div class="container">
             <div class="footer-content">
                 <div class="footer-column">
-                    <h3>Shop</h3>
+                    <h3 class="bangla">শপ</h3>
                     <ul>
-                        <li><a href="#">All Products</a></li>
-                        <li><a href="#">Featured</a></li>
-                        <li><a href="#">New Arrivals</a></li>
-                        <li><a href="#">Sale Items</a></li>
+                        <li><a href="#" class="bangla">সব পণ্য</a></li>
+                        <li><a href="#" class="bangla">ফিচার্ড</a></li>
+                        <li><a href="#" class="bangla">নতুন পণ্য</a></li>
+                        <li><a href="#" class="bangla">ডিসকাউন্ট পণ্য</a></li>
                     </ul>
                 </div>
                 <div class="footer-column">
-                    <h3>About</h3>
+                    <h3 class="bangla">আমাদের সম্পর্কে</h3>
                     <ul>
-                        <li><a href="#">Our Story</a></li>
-                        <li><a href="#">Designers</a></li>
-                        <li><a href="#">Sustainability</a></li>
-                        <li><a href="#">Press</a></li>
+                        <li><a href="#" class="bangla">আমাদের গল্প</a></li>
+                        <li><a href="#" class="bangla">ডিজাইনার</a></li>
+                        <li><a href="#" class="bangla">সাসটেইনেবিলিটি</a></li>
+                        <li><a href="#" class="bangla">প্রেস</a></li>
                     </ul>
                 </div>
                 <div class="footer-column">
-                    <h3>Customer Care</h3>
+                    <h3 class="bangla">গ্রাহক সেবা</h3>
                     <ul>
-                        <li><a href="#">Contact Us</a></li>
-                        <li><a href="#">FAQs</a></li>
-                        <li><a href="#">Shipping</a></li>
-                        <li><a href="#">Returns</a></li>
+                        <li><a href="#" class="bangla">যোগাযোগ</a></li>
+                        <li><a href="#" class="bangla">সাধারণ প্রশ্ন</a></li>
+                        <li><a href="#" class="bangla">ডেলিভারি</a></li>
+                        <li><a href="#" class="bangla">রিটার্ন</a></li>
                     </ul>
                 </div>
-                <div class="footer-column">
-                    <h3>Connect</h3>
-                    <ul>
-                        <li><a href="#">Instagram</a></li>
-                        <li><a href="#">Pinterest</a></li>
-                        <li><a href="#">Twitter</a></li>
-                        <li><a href="#">Facebook</a></li>
-                    </ul>
+                <div class="footer-column footer-contact">
+                    <h3 class="bangla">যোগাযোগ</h3>
+                    <p><i class="fas fa-map-marker-alt"></i> <span class="bangla">১২৩ গুলশান এভিনিউ, ঢাকা</span></p>
+                    <p><i class="fas fa-phone"></i> <span>+৮৮০ ১৭১২ ৩৪৫৬৭৮</span></p>
+                    <p><i class="fas fa-envelope"></i> <span>info@auranest.com</span></p>
+                    <div class="social-icons-footer">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-whatsapp"></i></a>
+                    </div>
                 </div>
             </div>
             <div class="copyright">
-                <p>&copy; 2023 HomeDecor. All rights reserved.</p>
+                <p class="bangla">&copy; ২০২৩ অরানেস্ট। সকল স্বত্ব সংরক্ষিত।</p>
             </div>
         </div>
     </footer>
@@ -889,11 +1360,75 @@
                     <img src="" alt="" id="modalProductImage">
                 </div>
                 <div class="modal-product-info">
-                    <h3 id="modalProductName"></h3>
+                    <h3 id="modalProductName" class="bangla"></h3>
                     <div class="price" id="modalProductPrice"></div>
-                    <p id="modalProductDescription"></p>
-                    <button class="btn add-to-cart" id="modalAddToCart">Add to Cart</button>
-                    <button class="btn" style="background: #3498db; margin-left: 10px;" id="addToCompare">Compare</button>
+                    <p id="modalProductDescription" class="bangla"></p>
+                    <div class="stock-indicator bangla" id="modalProductStock"></div>
+                    <button class="btn add-to-cart bangla" id="modalAddToCart">কার্টে যোগ করুন</button>
+                    <button class="btn" style="background: #3498db; margin-left: 10px;" id="addToCompare" class="bangla">তুলনা করুন</button>
+                    
+                    <div class="reviews-section" style="margin-top: 20px;">
+                        <h4 class="bangla">রিভিউ</h4>
+                        <div class="review-card">
+                            <div class="review-header">
+                                <div class="review-avatar">স</div>
+                                <div>
+                                    <div class="review-author bangla">সাকিব আহমেদ</div>
+                                    <div class="review-rating">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="far fa-star"></i>
+                                    </div>
+                                    <div class="review-date">15 May, 2023</div>
+                                </div>
+                            </div>
+                            <div class="review-body bangla">
+                                পণ্যটি দেখতে খুব সুন্দর। কোয়ালিটি ভালো, তবে দাম একটু বেশি মনে হয়েছে।
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div class="login-modal" id="loginModal">
+        <div class="login-container">
+            <h2 class="bangla">লগইন / রেজিস্টার</h2>
+            
+            <div class="login-options">
+                <div class="login-option active" data-tab="email">ইমেইল</div>
+                <div class="login-option" data-tab="phone">ফোন</div>
+            </div>
+            
+            <div class="login-form active" id="emailLogin">
+                <input type="email" placeholder="আপনার ইমেইল" class="bangla">
+                <input type="password" placeholder="পাসওয়ার্ড" class="bangla">
+                <button class="bangla">লগইন করুন</button>
+                <p class="bangla" style="margin-top: 15px;">অ্যাকাউন্ট নেই? <a href="#" style="color: #e74c3c;">রেজিস্টার করুন</a></p>
+            </div>
+            
+            <div class="login-form" id="phoneLogin">
+                <input type="tel" placeholder="আপনার ফোন নম্বর" class="bangla">
+                <button class="bangla">OTP পাঠান</button>
+                <p class="bangla" style="margin-top: 15px;">আমরা আপনাকে একটি OTP কোড পাঠাবো</p>
+            </div>
+            
+            <div class="social-login">
+                <p class="bangla">বা সোশ্যাল মিডিয়া দিয়ে লগইন করুন</p>
+                <div class="social-icons">
+                    <div class="social-icon facebook">
+                        <i class="fab fa-facebook-f"></i>
+                    </div>
+                    <div class="social-icon google">
+                        <i class="fab fa-google"></i>
+                    </div>
+                    <div class="social-icon phone">
+                        <i class="fas fa-phone"></i>
+                    </div>
                 </div>
             </div>
         </div>
@@ -906,61 +1441,87 @@
     <button class="back-to-top" id="backToTop">↑</button>
 
     <script>
-        // Sample Product Data
+        // Sample Product Data with Bangladeshi Prices
         const products = [
             {
                 id: 1,
-                name: "Write Chair",
-                price: 150,
+                name: "রাইট চেয়ার",
+                price: 12500,
                 category: "furniture",
                 image: "https://images.unsplash.com/photo-1519947486511-46149fa0a254?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80",
-                description: "Ergonomic writing chair with premium leather upholstery and adjustable height.",
-                stock: 3
+                description: "আরামদায়ক লেখার চেয়ার প্রিমিয়াম লেদার দিয়ে তৈরি এবং উচ্চতা সমন্বয়যোগ্য।",
+                stock: 3,
+                reviews: [
+                    {
+                        author: "আনিকা ইসলাম",
+                        rating: 5,
+                        date: "10 June, 2023",
+                        comment: "চেয়ারের কোয়ালিটি খুব ভালো। ডেলিভারি সময়মতো পেয়েছি। সাপোর্টও ভালো দিয়েছে। সবমিলিয়ে ভালো অভিজ্ঞতা হয়েছে।"
+                    },
+                    {
+                        author: "সাকিব আহমেদ",
+                        rating: 4,
+                        date: "15 May, 2023",
+                        comment: "পণ্যটি দেখতে খুব সুন্দর। কোয়ালিটি ভালো, তবে দাম একটু বেশি মনে হয়েছে।"
+                    }
+                ]
             },
             {
                 id: 2,
-                name: "Modern Sofa",
-                price: 499,
+                name: "মডার্ন সোফা",
+                price: 42500,
                 category: "furniture",
                 image: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
-                description: "Contemporary 3-seater sofa with clean lines and comfortable cushions.",
-                stock: 10
+                description: "আধুনিক ৩-সিটের সোফা পরিষ্কার লাইন এবং আরামদায়ক কুশন সহ।",
+                stock: 10,
+                reviews: [
+                    {
+                        author: "রাফিদ হাসান",
+                        rating: 4,
+                        date: "25 May, 2023",
+                        comment: "সোফাটি দেখতে খুব সুন্দর এবং আরামদায়ক। তবে ডেলিভারি একটু দেরিতে পেয়েছি।"
+                    }
+                ]
             },
             {
                 id: 3,
-                name: "Ceramic Vase",
-                price: 45,
+                name: "সিরামিক ফুলদানি",
+                price: 3800,
                 category: "decor",
                 image: "https://images.unsplash.com/photo-1583845112203-454c7c1319e6?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80",
-                description: "Handcrafted ceramic vase with unique glaze pattern. Perfect for fresh flowers.",
-                stock: 15
+                description: "হস্তনির্মিত সিরামিক ফুলদানি অনন্য গ্লেজ প্যাটার্ন সহ। তাজা ফুলের জন্য উপযুক্ত।",
+                stock: 15,
+                reviews: []
             },
             {
                 id: 4,
-                name: "Wooden Coffee Table",
-                price: 199,
+                name: "কাঠের কফি টেবিল",
+                price: 16900,
                 category: "furniture",
-                image: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
-                description: "Solid oak coffee table with minimalist design and smooth finish.",
-                stock: 5
+                image: "https://images.unsplash.com/photo-1556228453-efd6c1ff04f6?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
+                description: "শক্ত ওক কাঠের কফি টেবিল মিনিমালিস্ট ডিজাইন এবং মসৃণ ফিনিশ সহ।",
+                stock: 5,
+                reviews: []
             },
             {
                 id: 5,
-                name: "Potted Fiddle Leaf Fig",
-                price: 65,
+                name: "ফিডল লিফ ফিগ গাছ",
+                price: 5500,
                 category: "plants",
                 image: "https://images.unsplash.com/photo-1485955900006-10f4d324d411?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
-                description: "Healthy fiddle leaf fig tree in a stylish ceramic pot. Height: 3ft.",
-                stock: 8
+                description: "সুস্থ ফিডল লিফ ফিগ গাছ স্টাইলিশ সিরামিক পটে। উচ্চতা: ৩ ফুট।",
+                stock: 8,
+                reviews: []
             },
             {
                 id: 6,
-                name: "Decorative Throw Pillow",
-                price: 35,
+                name: "ডেকোরেটিভ থ্রো পিলো",
+                price: 2950,
                 category: "accessories",
                 image: "https://images.unsplash.com/photo-1572635148818-ef6fd45eb394?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80",
-                description: "Soft cotton pillow with geometric pattern. 18x18 inches.",
-                stock: 20
+                description: "নরম কটনের পিলো জ্যামিতিক প্যাটার্ন সহ। আকার: ১৮x১৮ ইঞ্চি।",
+                stock: 20,
+                reviews: []
             }
         ];
 
@@ -981,12 +1542,21 @@
         const comparisonGrid = document.getElementById('comparisonGrid');
         const clearComparisonBtn = document.getElementById('clearComparison');
         const addToCompareBtn = document.getElementById('addToCompare');
+        const loginModal = document.getElementById('loginModal');
+        const loginBtn = document.getElementById('loginBtn');
+        const mobileLoginBtn = document.getElementById('mobileLoginBtn');
+        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const loginOptions = document.querySelectorAll('.login-option');
+        const loginForms = document.querySelectorAll('.login-form');
+        const ratingStars = document.querySelectorAll('.rating-input i');
 
         // State
         let cartCount = 0;
         let wishlistCount = 0;
         let recentlyViewed = JSON.parse(localStorage.getItem('recentlyViewed')) || [];
         let comparisonProducts = [];
+        let currentUser = null;
 
         // Initialize
         document.addEventListener('DOMContentLoaded', () => {
@@ -995,7 +1565,7 @@
             
             // Set up price filter
             priceFilter.addEventListener('input', () => {
-                priceValue.textContent = priceFilter.value;
+                priceValue.textContent = formatPrice(priceFilter.value);
             });
             
             // Check for dark mode preference
@@ -1006,7 +1576,15 @@
             
             // Load recently viewed
             displayRecentlyViewed();
+            
+            // Format initial price
+            priceValue.textContent = formatPrice(priceFilter.value);
         });
+
+        // Format price with commas for Bangladeshi Taka
+        function formatPrice(price) {
+            return Number(price).toLocaleString('en-BD');
+        }
 
         // Display Products
         function displayProducts(productsToDisplay) {
@@ -1016,31 +1594,35 @@
             
             // Simulate loading delay
             setTimeout(() => {
-                productsToDisplay.forEach(product => {
-                    const productCard = document.createElement('div');
-                    productCard.className = 'product-card';
-                    productCard.dataset.id = product.id;
-                    productCard.dataset.category = product.category;
-                    productCard.dataset.price = product.price;
-                    
-                    productCard.innerHTML = `
-                        <div class="product-image">
-                            <img src="${product.image}" alt="${product.name}">
-                            <button class="quick-view-btn" data-id="${product.id}">Quick View</button>
-                            ${product.stock <= 5 ? `<div class="stock-indicator">Only <span class="stock-count">${product.stock}</span> left!</div>` : ''}
-                        </div>
-                        <div class="product-info">
-                            <button class="wishlist-btn">❤</button>
-                            <h3>${product.name}</h3>
-                            <div class="price">$${product.price}</div>
-                            <div class="category">${product.category.charAt(0).toUpperCase() + product.category.slice(1)}</div>
-                            <button class="btn add-to-cart">Add to Cart</button>
-                            <button class="btn compare-product" style="background: #3498db; margin-top: 10px;">Compare</button>
-                        </div>
-                    `;
-                    
-                    productGrid.appendChild(productCard);
-                });
+                if (productsToDisplay.length === 0) {
+                    productGrid.innerHTML = '<p class="bangla" style="grid-column: 1/-1; text-align: center;">কোন পণ্য পাওয়া যায়নি</p>';
+                } else {
+                    productsToDisplay.forEach(product => {
+                        const productCard = document.createElement('div');
+                        productCard.className = 'product-card';
+                        productCard.dataset.id = product.id;
+                        productCard.dataset.category = product.category;
+                        productCard.dataset.price = product.price;
+                        
+                        productCard.innerHTML = `
+                            <div class="product-image">
+                                <img src="${product.image}" alt="${product.name}">
+                                <button class="quick-view-btn bangla" data-id="${product.id}">দ্রুত দেখুন</button>
+                                ${product.stock <= 5 ? `<div class="stock-indicator bangla">মাত্র <span class="stock-count">${product.stock}</span> টি অবশিষ্ট</div>` : ''}
+                            </div>
+                            <div class="product-info">
+                                <button class="wishlist-btn">❤</button>
+                                <h3 class="bangla">${product.name}</h3>
+                                <div class="price">${formatPrice(product.price)}</div>
+                                <div class="category bangla">${getCategoryName(product.category)}</div>
+                                <button class="btn add-to-cart bangla">কার্টে যোগ করুন</button>
+                                <button class="btn compare-product bangla" style="background: #3498db; margin-top: 10px;">তুলনা করুন</button>
+                            </div>
+                        `;
+                        
+                        productGrid.appendChild(productCard);
+                    });
+                }
                 
                 // Hide loading
                 loader.style.display = 'none';
@@ -1050,11 +1632,27 @@
             }, 800);
         }
 
+        // Get Bangla category name
+        function getCategoryName(category) {
+            const categories = {
+                'furniture': 'ফার্নিচার',
+                'decor': 'ঘরের সাজসজ্জা',
+                'plants': 'গাছ',
+                'accessories': 'অ্যাকসেসরিজ'
+            };
+            return categories[category] || category;
+        }
+
         // Setup Event Listeners
         function setupEventListeners() {
             // Add to Cart buttons
             document.querySelectorAll('.add-to-cart').forEach(button => {
                 button.addEventListener('click', (e) => {
+                    if (!currentUser) {
+                        showLoginModal();
+                        return;
+                    }
+                    
                     const productCard = e.target.closest('.product-card');
                     const productId = parseInt(productCard.dataset.id);
                     const product = products.find(p => p.id === productId);
@@ -1063,11 +1661,11 @@
                     document.querySelector('.cart-count').textContent = cartCount;
                     
                     // Animation feedback
-                    e.target.textContent = 'Added!';
+                    e.target.textContent = 'যোগ করা হয়েছে!';
                     e.target.style.backgroundColor = '#2ecc71';
                     
                     setTimeout(() => {
-                        e.target.textContent = 'Add to Cart';
+                        e.target.textContent = 'কার্টে যোগ করুন';
                         e.target.style.backgroundColor = '#e74c3c';
                     }, 1000);
                     
@@ -1079,6 +1677,11 @@
             // Wishlist buttons
             document.querySelectorAll('.wishlist-btn').forEach(button => {
                 button.addEventListener('click', (e) => {
+                    if (!currentUser) {
+                        showLoginModal();
+                        return;
+                    }
+                    
                     e.stopPropagation();
                     button.classList.toggle('active');
                     
@@ -1099,10 +1702,17 @@
                     // Show product in modal
                     document.getElementById('modalProductImage').src = product.image;
                     document.getElementById('modalProductName').textContent = product.name;
-                    document.getElementById('modalProductPrice').textContent = `$${product.price}`;
+                    document.getElementById('modalProductPrice').textContent = formatPrice(product.price);
                     document.getElementById('modalProductDescription').textContent = product.description;
                     document.getElementById('modalAddToCart').dataset.id = product.id;
                     addToCompareBtn.dataset.id = product.id;
+                    
+                    if (product.stock <= 5) {
+                        document.getElementById('modalProductStock').textContent = `মাত্র ${product.stock} টি অবশিষ্ট`;
+                        document.getElementById('modalProductStock').style.display = 'block';
+                    } else {
+                        document.getElementById('modalProductStock').style.display = 'none';
+                    }
                     
                     // Show modal
                     quickViewModal.style.display = 'flex';
@@ -1155,7 +1765,7 @@
             const filteredProducts = products.filter(product => 
                 product.name.toLowerCase().includes(searchTerm) ||
                 product.description.toLowerCase().includes(searchTerm) ||
-                product.category.toLowerCase().includes(searchTerm)
+                getCategoryName(product.category).toLowerCase().includes(searchTerm)
             );
             
             displayProducts(filteredProducts);
@@ -1198,8 +1808,8 @@
                             <img src="${product.image}" alt="${product.name}">
                         </div>
                         <div class="product-info">
-                            <h3>${product.name}</h3>
-                            <div class="price">$${product.price}</div>
+                            <h3 class="bangla">${product.name}</h3>
+                            <div class="price">${formatPrice(product.price)}</div>
                         </div>
                     `;
                     recentlyViewedGrid.appendChild(productCard);
@@ -1213,7 +1823,7 @@
             
             if (!comparisonProducts.some(p => p.id === productId)) {
                 if (comparisonProducts.length >= 3) {
-                    alert('You can compare up to 3 products at a time');
+                    alert('আপনি সর্বোচ্চ ৩টি পণ্য তুলনা করতে পারবেন');
                     return;
                 }
                 
@@ -1225,7 +1835,7 @@
                     comparisonSection.style.display = 'block';
                 }
             } else {
-                alert('This product is already in comparison');
+                alert('এই পণ্যটি ইতিমধ্যেই তুলনায় রয়েছে');
             }
         }
 
@@ -1240,12 +1850,12 @@
             // Create header row with product names
             const headerRow = document.createElement('div');
             headerRow.className = 'comparison-header';
-            headerRow.innerHTML = '<div class="comparison-label">Feature</div>';
+            headerRow.innerHTML = '<div class="comparison-label bangla">ফিচার</div>';
             
             comparisonProducts.forEach(product => {
                 headerRow.innerHTML += `
                     <div class="comparison-product">
-                        <h4>${product.name}</h4>
+                        <h4 class="bangla">${product.name}</h4>
                         <button class="remove-comparison" data-id="${product.id}">×</button>
                     </div>
                 `;
@@ -1254,22 +1864,19 @@
             comparisonGrid.appendChild(headerRow);
             
             // Add comparison rows
-            const features = ['Price', 'Category', 'Stock'];
+            const features = [
+                { name: 'দাম', key: 'price', format: v => `৳${formatPrice(v)}` },
+                { name: 'ক্যাটাগরি', key: 'category', format: v => getCategoryName(v) },
+                { name: 'স্টক', key: 'stock', format: v => v }
+            ];
             
             features.forEach(feature => {
                 const row = document.createElement('div');
                 row.className = 'comparison-row';
-                row.innerHTML = `<div class="comparison-label">${feature}</div>`;
+                row.innerHTML = `<div class="comparison-label bangla">${feature.name}</div>`;
                 
                 comparisonProducts.forEach(product => {
-                    let value;
-                    switch(feature) {
-                        case 'Price': value = `$${product.price}`; break;
-                        case 'Category': value = product.category.charAt(0).toUpperCase() + product.category.slice(1); break;
-                        case 'Stock': value = product.stock; break;
-                    }
-                    
-                    row.innerHTML += `<div class="comparison-value">${value}</div>`;
+                    row.innerHTML += `<div class="comparison-value">${feature.format(product[feature.key])}</div>`;
                 });
                 
                 comparisonGrid.appendChild(row);
@@ -1300,18 +1907,91 @@
 
         // Modal add to cart
         document.getElementById('modalAddToCart').addEventListener('click', () => {
+            if (!currentUser) {
+                showLoginModal();
+                return;
+            }
+            
             cartCount++;
             document.querySelector('.cart-count').textContent = cartCount;
             
             const button = document.getElementById('modalAddToCart');
-            button.textContent = 'Added!';
+            button.textContent = 'যোগ করা হয়েছে!';
             button.style.backgroundColor = '#2ecc71';
             
             setTimeout(() => {
-                button.textContent = 'Add to Cart';
+                button.textContent = 'কার্টে যোগ করুন';
                 button.style.backgroundColor = '#e74c3c';
                 quickViewModal.style.display = 'none';
             }, 1000);
+        });
+
+        // Login Modal
+        function showLoginModal() {
+            loginModal.style.display = 'flex';
+        }
+        
+        loginBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            showLoginModal();
+        });
+        
+        mobileLoginBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            showLoginModal();
+            mobileMenu.classList.remove('active');
+        });
+        
+        document.querySelector('.login-modal').addEventListener('click', (e) => {
+            if (e.target === loginModal) {
+                loginModal.style.display = 'none';
+            }
+        });
+        
+        // Login options
+        loginOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                loginOptions.forEach(opt => opt.classList.remove('active'));
+                option.classList.add('active');
+                
+                const tab = option.dataset.tab;
+                loginForms.forEach(form => form.classList.remove('active'));
+                document.getElementById(`${tab}Login`).classList.add('active');
+            });
+        });
+        
+        // Rating stars
+        ratingStars.forEach(star => {
+            star.addEventListener('click', () => {
+                const rating = parseInt(star.dataset.rating);
+                ratingStars.forEach((s, i) => {
+                    if (i < rating) {
+                        s.classList.remove('far');
+                        s.classList.add('fas');
+                    } else {
+                        s.classList.remove('fas');
+                        s.classList.add('far');
+                    }
+                });
+            });
+        });
+        
+        // Mobile menu
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('active');
+        });
+        
+        // Simulate login (for demo)
+        document.querySelectorAll('.social-icon').forEach(icon => {
+            icon.addEventListener('click', () => {
+                currentUser = {
+                    name: "ডেমো ব্যবহারকারী",
+                    initial: "ড"
+                };
+                document.querySelector('.user-avatar').textContent = currentUser.initial;
+                loginModal.style.display = 'none';
+                alert('লগইন সফল! আপনি এখন অর্ডার দিতে পারবেন।');
+            });
         });
     </script>
 </body>
