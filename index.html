@@ -994,6 +994,26 @@
             border-top: 5px solid #e74c3c;
         }
         
+        /* Language Toggle */
+        .language-toggle {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #3498db;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            border: none;
+            z-index: 999;
+        }
+        
         /* Responsive Design */
         @media (min-width: 768px) {
             .main-content {
@@ -1437,6 +1457,9 @@
     <!-- Dark Mode Toggle -->
     <div class="dark-mode-toggle" id="darkModeToggle">🌙</div>
 
+    <!-- Language Toggle -->
+    <div class="language-toggle" id="languageToggle">EN</div>
+
     <!-- Back to Top Button -->
     <button class="back-to-top" id="backToTop">↑</button>
 
@@ -1446,80 +1469,98 @@
             {
                 id: 1,
                 name: "রাইট চেয়ার",
+                name_en: "Writing Chair",
                 price: 12500,
                 category: "furniture",
                 image: "https://images.unsplash.com/photo-1519947486511-46149fa0a254?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80",
                 description: "আরামদায়ক লেখার চেয়ার প্রিমিয়াম লেদার দিয়ে তৈরি এবং উচ্চতা সমন্বয়যোগ্য।",
+                description_en: "Comfortable writing chair made with premium leather and height adjustable.",
                 stock: 3,
                 reviews: [
                     {
                         author: "আনিকা ইসলাম",
+                        author_en: "Anika Islam",
                         rating: 5,
                         date: "10 June, 2023",
-                        comment: "চেয়ারের কোয়ালিটি খুব ভালো। ডেলিভারি সময়মতো পেয়েছি। সাপোর্টও ভালো দিয়েছে। সবমিলিয়ে ভালো অভিজ্ঞতা হয়েছে।"
+                        comment: "চেয়ারের কোয়ালিটি খুব ভালো। ডেলিভারি সময়মতো পেয়েছি। সাপোর্টও ভালো দিয়েছে। সবমিলিয়ে ভালো অভিজ্ঞতা হয়েছে।",
+                        comment_en: "The chair quality is very good. Received delivery on time. Support was also good. Overall a good experience."
                     },
                     {
                         author: "সাকিব আহমেদ",
+                        author_en: "Sakib Ahmed",
                         rating: 4,
                         date: "15 May, 2023",
-                        comment: "পণ্যটি দেখতে খুব সুন্দর। কোয়ালিটি ভালো, তবে দাম একটু বেশি মনে হয়েছে।"
+                        comment: "পণ্যটি দেখতে খুব সুন্দর। কোয়ালিটি ভালো, তবে দাম একটু বেশি মনে হয়েছে।",
+                        comment_en: "The product looks very nice. Quality is good, but the price seems a bit high."
                     }
                 ]
             },
             {
                 id: 2,
                 name: "মডার্ন সোফা",
+                name_en: "Modern Sofa",
                 price: 42500,
                 category: "furniture",
                 image: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
                 description: "আধুনিক ৩-সিটের সোফা পরিষ্কার লাইন এবং আরামদায়ক কুশন সহ।",
+                description_en: "Modern 3-seater sofa with clean lines and comfortable cushions.",
                 stock: 10,
                 reviews: [
                     {
                         author: "রাফিদ হাসান",
+                        author_en: "Rafid Hasan",
                         rating: 4,
                         date: "25 May, 2023",
-                        comment: "সোফাটি দেখতে খুব সুন্দর এবং আরামদায়ক। তবে ডেলিভারি একটু দেরিতে পেয়েছি।"
+                        comment: "সোফাটি দেখতে খুব সুন্দর এবং আরামদায়ক। তবে ডেলিভারি একটু দেরিতে পেয়েছি।",
+                        comment_en: "The sofa looks very nice and comfortable. However, I received the delivery a bit late."
                     }
                 ]
             },
             {
                 id: 3,
                 name: "সিরামিক ফুলদানি",
+                name_en: "Ceramic Vase",
                 price: 3800,
                 category: "decor",
                 image: "https://images.unsplash.com/photo-1583845112203-454c7c1319e6?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80",
                 description: "হস্তনির্মিত সিরামিক ফুলদানি অনন্য গ্লেজ প্যাটার্ন সহ। তাজা ফুলের জন্য উপযুক্ত।",
+                description_en: "Handcrafted ceramic vase with unique glaze patterns. Suitable for fresh flowers.",
                 stock: 15,
                 reviews: []
             },
             {
                 id: 4,
                 name: "কাঠের কফি টেবিল",
+                name_en: "Wooden Coffee Table",
                 price: 16900,
                 category: "furniture",
                 image: "https://images.unsplash.com/photo-1556228453-efd6c1ff04f6?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
                 description: "শক্ত ওক কাঠের কফি টেবিল মিনিমালিস্ট ডিজাইন এবং মসৃণ ফিনিশ সহ।",
+                description_en: "Solid oak wooden coffee table with minimalist design and smooth finish.",
                 stock: 5,
                 reviews: []
             },
             {
                 id: 5,
                 name: "ফিডল লিফ ফিগ গাছ",
+                name_en: "Fiddle Leaf Fig Plant",
                 price: 5500,
                 category: "plants",
                 image: "https://images.unsplash.com/photo-1485955900006-10f4d324d411?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
                 description: "সুস্থ ফিডল লিফ ফিগ গাছ স্টাইলিশ সিরামিক পটে। উচ্চতা: ৩ ফুট।",
+                description_en: "Healthy fiddle leaf fig plant in stylish ceramic pot. Height: 3 feet.",
                 stock: 8,
                 reviews: []
             },
             {
                 id: 6,
                 name: "ডেকোরেটিভ থ্রো পিলো",
+                name_en: "Decorative Throw Pillow",
                 price: 2950,
                 category: "accessories",
                 image: "https://images.unsplash.com/photo-1572635148818-ef6fd45eb394?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80",
                 description: "নরম কটনের পিলো জ্যামিতিক প্যাটার্ন সহ। আকার: ১৮x১৮ ইঞ্চি।",
+                description_en: "Soft cotton pillow with geometric patterns. Size: 18x18 inches.",
                 stock: 20,
                 reviews: []
             }
@@ -1550,6 +1591,7 @@
         const loginOptions = document.querySelectorAll('.login-option');
         const loginForms = document.querySelectorAll('.login-form');
         const ratingStars = document.querySelectorAll('.rating-input i');
+        const languageToggle = document.getElementById('languageToggle');
 
         // State
         let cartCount = 0;
@@ -1557,6 +1599,7 @@
         let recentlyViewed = JSON.parse(localStorage.getItem('recentlyViewed')) || [];
         let comparisonProducts = [];
         let currentUser = null;
+        let isEnglish = false;
 
         // Initialize
         document.addEventListener('DOMContentLoaded', () => {
@@ -1572,6 +1615,11 @@
             if (localStorage.getItem('darkMode') === 'true') {
                 document.body.classList.add('dark-mode');
                 darkModeToggle.innerHTML = '☀️';
+            }
+            
+            // Check for language preference
+            if (localStorage.getItem('language') === 'en') {
+                toggleLanguage();
             }
             
             // Load recently viewed
@@ -1595,7 +1643,9 @@
             // Simulate loading delay
             setTimeout(() => {
                 if (productsToDisplay.length === 0) {
-                    productGrid.innerHTML = '<p class="bangla" style="grid-column: 1/-1; text-align: center;">কোন পণ্য পাওয়া যায়নি</p>';
+                    productGrid.innerHTML = isEnglish ? 
+                        '<p style="grid-column: 1/-1; text-align: center;">No products found</p>' : 
+                        '<p class="bangla" style="grid-column: 1/-1; text-align: center;">কোন পণ্য পাওয়া যায়নি</p>';
                 } else {
                     productsToDisplay.forEach(product => {
                         const productCard = document.createElement('div');
@@ -1606,17 +1656,26 @@
                         
                         productCard.innerHTML = `
                             <div class="product-image">
-                                <img src="${product.image}" alt="${product.name}">
-                                <button class="quick-view-btn bangla" data-id="${product.id}">দ্রুত দেখুন</button>
-                                ${product.stock <= 5 ? `<div class="stock-indicator bangla">মাত্র <span class="stock-count">${product.stock}</span> টি অবশিষ্ট</div>` : ''}
+                                <img src="${product.image}" alt="${isEnglish ? product.name_en : product.name}">
+                                <button class="quick-view-btn ${isEnglish ? '' : 'bangla'}" data-id="${product.id}">
+                                    ${isEnglish ? 'Quick View' : 'দ্রুত দেখুন'}
+                                </button>
+                                ${product.stock <= 5 ? `
+                                <div class="stock-indicator ${isEnglish ? '' : 'bangla'}">
+                                    ${isEnglish ? `Only <span class="stock-count">${product.stock}</span> left` : `মাত্র <span class="stock-count">${product.stock}</span> টি অবশিষ্ট`}
+                                </div>` : ''}
                             </div>
                             <div class="product-info">
                                 <button class="wishlist-btn">❤</button>
-                                <h3 class="bangla">${product.name}</h3>
+                                <h3 class="${isEnglish ? '' : 'bangla'}">${isEnglish ? product.name_en : product.name}</h3>
                                 <div class="price">${formatPrice(product.price)}</div>
-                                <div class="category bangla">${getCategoryName(product.category)}</div>
-                                <button class="btn add-to-cart bangla">কার্টে যোগ করুন</button>
-                                <button class="btn compare-product bangla" style="background: #3498db; margin-top: 10px;">তুলনা করুন</button>
+                                <div class="category ${isEnglish ? '' : 'bangla'}">${getCategoryName(product.category)}</div>
+                                <button class="btn add-to-cart ${isEnglish ? '' : 'bangla'}">
+                                    ${isEnglish ? 'Add to Cart' : 'কার্টে যোগ করুন'}
+                                </button>
+                                <button class="btn compare-product ${isEnglish ? '' : 'bangla'}" style="background: #3498db; margin-top: 10px;">
+                                    ${isEnglish ? 'Compare' : 'তুলনা করুন'}
+                                </button>
                             </div>
                         `;
                         
@@ -1632,13 +1691,13 @@
             }, 800);
         }
 
-        // Get Bangla category name
+        // Get category name
         function getCategoryName(category) {
             const categories = {
-                'furniture': 'ফার্নিচার',
-                'decor': 'ঘরের সাজসজ্জা',
-                'plants': 'গাছ',
-                'accessories': 'অ্যাকসেসরিজ'
+                'furniture': isEnglish ? 'Furniture' : 'ফার্নিচার',
+                'decor': isEnglish ? 'Home Decor' : 'ঘরের সাজসজ্জা',
+                'plants': isEnglish ? 'Plants' : 'গাছ',
+                'accessories': isEnglish ? 'Accessories' : 'অ্যাকসেসরিজ'
             };
             return categories[category] || category;
         }
@@ -1661,11 +1720,11 @@
                     document.querySelector('.cart-count').textContent = cartCount;
                     
                     // Animation feedback
-                    e.target.textContent = 'যোগ করা হয়েছে!';
+                    e.target.textContent = isEnglish ? 'Added!' : 'যোগ করা হয়েছে!';
                     e.target.style.backgroundColor = '#2ecc71';
                     
                     setTimeout(() => {
-                        e.target.textContent = 'কার্টে যোগ করুন';
+                        e.target.textContent = isEnglish ? 'Add to Cart' : 'কার্টে যোগ করুন';
                         e.target.style.backgroundColor = '#e74c3c';
                     }, 1000);
                     
@@ -1701,17 +1760,41 @@
                     
                     // Show product in modal
                     document.getElementById('modalProductImage').src = product.image;
-                    document.getElementById('modalProductName').textContent = product.name;
+                    document.getElementById('modalProductName').textContent = isEnglish ? product.name_en : product.name;
+                    document.getElementById('modalProductName').className = isEnglish ? '' : 'bangla';
                     document.getElementById('modalProductPrice').textContent = formatPrice(product.price);
-                    document.getElementById('modalProductDescription').textContent = product.description;
+                    document.getElementById('modalProductDescription').textContent = isEnglish ? product.description_en : product.description;
+                    document.getElementById('modalProductDescription').className = isEnglish ? '' : 'bangla';
                     document.getElementById('modalAddToCart').dataset.id = product.id;
                     addToCompareBtn.dataset.id = product.id;
                     
                     if (product.stock <= 5) {
-                        document.getElementById('modalProductStock').textContent = `মাত্র ${product.stock} টি অবশিষ্ট`;
+                        document.getElementById('modalProductStock').textContent = isEnglish ? 
+                            `Only ${product.stock} left` : `মাত্র ${product.stock} টি অবশিষ্ট`;
+                        document.getElementById('modalProductStock').className = isEnglish ? '' : 'bangla';
                         document.getElementById('modalProductStock').style.display = 'block';
                     } else {
                         document.getElementById('modalProductStock').style.display = 'none';
+                    }
+                    
+                    // Update modal buttons
+                    document.getElementById('modalAddToCart').textContent = isEnglish ? 'Add to Cart' : 'কার্টে যোগ করুন';
+                    document.getElementById('modalAddToCart').className = `btn add-to-cart ${isEnglish ? '' : 'bangla'}`;
+                    addToCompareBtn.textContent = isEnglish ? 'Compare' : 'তুলনা করুন';
+                    addToCompareBtn.className = isEnglish ? '' : 'bangla';
+                    
+                    // Update reviews in modal
+                    const reviewHeader = document.querySelector('.modal-content .review-header');
+                    if (reviewHeader) {
+                        const reviewAuthor = reviewHeader.querySelector('.review-author');
+                        const reviewBody = reviewHeader.nextElementSibling;
+                        
+                        if (product.reviews.length > 0) {
+                            reviewAuthor.textContent = isEnglish ? product.reviews[0].author_en : product.reviews[0].author;
+                            reviewAuthor.className = isEnglish ? 'review-author' : 'review-author bangla';
+                            reviewBody.textContent = isEnglish ? product.reviews[0].comment_en : product.reviews[0].comment;
+                            reviewBody.className = isEnglish ? 'review-body' : 'review-body bangla';
+                        }
                     }
                     
                     // Show modal
@@ -1750,6 +1833,200 @@
             localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
         });
 
+        // Language Toggle
+        languageToggle.addEventListener('click', toggleLanguage);
+
+        function toggleLanguage() {
+            isEnglish = !isEnglish;
+            localStorage.setItem('language', isEnglish ? 'en' : 'bn');
+            
+            // Update UI elements
+            languageToggle.textContent = isEnglish ? 'BN' : 'EN';
+            
+            // Update header
+            const navLinks = document.querySelectorAll('.nav-links a');
+            if (isEnglish) {
+                navLinks[0].textContent = 'Home';
+                navLinks[1].textContent = 'Shop';
+                navLinks[2].textContent = 'Categories';
+                navLinks[3].textContent = 'About Us';
+                navLinks[4].textContent = 'Contact';
+                searchInput.placeholder = 'Search products...';
+                navLinks[5].textContent = 'Login';
+                navLinks[6].textContent = 'My Orders';
+                navLinks[7].textContent = 'Wishlist';
+                navLinks[8].textContent = 'Account Settings';
+                navLinks[9].textContent = 'Logout';
+                
+                // Update mobile menu
+                const mobileLinks = document.querySelectorAll('.mobile-menu a');
+                mobileLinks[0].textContent = 'Home';
+                mobileLinks[1].textContent = 'Shop';
+                mobileLinks[2].textContent = 'Categories';
+                mobileLinks[3].textContent = 'About Us';
+                mobileLinks[4].textContent = 'Contact';
+                mobileLinks[5].textContent = 'Login';
+                mobileLinks[6].textContent = 'My Orders';
+                mobileLinks[7].textContent = 'Wishlist';
+                
+                // Update hero section
+                document.querySelector('.hero h1').textContent = 'Make Your Home More Beautiful';
+                document.querySelector('.hero p').textContent = 'Choose styles and designs according to your preference. Delivery available all over Bangladesh.';
+                document.querySelector('.hero .btn').textContent = 'Browse Now';
+                
+                // Update filters
+                document.querySelector('.filters-sidebar h3').textContent = 'Filters';
+                document.querySelector('.price-range h4').textContent = 'Price Range';
+                document.querySelector('.category-filter h4').textContent = 'Categories';
+                document.querySelector('#applyFilters').textContent = 'Apply Filters';
+                
+                // Update section titles
+                document.querySelectorAll('.section-title h2').forEach((title, index) => {
+                    if (index === 0) title.textContent = 'Featured Products';
+                    else if (index === 1) title.textContent = 'Customer Reviews';
+                    else if (index === 2) title.textContent = 'Recently Viewed';
+                    else if (index === 3) title.textContent = 'Browse by Category';
+                });
+                
+                // Update category items
+                document.querySelectorAll('.category-item h3').forEach((item, index) => {
+                    if (index === 0) item.textContent = 'Furniture';
+                    else if (index === 1) item.textContent = 'Home Decor';
+                    else if (index === 2) item.textContent = 'Plants';
+                    else if (index === 3) item.textContent = 'Accessories';
+                });
+                
+                // Update footer
+                document.querySelectorAll('.footer-column h3').forEach((heading, index) => {
+                    if (index === 0) heading.textContent = 'Shop';
+                    else if (index === 1) heading.textContent = 'About Us';
+                    else if (index === 2) heading.textContent = 'Customer Service';
+                    else if (index === 3) heading.textContent = 'Contact';
+                });
+                
+                document.querySelectorAll('.footer-column ul li a').forEach((link, index) => {
+                    const texts = [
+                        'All Products', 'Featured', 'New Arrivals', 'Discounted',
+                        'Our Story', 'Designers', 'Sustainability', 'Press',
+                        'Contact', 'FAQs', 'Delivery', 'Returns'
+                    ];
+                    if (index < texts.length) {
+                        link.textContent = texts[index];
+                    }
+                });
+                
+                document.querySelector('.copyright p').textContent = '© 2023 AURANest. All rights reserved.';
+                
+                // Update modal
+                if (quickViewModal.style.display === 'flex') {
+                    const productId = parseInt(addToCompareBtn.dataset.id);
+                    const product = products.find(p => p.id === productId);
+                    
+                    document.getElementById('modalProductName').textContent = product.name_en;
+                    document.getElementById('modalProductDescription').textContent = product.description_en;
+                    
+                    if (product.reviews.length > 0) {
+                        document.querySelector('.modal-content .review-author').textContent = product.reviews[0].author_en;
+                        document.querySelector('.modal-content .review-body').textContent = product.reviews[0].comment_en;
+                    }
+                }
+            } else {
+                navLinks[0].textContent = 'হোম';
+                navLinks[1].textContent = 'শপ';
+                navLinks[2].textContent = 'ক্যাটাগরি';
+                navLinks[3].textContent = 'আমাদের সম্পর্কে';
+                navLinks[4].textContent = 'যোগাযোগ';
+                searchInput.placeholder = 'পণ্য খুঁজুন...';
+                navLinks[5].textContent = 'লগইন';
+                navLinks[6].textContent = 'আমার অর্ডার';
+                navLinks[7].textContent = 'উইশলিস্ট';
+                navLinks[8].textContent = 'অ্যাকাউন্ট সেটিংস';
+                navLinks[9].textContent = 'লগআউট';
+                
+                // Update mobile menu
+                const mobileLinks = document.querySelectorAll('.mobile-menu a');
+                mobileLinks[0].textContent = 'হোম';
+                mobileLinks[1].textContent = 'শপ';
+                mobileLinks[2].textContent = 'ক্যাটাগরি';
+                mobileLinks[3].textContent = 'আমাদের সম্পর্কে';
+                mobileLinks[4].textContent = 'যোগাযোগ';
+                mobileLinks[5].textContent = 'লগইন';
+                mobileLinks[6].textContent = 'আমার অর্ডার';
+                mobileLinks[7].textContent = 'উইশলিস্ট';
+                
+                // Update hero section
+                document.querySelector('.hero h1').textContent = 'আপনার বাসাকে করুন আরও সুন্দর';
+                document.querySelector('.hero p').textContent = 'আপনার পছন্দ অনুযায়ী স্টাইল এবং ডিজাইন বাছাই করুন। সমস্ত বাংলাদেশে ডেলিভারি উপলব্ধ।';
+                document.querySelector('.hero .btn').textContent = 'এখনই ব্রাউজ করুন';
+                
+                // Update filters
+                document.querySelector('.filters-sidebar h3').textContent = 'ফিল্টার';
+                document.querySelector('.price-range h4').textContent = 'দামের রেঞ্জ';
+                document.querySelector('.category-filter h4').textContent = 'ক্যাটাগরি';
+                document.querySelector('#applyFilters').textContent = 'ফিল্টার প্রয়োগ করুন';
+                
+                // Update section titles
+                document.querySelectorAll('.section-title h2').forEach((title, index) => {
+                    if (index === 0) title.textContent = 'ফিচার্ড পণ্য';
+                    else if (index === 1) title.textContent = 'গ্রাহকদের রিভিউ';
+                    else if (index === 2) title.textContent = 'সম্প্রতি দেখা';
+                    else if (index === 3) title.textContent = 'ক্যাটাগরি অনুযায়ী ব্রাউজ করুন';
+                });
+                
+                // Update category items
+                document.querySelectorAll('.category-item h3').forEach((item, index) => {
+                    if (index === 0) item.textContent = 'ফার্নিচার';
+                    else if (index === 1) item.textContent = 'ঘরের সাজসজ্জা';
+                    else if (index === 2) item.textContent = 'গাছ';
+                    else if (index === 3) item.textContent = 'অ্যাকসেসরিজ';
+                });
+                
+                // Update footer
+                document.querySelectorAll('.footer-column h3').forEach((heading, index) => {
+                    if (index === 0) heading.textContent = 'শপ';
+                    else if (index === 1) heading.textContent = 'আমাদের সম্পর্কে';
+                    else if (index === 2) heading.textContent = 'গ্রাহক সেবা';
+                    else if (index === 3) heading.textContent = 'যোগাযোগ';
+                });
+                
+                document.querySelectorAll('.footer-column ul li a').forEach((link, index) => {
+                    const texts = [
+                        'সব পণ্য', 'ফিচার্ড', 'নতুন পণ্য', 'ডিসকাউন্ট পণ্য',
+                        'আমাদের গল্প', 'ডিজাইনার', 'সাসটেইনেবিলিটি', 'প্রেস',
+                        'যোগাযোগ', 'সাধারণ প্রশ্ন', 'ডেলিভারি', 'রিটার্ন'
+                    ];
+                    if (index < texts.length) {
+                        link.textContent = texts[index];
+                    }
+                });
+                
+                document.querySelector('.copyright p').textContent = '© ২০২৩ অরানেস্ট। সকল স্বত্ব সংরক্ষিত।';
+                
+                // Update modal
+                if (quickViewModal.style.display === 'flex') {
+                    const productId = parseInt(addToCompareBtn.dataset.id);
+                    const product = products.find(p => p.id === productId);
+                    
+                    document.getElementById('modalProductName').textContent = product.name;
+                    document.getElementById('modalProductDescription').textContent = product.description;
+                    
+                    if (product.reviews.length > 0) {
+                        document.querySelector('.modal-content .review-author').textContent = product.reviews[0].author;
+                        document.querySelector('.modal-content .review-body').textContent = product.reviews[0].comment;
+                    }
+                }
+            }
+            
+            // Re-render products to update language
+            displayProducts(products);
+            
+            // Update recently viewed
+            displayRecentlyViewed();
+            
+            // Update comparison section
+            updateComparisonView();
+        }
+
         // Back to Top Button
         window.addEventListener('scroll', () => {
             backToTopBtn.style.display = (window.scrollY > 500) ? 'flex' : 'none';
@@ -1763,8 +2040,8 @@
         searchInput.addEventListener('input', (e) => {
             const searchTerm = e.target.value.toLowerCase();
             const filteredProducts = products.filter(product => 
-                product.name.toLowerCase().includes(searchTerm) ||
-                product.description.toLowerCase().includes(searchTerm) ||
+                (isEnglish ? product.name_en.toLowerCase() : product.name.toLowerCase()).includes(searchTerm) ||
+                (isEnglish ? product.description_en.toLowerCase() : product.description.toLowerCase()).includes(searchTerm) ||
                 getCategoryName(product.category).toLowerCase().includes(searchTerm)
             );
             
@@ -1798,6 +2075,12 @@
 
         function displayRecentlyViewed() {
             recentlyViewedGrid.innerHTML = '';
+            
+            if (isEnglish) {
+                const title = document.querySelector('.recently-viewed .section-title h2');
+                if (title) title.textContent = 'Recently Viewed';
+            }
+            
             recentlyViewed.forEach(productId => {
                 const product = products.find(p => p.id === productId);
                 if (product) {
@@ -1805,10 +2088,10 @@
                     productCard.className = 'product-card';
                     productCard.innerHTML = `
                         <div class="product-image">
-                            <img src="${product.image}" alt="${product.name}">
+                            <img src="${product.image}" alt="${isEnglish ? product.name_en : product.name}">
                         </div>
                         <div class="product-info">
-                            <h3 class="bangla">${product.name}</h3>
+                            <h3 class="${isEnglish ? '' : 'bangla'}">${isEnglish ? product.name_en : product.name}</h3>
                             <div class="price">${formatPrice(product.price)}</div>
                         </div>
                     `;
@@ -1823,7 +2106,7 @@
             
             if (!comparisonProducts.some(p => p.id === productId)) {
                 if (comparisonProducts.length >= 3) {
-                    alert('আপনি সর্বোচ্চ ৩টি পণ্য তুলনা করতে পারবেন');
+                    alert(isEnglish ? 'You can compare maximum 3 products' : 'আপনি সর্বোচ্চ ৩টি পণ্য তুলনা করতে পারবেন');
                     return;
                 }
                 
@@ -1835,7 +2118,7 @@
                     comparisonSection.style.display = 'block';
                 }
             } else {
-                alert('এই পণ্যটি ইতিমধ্যেই তুলনায় রয়েছে');
+                alert(isEnglish ? 'This product is already in comparison' : 'এই পণ্যটি ইতিমধ্যেই তুলনায় রয়েছে');
             }
         }
 
@@ -1847,15 +2130,28 @@
                 return;
             }
             
+            // Update title
+            const comparisonTitle = document.querySelector('#comparisonSection h3');
+            if (comparisonTitle) {
+                comparisonTitle.textContent = isEnglish ? 'Product Comparison' : 'পণ্য তুলনা';
+                comparisonTitle.className = isEnglish ? '' : 'bangla';
+            }
+            
+            // Update clear button
+            if (clearComparisonBtn) {
+                clearComparisonBtn.textContent = isEnglish ? 'Clear Comparison' : 'তুলনা মুছুন';
+                clearComparisonBtn.className = `btn compare-btn ${isEnglish ? '' : 'bangla'}`;
+            }
+            
             // Create header row with product names
             const headerRow = document.createElement('div');
             headerRow.className = 'comparison-header';
-            headerRow.innerHTML = '<div class="comparison-label bangla">ফিচার</div>';
+            headerRow.innerHTML = `<div class="comparison-label ${isEnglish ? '' : 'bangla'}">${isEnglish ? 'Feature' : 'ফিচার'}</div>`;
             
             comparisonProducts.forEach(product => {
                 headerRow.innerHTML += `
                     <div class="comparison-product">
-                        <h4 class="bangla">${product.name}</h4>
+                        <h4 class="${isEnglish ? '' : 'bangla'}">${isEnglish ? product.name_en : product.name}</h4>
                         <button class="remove-comparison" data-id="${product.id}">×</button>
                     </div>
                 `;
@@ -1865,15 +2161,15 @@
             
             // Add comparison rows
             const features = [
-                { name: 'দাম', key: 'price', format: v => `৳${formatPrice(v)}` },
-                { name: 'ক্যাটাগরি', key: 'category', format: v => getCategoryName(v) },
-                { name: 'স্টক', key: 'stock', format: v => v }
+                { name: isEnglish ? 'Price' : 'দাম', key: 'price', format: v => `৳${formatPrice(v)}` },
+                { name: isEnglish ? 'Category' : 'ক্যাটাগরি', key: 'category', format: v => getCategoryName(v) },
+                { name: isEnglish ? 'Stock' : 'স্টক', key: 'stock', format: v => v }
             ];
             
             features.forEach(feature => {
                 const row = document.createElement('div');
                 row.className = 'comparison-row';
-                row.innerHTML = `<div class="comparison-label bangla">${feature.name}</div>`;
+                row.innerHTML = `<div class="comparison-label ${isEnglish ? '' : 'bangla'}">${feature.name}</div>`;
                 
                 comparisonProducts.forEach(product => {
                     row.innerHTML += `<div class="comparison-value">${feature.format(product[feature.key])}</div>`;
@@ -1916,11 +2212,11 @@
             document.querySelector('.cart-count').textContent = cartCount;
             
             const button = document.getElementById('modalAddToCart');
-            button.textContent = 'যোগ করা হয়েছে!';
+            button.textContent = isEnglish ? 'Added!' : 'যোগ করা হয়েছে!';
             button.style.backgroundColor = '#2ecc71';
             
             setTimeout(() => {
-                button.textContent = 'কার্টে যোগ করুন';
+                button.textContent = isEnglish ? 'Add to Cart' : 'কার্টে যোগ করুন';
                 button.style.backgroundColor = '#e74c3c';
                 quickViewModal.style.display = 'none';
             }, 1000);
@@ -1928,6 +2224,55 @@
 
         // Login Modal
         function showLoginModal() {
+            // Update login modal based on language
+            const loginTitle = document.querySelector('.login-container h2');
+            const emailOption = document.querySelector('.login-option[data-tab="email"]');
+            const phoneOption = document.querySelector('.login-option[data-tab="phone"]');
+            const emailInput = document.querySelector('#emailLogin input[type="email"]');
+            const passwordInput = document.querySelector('#emailLogin input[type="password"]');
+            const emailSubmit = document.querySelector('#emailLogin button');
+            const emailFooter = document.querySelector('#emailLogin p');
+            const phoneInput = document.querySelector('#phoneLogin input[type="tel"]');
+            const phoneSubmit = document.querySelector('#phoneLogin button');
+            const phoneFooter = document.querySelector('#phoneLogin p');
+            const socialText = document.querySelector('.social-login p');
+            
+            if (isEnglish) {
+                loginTitle.textContent = 'Login / Register';
+                loginTitle.className = '';
+                emailOption.textContent = 'Email';
+                phoneOption.textContent = 'Phone';
+                emailInput.placeholder = 'Your Email';
+                passwordInput.placeholder = 'Password';
+                emailSubmit.textContent = 'Login';
+                emailFooter.innerHTML = 'No account? <a href="#" style="color: #e74c3c;">Register</a>';
+                phoneInput.placeholder = 'Your Phone Number';
+                phoneSubmit.textContent = 'Send OTP';
+                phoneFooter.textContent = 'We will send you an OTP code';
+                socialText.textContent = 'Or login with social media';
+            } else {
+                loginTitle.textContent = 'লগইন / রেজিস্টার';
+                loginTitle.className = 'bangla';
+                emailOption.textContent = 'ইমেইল';
+                phoneOption.textContent = 'ফোন';
+                emailInput.placeholder = 'আপনার ইমেইল';
+                emailInput.className = 'bangla';
+                passwordInput.placeholder = 'পাসওয়ার্ড';
+                passwordInput.className = 'bangla';
+                emailSubmit.textContent = 'লগইন করুন';
+                emailSubmit.className = 'bangla';
+                emailFooter.innerHTML = 'অ্যাকাউন্ট নেই? <a href="#" style="color: #e74c3c;">রেজিস্টার করুন</a>';
+                emailFooter.className = 'bangla';
+                phoneInput.placeholder = 'আপনার ফোন নম্বর';
+                phoneInput.className = 'bangla';
+                phoneSubmit.textContent = 'OTP পাঠান';
+                phoneSubmit.className = 'bangla';
+                phoneFooter.textContent = 'আমরা আপনাকে একটি OTP কোড পাঠাবো';
+                phoneFooter.className = 'bangla';
+                socialText.textContent = 'বা সোশ্যাল মিডিয়া দিয়ে লগইন করুন';
+                socialText.className = 'bangla';
+            }
+            
             loginModal.style.display = 'flex';
         }
         
@@ -1985,12 +2330,12 @@
         document.querySelectorAll('.social-icon').forEach(icon => {
             icon.addEventListener('click', () => {
                 currentUser = {
-                    name: "ডেমো ব্যবহারকারী",
-                    initial: "ড"
+                    name: isEnglish ? "Demo User" : "ডেমো ব্যবহারকারী",
+                    initial: isEnglish ? "D" : "ড"
                 };
                 document.querySelector('.user-avatar').textContent = currentUser.initial;
                 loginModal.style.display = 'none';
-                alert('লগইন সফল! আপনি এখন অর্ডার দিতে পারবেন।');
+                alert(isEnglish ? 'Login successful! You can now place orders.' : 'লগইন সফল! আপনি এখন অর্ডার দিতে পারবেন।');
             });
         });
     </script>
