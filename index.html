@@ -42,6 +42,42 @@
             overflow-x: hidden;
         }
 
+        /* Loading Animation */
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255,255,255,0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .loader.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .loader-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
         /* Header Styles */
         header {
             display: flex;
@@ -79,6 +115,7 @@
             color: white;
             font-size: 1.3rem;
             position: relative;
+            cursor: pointer;
         }
 
         .cart-count {
@@ -103,6 +140,7 @@
             color: white;
             font-size: 1.3rem;
             margin-right: 10px;
+            cursor: pointer;
         }
 
         /* Hero Section */
@@ -131,6 +169,12 @@
             border-radius: 50px;
             font-weight: 600;
             font-size: 1rem;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .btn-shop-now:hover {
+            transform: scale(1.05);
         }
 
         .hero-image {
@@ -142,6 +186,13 @@
             max-width: 300px;
             border-radius: 10px;
             box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
         }
 
         /* Products Section */
@@ -167,6 +218,13 @@
             border-radius: 10px;
             overflow: hidden;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
         }
 
         .product-badge {
@@ -179,12 +237,18 @@
             border-radius: 50px;
             font-size: 0.8rem;
             font-weight: 500;
+            z-index: 1;
         }
 
         .product-img {
             width: 100%;
             height: 180px;
             object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .product-card:hover .product-img {
+            transform: scale(1.05);
         }
 
         .product-info {
@@ -218,6 +282,12 @@
             border: none;
             border-radius: 5px;
             font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-add-to-cart:hover {
+            background-color: var(--secondary-color);
         }
 
         /* Deals Section */
@@ -231,6 +301,11 @@
             border-radius: 10px;
             overflow: hidden;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .deal-card:hover {
+            transform: scale(1.02);
         }
 
         .deal-img {
@@ -276,6 +351,12 @@
             border-radius: 5px;
             font-weight: 500;
             margin-top: 0.5rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-deal:hover {
+            background-color: var(--secondary-color);
         }
 
         /* Contact Section */
@@ -301,6 +382,21 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            transition: transform 0.3s ease;
+        }
+
+        .contact-item:hover i {
+            transform: scale(1.1);
+        }
+
+        .contact-item a {
+            color: var(--text-color);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .contact-item:hover a {
+            color: var(--primary-color);
         }
 
         /* Cart Sidebar */
@@ -339,6 +435,12 @@
             margin-bottom: 1rem;
             padding-bottom: 1rem;
             border-bottom: 1px solid #eee;
+            animation: slideIn 0.3s ease forwards;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
         }
 
         .cart-item-img {
@@ -379,6 +481,11 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-quantity:hover {
+            background-color: #f0f0f0;
         }
 
         .btn-remove-item {
@@ -387,6 +494,11 @@
             color: #e74c3c;
             cursor: pointer;
             margin-left: auto;
+            transition: transform 0.3s ease;
+        }
+
+        .btn-remove-item:hover {
+            transform: scale(1.1);
         }
 
         .cart-summary {
@@ -412,6 +524,11 @@
             font-size: 1.1rem;
             font-weight: 500;
             cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-checkout:hover {
+            background-color: var(--secondary-color);
         }
 
         /* Payment Modal */
@@ -439,6 +556,12 @@
             border-radius: 10px;
             overflow: hidden;
             box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            animation: modalFadeIn 0.3s ease;
+        }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .payment-header {
@@ -461,6 +584,12 @@
             background-color: var(--card-light);
             border-radius: 5px;
             cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .payment-option:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 10px rgba(0,0,0,0.1);
         }
 
         .payment-option i {
@@ -475,6 +604,192 @@
         .payment-option-text p {
             font-size: 0.8rem;
             color: #777;
+        }
+
+        /* Login Modal */
+        .login-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 3000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .login-modal.active {
+            display: flex;
+        }
+
+        .login-content {
+            background-color: var(--bg-light);
+            width: 90%;
+            max-width: 400px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            animation: modalFadeIn 0.3s ease;
+        }
+
+        .login-header {
+            padding: 1rem;
+            background-color: var(--primary-color);
+            color: white;
+            text-align: center;
+        }
+
+        .login-form {
+            padding: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-family: 'Hind Siliguri', sans-serif;
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 0.8rem;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-weight: 500;
+            cursor: pointer;
+            margin-top: 1rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-login:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .login-footer {
+            text-align: center;
+            padding: 0 1.5rem 1.5rem;
+            font-size: 0.9rem;
+        }
+
+        .btn-google-login {
+            width: 100%;
+            padding: 0.8rem;
+            background-color: #4285F4;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-weight: 500;
+            cursor: pointer;
+            margin-top: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-google-login:hover {
+            background-color: #357ABD;
+        }
+
+        /* Profile Section */
+        .profile-section {
+            display: none;
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 100%;
+            height: 100vh;
+            background-color: var(--bg-light);
+            z-index: 2000;
+            transition: all 0.3s ease;
+            overflow-y: auto;
+        }
+
+        .profile-section.active {
+            right: 0;
+        }
+
+        .profile-header {
+            padding: 1rem;
+            background-color: var(--primary-color);
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .profile-content {
+            padding: 1.5rem;
+        }
+
+        .profile-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .profile-pic {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 1rem;
+            border: 3px solid var(--primary-color);
+        }
+
+        .profile-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .profile-email {
+            color: #777;
+            margin-bottom: 1rem;
+        }
+
+        .profile-menu {
+            list-style: none;
+        }
+
+        .profile-menu li {
+            padding: 1rem 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .profile-menu li a {
+            color: var(--text-color);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            transition: color 0.3s ease;
+        }
+
+        .profile-menu li a:hover {
+            color: var(--primary-color);
+        }
+
+        .profile-menu li a i {
+            font-size: 1.2rem;
+            width: 30px;
         }
 
         /* Footer */
@@ -498,6 +813,29 @@
             font-size: 0.9rem;
         }
 
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+            z-index: 4000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .toast.show {
+            opacity: 1;
+        }
+
         /* Responsive Adjustments */
         @media (min-width: 768px) {
             body {
@@ -505,10 +843,19 @@
                 margin: 0 auto;
                 box-shadow: 0 0 20px rgba(0,0,0,0.1);
             }
+
+            .product-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
     </style>
 </head>
 <body>
+    <!-- Loading Animation -->
+    <div class="loader" id="loader">
+        <div class="loader-spinner"></div>
+    </div>
+
     <!-- Header -->
     <header>
         <div class="logo">
@@ -518,6 +865,9 @@
         <div class="auth-buttons">
             <button class="theme-toggle" id="themeToggle">
                 <i class="fas fa-moon"></i>
+            </button>
+            <button class="btn-profile" id="profileBtn">
+                <i class="fas fa-user"></i>
             </button>
             <button class="btn-cart" id="cartBtn">
                 <i class="fas fa-shopping-cart"></i>
@@ -549,7 +899,7 @@
                 <div class="product-info">
                     <h3>মডার্ন সোফা</h3>
                     <p class="product-price">৳১২,৯৯৯ <span>৳১৫,৯৯৯</span></p>
-                    <button class="btn-add-to-cart">কার্টে যোগ করুন</button>
+                    <button class="btn-add-to-cart" data-name="মডার্ন সোফা" data-price="12999" data-img="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60">কার্টে যোগ করুন</button>
                 </div>
             </div>
             
@@ -559,7 +909,7 @@
                 <div class="product-info">
                     <h3>কাঠের কফি টেবিল</h3>
                     <p class="product-price">৳৭,৪৯৯ <span>৳৯,৯৯৯</span></p>
-                    <button class="btn-add-to-cart">কার্টে যোগ করুন</button>
+                    <button class="btn-add-to-cart" data-name="কাঠের কফি টেবিল" data-price="7499" data-img="https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60">কার্টে যোগ করুন</button>
                 </div>
             </div>
             
@@ -570,7 +920,7 @@
                 <div class="product-info">
                     <h3>ওয়াল আর্ট</h3>
                     <p class="product-price">৳৩,২৯৯ <span>৳৪,৪৯৯</span></p>
-                    <button class="btn-add-to-cart">কার্টে যোগ করুন</button>
+                    <button class="btn-add-to-cart" data-name="ওয়াল আর্ট" data-price="3299" data-img="https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60">কার্টে যোগ করুন</button>
                 </div>
             </div>
         </div>
@@ -595,7 +945,7 @@
         <h2 class="section-title">যোগাযোগ</h2>
         <div class="contact-item">
             <i class="fas fa-phone-alt"></i>
-            <p><a href="tel:01974367928">০১৯৭৪৩৬৭৯২৮</a></p>
+            <p><a href="https://wa.me/8801974367928" target="_blank">০১৯৭৪৩৬৭৯২৮</a></p>
         </div>
         <div class="contact-item">
             <i class="fas fa-envelope"></i>
@@ -650,6 +1000,59 @@
         </div>
     </div>
 
+    <!-- Login Modal -->
+    <div class="login-modal" id="loginModal">
+        <div class="login-content">
+            <div class="login-header">
+                <h3>লগইন করুন</h3>
+            </div>
+            <div class="login-form">
+                <div class="form-group">
+                    <label for="email">ইমেইল</label>
+                    <input type="email" id="loginEmail" placeholder="আপনার ইমেইল দিন">
+                </div>
+                <div class="form-group">
+                    <label for="password">পাসওয়ার্ড</label>
+                    <input type="password" id="loginPassword" placeholder="আপনার পাসওয়ার্ড দিন">
+                </div>
+                <button class="btn-login" id="loginBtn">লগইন করুন</button>
+                <button class="btn-google-login" id="googleLoginBtn">
+                    <i class="fab fa-google"></i> Google দিয়ে লগইন করুন
+                </button>
+            </div>
+            <div class="login-footer">
+                <p>অ্যাকাউন্ট নেই? <a href="#" id="showRegister">রেজিস্টার করুন</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile Section -->
+    <div class="profile-section" id="profileSection">
+        <div class="profile-header">
+            <h3>আমার প্রোফাইল</h3>
+            <button id="closeProfileBtn">&times;</button>
+        </div>
+        <div class="profile-content">
+            <div class="profile-info">
+                <img src="https://ui-avatars.com/api/?name=User&background=8e44ad&color=fff" alt="Profile Picture" class="profile-pic" id="profilePic">
+                <h3 class="profile-name" id="profileName">গেস্ট ব্যবহারকারী</h3>
+                <p class="profile-email" id="profileEmail">লগইন করা নেই</p>
+            </div>
+            <ul class="profile-menu">
+                <li><a href="#"><i class="fas fa-shopping-bag"></i> আমার অর্ডার</a></li>
+                <li><a href="#"><i class="fas fa-heart"></i> উইশলিস্ট</a></li>
+                <li><a href="#"><i class="fas fa-map-marker-alt"></i> ঠিকানা</a></li>
+                <li><a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> লগআউট</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toastMessage">পণ্য কার্টে যোগ করা হয়েছে</span>
+    </div>
+
     <!-- Footer -->
     <footer>
         <div class="footer-logo">
@@ -665,6 +1068,7 @@
             // DOM Elements
             const themeToggle = document.getElementById('themeToggle');
             const cartBtn = document.getElementById('cartBtn');
+            const profileBtn = document.getElementById('profileBtn');
             const cartSidebar = document.getElementById('cartSidebar');
             const closeCartBtn = document.getElementById('closeCartBtn');
             const cartItemsContainer = document.getElementById('cartItems');
@@ -675,10 +1079,20 @@
             const codOption = document.getElementById('codOption');
             const onlineOption = document.getElementById('onlineOption');
             const addToCartButtons = document.querySelectorAll('.btn-add-to-cart');
+            const loginModal = document.getElementById('loginModal');
+            const loginBtn = document.getElementById('loginBtn');
+            const googleLoginBtn = document.getElementById('googleLoginBtn');
+            const profileSection = document.getElementById('profileSection');
+            const closeProfileBtn = document.getElementById('closeProfileBtn');
+            const logoutBtn = document.getElementById('logoutBtn');
+            const loader = document.getElementById('loader');
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toastMessage');
             
             // Cart Data
             let cart = [];
             let currentTheme = 'light';
+            let user = null;
             
             // Initialize
             updateCart();
@@ -686,10 +1100,15 @@
             // Event Listeners
             themeToggle.addEventListener('click', toggleTheme);
             cartBtn.addEventListener('click', openCartSidebar);
+            profileBtn.addEventListener('click', toggleProfile);
             closeCartBtn.addEventListener('click', closeCartSidebar);
+            closeProfileBtn.addEventListener('click', closeProfile);
             checkoutBtn.addEventListener('click', openPaymentModal);
             codOption.addEventListener('click', proceedToCOD);
             onlineOption.addEventListener('click', proceedToOnlinePayment);
+            loginBtn.addEventListener('click', loginWithEmail);
+            googleLoginBtn.addEventListener('click', loginWithGoogle);
+            logoutBtn.addEventListener('click', logout);
             
             // Add to cart buttons
             addToCartButtons.forEach(button => {
@@ -709,6 +1128,22 @@
                 }
             }
             
+            function showLoader() {
+                loader.classList.add('active');
+            }
+            
+            function hideLoader() {
+                loader.classList.remove('active');
+            }
+            
+            function showToast(message) {
+                toastMessage.textContent = message;
+                toast.classList.add('show');
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 3000);
+            }
+            
             function openCartSidebar() {
                 cartSidebar.classList.add('active');
             }
@@ -717,7 +1152,23 @@
                 cartSidebar.classList.remove('active');
             }
             
+            function toggleProfile() {
+                if (user) {
+                    profileSection.classList.add('active');
+                } else {
+                    loginModal.classList.add('active');
+                }
+            }
+            
+            function closeProfile() {
+                profileSection.classList.remove('active');
+            }
+            
             function openPaymentModal() {
+                if (cart.length === 0) {
+                    showToast('আপনার কার্ট খালি');
+                    return;
+                }
                 paymentModal.classList.add('active');
             }
             
@@ -727,10 +1178,9 @@
             
             function addToCart(event) {
                 const button = event.target;
-                const productCard = button.closest('.product-card');
-                const productName = productCard.querySelector('h3').textContent;
-                const productPrice = parseFloat(productCard.querySelector('.product-price').textContent.replace('৳', '').replace(',', ''));
-                const productImg = productCard.querySelector('.product-img').src;
+                const productName = button.getAttribute('data-name');
+                const productPrice = parseFloat(button.getAttribute('data-price'));
+                const productImg = button.getAttribute('data-img');
                 
                 // Check if product already in cart
                 const existingItem = cart.find(item => item.name === productName);
@@ -747,6 +1197,7 @@
                 }
                 
                 updateCart();
+                showToast(`${productName} কার্টে যোগ করা হয়েছে`);
                 
                 // Animation effect
                 button.textContent = 'যোগ করা হয়েছে!';
@@ -781,7 +1232,7 @@
                         <img src="${item.img}" alt="${item.name}" class="cart-item-img">
                         <div class="cart-item-details">
                             <h4 class="cart-item-title">${item.name}</h4>
-                            <p class="cart-item-price">৳${item.price.toLocaleString('bn-BD')}</p>
+                            <p class="cart-item-price">৳${item.price.toLocaleString('bn-BD')} x ${item.quantity} = ৳${(item.price * item.quantity).toLocaleString('bn-BD')}</p>
                             <div class="cart-item-actions">
                                 <div class="cart-item-quantity">
                                     <button class="btn-quantity minus">-</button>
@@ -807,9 +1258,11 @@
                         if (item.quantity > 1) {
                             item.quantity -= 1;
                             quantityDisplay.textContent = item.quantity;
+                            showToast(`${item.name} এর পরিমাণ কমানো হয়েছে`);
                         } else {
                             cart = cart.filter(cartItem => cartItem.name !== item.name);
                             cartItemElement.remove();
+                            showToast(`${item.name} কার্ট থেকে সরানো হয়েছে`);
                         }
                         updateCart();
                     });
@@ -817,12 +1270,14 @@
                     plusBtn.addEventListener('click', () => {
                         item.quantity += 1;
                         quantityDisplay.textContent = item.quantity;
+                        showToast(`${item.name} এর পরিমাণ বাড়ানো হয়েছে`);
                         updateCart();
                     });
                     
                     removeBtn.addEventListener('click', () => {
                         cart = cart.filter(cartItem => cartItem.name !== item.name);
                         cartItemElement.remove();
+                        showToast(`${item.name} কার্ট থেকে সরানো হয়েছে`);
                         updateCart();
                     });
                     
@@ -834,17 +1289,22 @@
             }
             
             function proceedToCOD() {
-                const whatsappNumber = '01974367928';
+                if (cart.length === 0) {
+                    showToast('আপনার কার্ট খালি');
+                    return;
+                }
+                
+                const whatsappNumber = '8801974367928'; // Added Bangladesh country code
                 let message = 'আমি নিচের পণ্যগুলো অর্ডার করতে চাই (ক্যাশ অন ডেলিভারি):\n\n';
                 
                 cart.forEach(item => {
                     message += `- ${item.name} (${item.quantity} x ৳${item.price.toLocaleString('bn-BD')}) = ৳${(item.price * item.quantity).toLocaleString('bn-BD')}\n`;
                 });
                 
-                message += `\nমোট: ${cartTotalAmount.textContent}\n\nঠিকানা এবং কন্টাক্ট ডিটেইলস আলাদাভাবে জানাবো।`;
+                message += `\nমোট: ৳${cartTotalAmount.textContent.replace('৳', '')}\n\nঠিকানা এবং কন্টাক্ট ডিটেইলস আলাদাভাবে জানাবো।`;
                 
                 const encodedMessage = encodeURIComponent(message);
-                window.location.href = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
+                window.open(`https://wa.me/${whatsappNumber}?text=${encodedMessage}`, '_blank');
                 
                 // Reset cart
                 cart = [];
@@ -854,17 +1314,22 @@
             }
             
             function proceedToOnlinePayment() {
-                const whatsappNumber = '01974367928';
+                if (cart.length === 0) {
+                    showToast('আপনার কার্ট খালি');
+                    return;
+                }
+                
+                const whatsappNumber = '8801974367928'; // Added Bangladesh country code
                 let message = 'আমি নিচের পণ্যগুলো অর্ডার করতে চাই (অনলাইন পেমেন্ট):\n\n';
                 
                 cart.forEach(item => {
                     message += `- ${item.name} (${item.quantity} x ৳${item.price.toLocaleString('bn-BD')}) = ৳${(item.price * item.quantity).toLocaleString('bn-BD')}\n`;
                 });
                 
-                message += `\nমোট: ${cartTotalAmount.textContent}\n\nআমি অনলাইন পেমেন্ট (বিকাশ/নগদ/কার্ড) এর মাধ্যমে পেমেন্ট করতে চাই। পেমেন্ট ডিটেইলস জানাবো।`;
+                message += `\nমোট: ৳${cartTotalAmount.textContent.replace('৳', '')}\n\nআমি অনলাইন পেমেন্ট (বিকাশ/নগদ/কার্ড) এর মাধ্যমে পেমেন্ট করতে চাই। পেমেন্ট ডিটেইলস জানাবো।`;
                 
                 const encodedMessage = encodeURIComponent(message);
-                window.location.href = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
+                window.open(`https://wa.me/${whatsappNumber}?text=${encodedMessage}`, '_blank');
                 
                 // Reset cart
                 cart = [];
@@ -872,6 +1337,73 @@
                 closePaymentModal();
                 closeCartSidebar();
             }
+            
+            function loginWithEmail() {
+                const email = document.getElementById('loginEmail').value;
+                const password = document.getElementById('loginPassword').value;
+                
+                if (!email || !password) {
+                    showToast('ইমেইল এবং পাসওয়ার্ড দিন');
+                    return;
+                }
+                
+                showLoader();
+                
+                // Simulate API call
+                setTimeout(() => {
+                    hideLoader();
+                    user = {
+                        name: 'ব্যবহারকারী',
+                        email: email,
+                        photoUrl: 'https://ui-avatars.com/api/?name=User&background=8e44ad&color=fff'
+                    };
+                    updateUserProfile();
+                    loginModal.classList.remove('active');
+                    showToast('সফলভাবে লগইন করা হয়েছে');
+                }, 1500);
+            }
+            
+            function loginWithGoogle() {
+                showLoader();
+                
+                // Simulate Google login
+                setTimeout(() => {
+                    hideLoader();
+                    user = {
+                        name: 'Google ব্যবহারকারী',
+                        email: 'user@gmail.com',
+                        photoUrl: 'https://ui-avatars.com/api/?name=Google+User&background=8e44ad&color=fff'
+                    };
+                    updateUserProfile();
+                    loginModal.classList.remove('active');
+                    showToast('Google দিয়ে সফলভাবে লগইন করা হয়েছে');
+                }, 1500);
+            }
+            
+            function logout() {
+                user = null;
+                profileSection.classList.remove('active');
+                updateUserProfile();
+                showToast('সফলভাবে লগআউট করা হয়েছে');
+            }
+            
+            function updateUserProfile() {
+                if (user) {
+                    document.getElementById('profileName').textContent = user.name;
+                    document.getElementById('profileEmail').textContent = user.email;
+                    document.getElementById('profilePic').src = user.photoUrl;
+                } else {
+                    document.getElementById('profileName').textContent = 'গেস্ট ব্যবহারকারী';
+                    document.getElementById('profileEmail').textContent = 'লগইন করা নেই';
+                    document.getElementById('profilePic').src = 'https://ui-avatars.com/api/?name=Guest&background=8e44ad&color=fff';
+                }
+            }
+            
+            // Simulate initial loading
+            showLoader();
+            setTimeout(() => {
+                hideLoader();
+            }, 1500);
         });
     </script>
 </body>
