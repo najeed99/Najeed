@@ -1294,14 +1294,17 @@
                     return;
                 }
                 
-                const whatsappNumber = '8801974367928'; // Added Bangladesh country code
-                let message = 'আমি নিচের পণ্যগুলো অর্ডার করতে চাই (ক্যাশ অন ডেলিভারি):\n\n';
+                const whatsappNumber = '8801974367928'; // Bangladesh country code added
+                let message = 'আমি এই পণ্যগুলি অর্ডার করতে চাই (ক্যাশ অন ডেলিভারি):\n\n';
                 
                 cart.forEach(item => {
                     message += `- ${item.name} (${item.quantity} x ৳${item.price.toLocaleString('bn-BD')}) = ৳${(item.price * item.quantity).toLocaleString('bn-BD')}\n`;
                 });
                 
-                message += `\nমোট: ৳${cartTotalAmount.textContent.replace('৳', '')}\n\nঠিকানা এবং কন্টাক্ট ডিটেইলস আলাদাভাবে জানাবো।`;
+                message += `\nমোট: ৳${cartTotalAmount.textContent.replace('৳', '')}\n\nআমি ক্যাশ অন ডেলিভারি মাধ্যমে পেমেন্ট করতে চাই। আমার কন্টাক্ট নাম্বার এবং ঠিকানা নিচে দিলাম:\n\n`;
+                message += `নাম: [আপনার নাম লিখুন]\n`;
+                message += `মোবাইল: [আপনার মোবাইল নাম্বার লিখুন]\n`;
+                message += `ঠিকানা: [আপনার সম্পূর্ণ ঠিকানা লিখুন]`;
                 
                 const encodedMessage = encodeURIComponent(message);
                 window.open(`https://wa.me/${whatsappNumber}?text=${encodedMessage}`, '_blank');
@@ -1319,14 +1322,19 @@
                     return;
                 }
                 
-                const whatsappNumber = '8801974367928'; // Added Bangladesh country code
-                let message = 'আমি নিচের পণ্যগুলো অর্ডার করতে চাই (অনলাইন পেমেন্ট):\n\n';
+                const whatsappNumber = '8801974367928'; // Bangladesh country code added
+                let message = 'আমি এই পণ্যগুলি অর্ডার করতে চাই (অনলাইন পেমেন্ট):\n\n';
                 
                 cart.forEach(item => {
                     message += `- ${item.name} (${item.quantity} x ৳${item.price.toLocaleString('bn-BD')}) = ৳${(item.price * item.quantity).toLocaleString('bn-BD')}\n`;
                 });
                 
-                message += `\nমোট: ৳${cartTotalAmount.textContent.replace('৳', '')}\n\nআমি অনলাইন পেমেন্ট (বিকাশ/নগদ/কার্ড) এর মাধ্যমে পেমেন্ট করতে চাই। পেমেন্ট ডিটেইলস জানাবো।`;
+                message += `\nমোট: ৳${cartTotalAmount.textContent.replace('৳', '')}\n\nআমি অনলাইন পেমেন্ট (বিকাশ/নগদ/কার্ড) এর মাধ্যমে পেমেন্ট করতে চাই। আমার কন্টাক্ট নাম্বার এবং ঠিকানা নিচে দিলাম:\n\n`;
+                message += `নাম: [আপনার নাম লিখুন]\n`;
+                message += `মোবাইল: [আপনার মোবাইল নাম্বার লিখুন]\n`;
+                message += `ঠিকানা: [আপনার সম্পূর্ণ ঠিকানা লিখুন]\n`;
+                message += `পেমেন্ট মেথড: [বিকাশ/নগদ/কার্ড]\n`;
+                message += `ট্রানজেকশন ID: [আপনার পেমেন্ট ট্রানজেকশন ID লিখুন]`;
                 
                 const encodedMessage = encodeURIComponent(message);
                 window.open(`https://wa.me/${whatsappNumber}?text=${encodedMessage}`, '_blank');
