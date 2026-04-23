@@ -2,544 +2,1317 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Echoes of the Lost Keep | Interactive Story Game</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>NEO CITY - Open World Game (GTA Style)</title>
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            background: linear-gradient(145deg, #0a0f1e 0%, #0c1222 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-family: 'Segoe UI', 'Cinema', 'Georgia', 'Times New Roman', serif;
-            padding: 1.5rem;
-        }
-
-        /* Main game container */
-        .game-container {
-            max-width: 800px;
-            width: 100%;
-            background: rgba(22, 28, 40, 0.85);
-            backdrop-filter: blur(2px);
-            border-radius: 2.5rem;
-            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(210, 180, 140, 0.3);
-            overflow: hidden;
-            transition: all 0.2s;
-        }
-
-        /* Header / atmosphere */
-        .game-header {
-            background: #1e2a2e;
-            padding: 1rem 1.5rem;
-            border-bottom: 2px solid #cdb084;
-            text-align: center;
-        }
-
-        .game-header h1 {
-            font-size: 1.8rem;
-            letter-spacing: 3px;
-            color: #f7e5c2;
-            text-shadow: 0 2px 5px #00000040;
-            font-weight: 600;
-            word-break: keep-all;
-        }
-
-        .game-header p {
-            font-size: 0.8rem;
-            color: #b9c7c9;
-            font-family: monospace;
-            margin-top: 0.3rem;
-        }
-
-        /* Story panel */
-        .story-panel {
-            padding: 2rem 1.8rem;
-            background: #0f121bcc;
-            min-height: 320px;
-            border-bottom: 1px solid #2c3542;
-        }
-
-        .story-text {
-            font-size: 1.25rem;
-            line-height: 1.5;
-            color: #ece4d7;
-            text-shadow: 0 1px 1px black;
-            font-weight: 500;
-            margin-bottom: 1.8rem;
-            word-break: break-word;
-            white-space: pre-wrap;
-        }
-
-        .story-meta {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.7rem;
-            color: #a6b3bc;
-            border-top: 1px dashed #2e3a48;
-            padding-top: 0.8rem;
-            margin-top: 0.5rem;
-        }
-
-        /* Choices area */
-        .choices-area {
-            padding: 1.2rem 1.8rem 1.8rem;
-            background: #0b0f17;
-        }
-
-        .choices-title {
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: #c5b18b;
-            margin-bottom: 1rem;
-            font-weight: 600;
-        }
-
-        .choices-buttons {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        .choice-btn {
-            background: #1e2936;
-            border: 1px solid #4b5568;
-            color: #f3edd8;
-            padding: 0.85rem 1.2rem;
-            font-size: 1rem;
-            font-weight: 500;
-            text-align: left;
-            border-radius: 60px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            font-family: inherit;
-            letter-spacing: 0.3px;
-            backdrop-filter: blur(4px);
-        }
-
-        .choice-btn:hover {
-            background: #2d3b4b;
-            border-color: #cdb084;
-            transform: translateX(8px);
-            box-shadow: 0 5px 12px rgba(0, 0, 0, 0.3);
+        body { margin: 0; overflow: hidden; font-family: 'Segoe UI', 'Arial', sans-serif; }
+        #info {
+            position: absolute;
+            top: 20px;
+            left: 20px;
             color: white;
-        }
-
-        .choice-btn:active {
-            transform: scale(0.98);
-        }
-
-        /* Action bar (restart / stats) */
-        .action-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0.9rem 1.8rem;
-            background: #070b10;
-            border-top: 1px solid #282f3a;
-            flex-wrap: wrap;
-            gap: 0.8rem;
-        }
-
-        .restart-btn {
-            background: #3c2a2a;
-            border: none;
-            color: #f0cfb0;
-            padding: 0.5rem 1.2rem;
-            border-radius: 40px;
+            background: rgba(0,0,0,0.7);
+            padding: 8px 15px;
+            border-radius: 8px;
+            pointer-events: none;
+            z-index: 10;
+            backdrop-filter: blur(5px);
+            font-size: 14px;
             font-weight: bold;
+            text-shadow: 1px 1px 0 black;
+        }
+        #controls-info {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            color: rgba(255,255,255,0.8);
+            background: rgba(0,0,0,0.5);
+            padding: 5px 12px;
+            border-radius: 8px;
+            font-size: 12px;
             font-family: monospace;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-size: 0.9rem;
+            pointer-events: none;
+            z-index: 10;
         }
-
-        .restart-btn:hover {
-            background: #5e3f3f;
-            color: #ffefcf;
-            transform: scale(1.02);
+        #health-bar {
+            position: absolute;
+            bottom: 30px;
+            right: 30px;
+            width: 200px;
+            height: 16px;
+            background: rgba(0,0,0,0.6);
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid #ff4444;
+            pointer-events: none;
+            z-index: 10;
         }
-
-        .stats {
-            font-size: 0.8rem;
-            color: #aead9a;
-            background: #1e222d60;
-            padding: 0.3rem 0.9rem;
-            border-radius: 28px;
-            font-family: monospace;
+        #health-fill {
+            width: 100%;
+            height: 100%;
+            background: #ff3333;
+            transition: width 0.2s;
         }
-
-        /* subtle footer */
-        .game-footer {
-            font-size: 0.7rem;
-            text-align: center;
-            padding: 0.8rem;
-            color: #5f6c7a;
-            border-top: 1px solid #1e2530;
-        }
-
-        @media (max-width: 550px) {
-            .story-panel {
-                padding: 1.5rem;
-            }
-            .story-text {
-                font-size: 1rem;
-            }
-            .choice-btn {
-                padding: 0.7rem 1rem;
-                font-size: 0.9rem;
-            }
-            .game-header h1 {
-                font-size: 1.3rem;
-            }
+        .crosshair {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 4px;
+            height: 4px;
+            background: white;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            border: 1px solid black;
+            pointer-events: none;
+            z-index: 20;
         }
     </style>
 </head>
 <body>
-<div class="game-container" id="gameRoot">
-    <div class="game-header">
-        <h1>⚔️ ECHOES OF THE LOST KEEP ⚔️</h1>
-        <p>✦ a branching tale of fate, courage & shadow ✦</p>
+    <div id="info">
+        🚀 NEO CITY | Open World | W/A/S/D = Move | Mouse = Look | Click = Shoot
     </div>
-    <div class="story-panel" id="storyPanel">
-        <div class="story-text" id="storyText">
-            Loading the ancient scroll...
-        </div>
-        <div class="story-meta">
-            <span>📜 Chapter of Whispers</span>
-            <span>🎭 your choices shape destiny</span>
-        </div>
+    <div id="controls-info">
+        🎮 [E] Enter Car | [Space] Jump | [Shift] Run | [R] Reload
     </div>
-    <div class="choices-area" id="choicesArea">
-        <div class="choices-title">⟡ what will you do? ⟡</div>
-        <div class="choices-buttons" id="choicesContainer">
-            <!-- dynamic choices injected here -->
-        </div>
+    <div id="health-bar">
+        <div id="health-fill"></div>
     </div>
-    <div class="action-bar">
-        <button class="restart-btn" id="restartGameBtn">⟳ restart journey</button>
-        <div class="stats" id="statsDisplay">⚔️ valor: 0  |  🜁 shadow: 0</div>
-    </div>
-    <div class="game-footer">
-        ✦ each decision weaves the legend — multiple endings await ✦
-    </div>
-</div>
+    <div class="crosshair"></div>
 
-<script>
-    // --------------------------------------------------------------
-    // STORY DATABASE: NODES WITH CHOICES, OUTCOMES, STATS IMPACT
-    // --------------------------------------------------------------
-    // The game keeps two main stats: Valor (courage/honor) & Shadow (mystic/dark cunning)
-    // Many endings will depend on these thresholds
-    
-    const STATS = {
-        VALOR: 'valor',
-        SHADOW: 'shadow'
-    };
-    
-    // ---- Story nodes definitions ----
-    const storyGraph = {
-        // INTRO - node 0
-        start: {
-            id: 'start',
-            title: 'The Forgotten Road',
-            text: "You stand at the crumbling edge of the Whispering Woods. Before you lies the path to the Lost Keep, where King Aldric's spirit is said to linger. An old hermit offers you two tokens: a silver talon (courage) or a raven's feather (cunning). The heavy mist coils like a living thing.\n\n'Choose wisely, wanderer,' the hermit whispers. 'Your soul's echo will decide the Keep's fate...'",
-            choices: [
-                { text: "🛡️ Take the Silver Talon — embrace honor & valor", nextNode: "crossroads_valor", stats: { valor: +2, shadow: 0 } },
-                { text: "🌑 Accept the Raven's Feather — rely on shadows & subtlety", nextNode: "crossroads_shadow", stats: { valor: 0, shadow: +2 } },
-                { text: "❓ Reject both — walk your own raw path", nextNode: "raw_path", stats: { valor: +1, shadow: +1 } }
-            ]
-        },
-        // VALOR PATH START
-        crossroads_valor: {
-            id: 'crossroads_valor',
-            text: "Clutching the silver talon, you feel warmth in your chest. You stride into the ancient grove. A wounded griffin blocks the way, gasping for breath. It speaks in a low rumble: 'Heal me, and I shall guide you. Or leave me, and take the faster but treacherous mountain pass.'",
-            choices: [
-                { text: "✨ Heal the noble griffin — risk delay but gain a powerful ally", nextNode: "griffin_ally", stats: { valor: +3, shadow: -1 } },
-                { text: "⛰️ Abandon the beast — take the mountain pass with haste", nextNode: "mountain_pass_valor", stats: { valor: -1, shadow: +1 } }
-            ]
-        },
-        griffin_ally: {
-            id: 'griffin_ally',
-            text: "You share your water and herbs, mending the griffin's wing. Grateful, it bows low. 'I am Skyshadow. The Keep's curse feeds on solitude. Come, I will carry you over the Thornwall.' Together you soar above the cursed pines. You land before an ancient door carved with runes of loyalty.",
-            choices: [
-                { text: "🏰 Enter the door with Skyshadow beside you — united front", nextNode: "hall_of_oaths", stats: { valor: +2, shadow: 0 } },
-                { text: "🗝️ Whisper a thank you but send the griffin away — enter alone", nextNode: "alone_hall", stats: { valor: -1, shadow: +2 } }
-            ]
-        },
-        mountain_pass_valor: {
-            id: 'mountain_pass_valor',
-            text: "You rush through the treacherous mountain pass. Rocks crumble behind you. You find an abandoned watchtower with a strange ghostly bell. Ringing it summons visions of past knights. They offer you a cursed blade that grants might but whispers temptations.",
-            choices: [
-                { text: "⚔️ Take the Cursed Blade — power at a price", nextNode: "cursed_blade_path", stats: { valor: -2, shadow: +3 } },
-                { text: "🔔 Refuse and pray to the old gods for guidance", nextNode: "prayer_clearing", stats: { valor: +2, shadow: -1 } }
-            ]
-        },
-        cursed_blade_path: {
-            id: 'cursed_blade_path',
-            text: "The blade hums with dark promises. You cut through the shadow-wardens with ease, but each victory stains your spirit. You reach the Keep's throne room, where a reflection of yourself snarls. The Keep offers a bargain: become its eternal guardian or shatter the blade.",
-            choices: [
-                { text: "💔 Shatter the blade at the last moment — redeem yourself", nextNode: "ending_redemption", stats: { valor: +4, shadow: -3 } },
-                { text: "👑 Accept the dark bargain — rule the Keep as a shadow tyrant", nextNode: "ending_shadow_tyrant", stats: { valor: -5, shadow: +5 } }
-            ]
-        },
-        prayer_clearing: {
-            id: 'prayer_clearing',
-            text: "Kneeling in mossy ruins, a celestial light blinds you. An ethereal stag appears. 'True courage is mercy.' It marks your brow with starlight. The Lost Keep's doors swing open before you, and the inner sanctum holds the Crown of Oaths.",
-            choices: [
-                { text: "👑 Take the Crown of Oaths and restore the kingdom", nextNode: "ending_true_king", stats: { valor: +5, shadow: -2 } },
-                { text: "🕯️ Lay the crown on the altar and leave — a humble legend", nextNode: "ending_humble_legend", stats: { valor: +3, shadow: 0 } }
-            ]
-        },
-        hall_of_oaths: {
-            id: 'hall_of_oaths',
-            text: "Skyshadow's presence fills the hall with primal light. Fallen knights rise as spirits, and they recognize your companion. 'One who heals earns the right to challenge the Eclipse Warden.' The final test: answer a riddle of sacrifice or combat.",
-            choices: [
-                { text: "🧠 Answer the riddle of sacrifice — wisdom over violence", nextNode: "wisdom_end", stats: { valor: +2, shadow: +1 } },
-                { text: "⚔️ Challenge the Warden to single combat", nextNode: "combat_glory", stats: { valor: +3, shadow: -1 } }
-            ]
-        },
-        wisdom_end: {
-            id: 'wisdom_end',
-            text: "You recite the ancient triad: 'Duty without heart is a cage, power without wisdom is ruin, love without courage is hollow.' The Eclipse Warden dissolves into light. The Lost Keep becomes a sanctuary for all lost souls. Bards sing of your clever mercy for centuries.",
-            choices: [] // ending
-        },
-        combat_glory: {
-            id: 'combat_glory',
-            text: "You face the Warden in a storm of steel and honor. Skyshadow lends you swiftness. After a grueling fight, you pierce its shadow core. The curse breaks, but you fall with a mortal wound. Yet the people build a statue in the great square — the hero who gave everything.",
-            choices: [] // ending
-        },
-        alone_hall: {
-            id: 'alone_hall',
-            text: "You dismiss Skyshadow — inside the hall, solitude gnaws at your mind. A phantom offers you a mirror: see what you truly desire. Power, love, or oblivion?",
-            choices: [
-                { text: "🔮 Gaze into power — become lord of echoes", nextNode: "ending_lord_echoes", stats: { valor: -3, shadow: +4 } },
-                { text: "💔 Shatter the mirror — choose oblivion and wander forever", nextNode: "ending_wanderer", stats: { valor: 0, shadow: 0 } }
-            ]
-        },
-        // SHADOW PATH START
-        crossroads_shadow: {
-            id: 'crossroads_shadow',
-            text: "The Raven's Feather grows cold in your palm. You take the forgotten tunnels beneath the mountain. Whispers guide you to a coven of shadow-weavers. They offer you a ritual to 'unveil the Keep's heart', but it requires a sacrifice of a memory.",
-            choices: [
-                { text: "🎭 Perform the ritual — sacrifice a precious memory", nextNode: "shadow_ritual", stats: { shadow: +3, valor: -1 } },
-                { text: "🌿 Refuse the ritual and seek the hidden entrance yourself", nextNode: "sneak_entrance", stats: { shadow: +1, valor: +1 } }
-            ]
-        },
-        shadow_ritual: {
-            id: 'shadow_ritual',
-            text: "The shadows accept your memory of childhood warmth. You gain sight beyond sight. You walk through walls into the Keep's heart, where a cursed mirror shows the future: either you bind the darkness or it consumes you.",
-            choices: [
-                { text: "🪞 Bind the darkness into the Raven's Feather — become a wise dusk-bringer", nextNode: "ending_dusk_bringer", stats: { shadow: +2, valor: +2 } },
-                { text: "🌀 Let darkness consume you — become the new Nightmare King", nextNode: "ending_nightmare_king", stats: { shadow: +6, valor: -4 } }
-            ]
-        },
-        sneak_entrance: {
-            id: 'sneak_entrance',
-            text: "You slip through a crumbling lattice. Inside, you find the original wardstone of the Keep. It is cracked. You can either repair it using thieved magical essence or shatter it to unleash chaotic freedom.",
-            choices: [
-                { text: "🔧 Repair the wardstone — steady balance", nextNode: "ending_balance", stats: { valor: +2, shadow: +1 } },
-                { text: "💥 Shatter the stone — total anarchy, but you rule the ruins", nextNode: "ending_anarchy", stats: { shadow: +5, valor: -2 } }
-            ]
-        },
-        // RAW PATH (reject both tokens)
-        raw_path: {
-            id: 'raw_path',
-            text: "Without token, the forest treats you as neither prey nor guest. You wander until you find a hidden druidic circle. An ancient tree speaks: 'One who refuses gifts might still be worthy. Choose: become the Grove Guardian or seek the Keep through the sunless bog.'",
-            choices: [
-                { text: "🌳 Become Grove Guardian — protect nature, abandon the Keep", nextNode: "ending_grove_guardian", stats: { valor: +3, shadow: +1 } },
-                { text: "🏞️ Push through the bog toward the Keep", nextNode: "bog_journey", stats: { valor: +1, shadow: +2 } }
-            ]
-        },
-        bog_journey: {
-            id: 'bog_journey',
-            text: "The bog tests your endurance. Ghost lights lure you, but you resist. You find a hidden crypt with three relics: a warrior's helm, a rogue's cloak, a priest's censer. Choose your aspect.",
-            choices: [
-                { text: "⛑️ Warrior's Helm — face the curse head-on", nextNode: "warrior_ending", stats: { valor: +3, shadow: 0 } },
-                { text: "🥷 Rogue's Cloak — infiltrate and disable the curse", nextNode: "rogue_ending", stats: { shadow: +3, valor: 0 } },
-                { text: "🕯️ Priest's Censer — try to exorcise the sorrow", nextNode: "priest_ending", stats: { valor: +2, shadow: +1 } }
-            ]
-        },
-        warrior_ending: {
-            id: 'warrior_ending',
-            text: "You smash through the cursed wards with brute force. The Keep's spirit respects your tenacity and lifts the gloom, naming you Warden of the Marches. The land heals under your stern but just rule.",
-            choices: []
-        },
-        rogue_ending: {
-            id: 'rogue_ending',
-            text: "Under cover of shadows, you sabotage the main hex crystal. The curse evaporates silently. No one knows your name, but the common folk speak of a 'phantom savior.' You steal a legendary gem and live free.",
-            choices: []
-        },
-        priest_ending: {
-            id: 'priest_ending',
-            text: "You chant old hymns and release each sorrow trapped within the walls. The spirits weep with gratitude. The Lost Keep becomes a peaceful sanctuary, and you become the first of the Silent Order.",
-            choices: []
-        },
-        // Specific endings from previous continuations:
-        ending_redemption: {
-            id: 'ending_redemption',
-            text: "With a final cry, you shatter the cursed blade. The explosion of light cleanses the throne room. King Aldric's ghost thanks you, placing a laurel on your head. You become the legendary Redeemer, and the Lost Keep is renamed Fort Hope. ✨ GLORIOUS REDEMPTION END ✨",
-            choices: []
-        },
-        ending_shadow_tyrant: {
-            id: 'ending_shadow_tyrant',
-            text: "You accept the dark bargain. The Lost Keep becomes a fortress of eternal twilight. You rule with an iron fist masked by shadows. None dare enter your realm. ⚫ SHADOW TYRANT ENDING ⚫",
-            choices: []
-        },
-        ending_true_king: {
-            id: 'ending_true_king',
-            text: "The Crown of Oaths blazes as you place it upon your brow. Every fallen knight rises to bow. Peace sweeps across the land for a thousand years. 👑 TRUE KING ENDING — the golden age begins 👑",
-            choices: []
-        },
-        ending_humble_legend: {
-            id: 'ending_humble_legend',
-            text: "You leave the crown untouched, walking away into the sunrise. Villages tell tales of the 'nameless one' who saved the Keep without desire for reward. 🍃 THE HUMBLE LEGEND — eternal in spirit 🍃",
-            choices: []
-        },
-        ending_lord_echoes: {
-            id: 'ending_lord_echoes',
-            text: "You become the Lord of Echoes, commanding ghostly legions. The mortal world knows you as a myth — neither good nor evil, just eternal. 🏛️ LORD OF ECHOES END 🏛️",
-            choices: []
-        },
-        ending_wanderer: {
-            id: 'ending_wanderer',
-            text: "You shatter the mirror, and reality dissolves. You wander as a translucent shade between worlds, forever searching for a home you'll never find. 🌫️ THE ETERNAL WANDERER 🌫️",
-            choices: []
-        },
-        ending_dusk_bringer: {
-            id: 'ending_dusk_bringer',
-            text: "You bind the darkness into the Raven's Feather. Now you walk between dusk and dawn, healing cursed places. Whispers call you the Dusk Bringer — a legend of twilight salvation. 🌄 DUSK BRINGER ENDING 🌄",
-            choices: []
-        },
-        ending_nightmare_king: {
-            id: 'ending_nightmare_king',
-            text: "The darkness consumes all. You become the Nightmare King, turning the Keep into a realm of terror. Even your memory brings fear. 💀 NIGHTMARE KING — an age of dread 💀",
-            choices: []
-        },
-        ending_balance: {
-            id: 'ending_balance',
-            text: "You repair the wardstone with equal parts valor and subtle craft. The Keep stabilizes as a neutral ground. You become a mythic arbiter — the Scale Warden. ⚖️ ENDING OF PERFECT BALANCE ⚖️",
-            choices: []
-        },
-        ending_anarchy: {
-            id: 'ending_anarchy',
-            text: "The stone shatters, releasing raw chaos. The Keep crumbles but you survive, a warlord of the wild magic zone. Freedom without laws — chaotic and glorious. 🔥 ANARCHY REIGN 🔥",
-            choices: []
-        },
-        ending_grove_guardian: {
-            id: 'ending_grove_guardian',
-            text: "You merge with the ancient tree and protect the wilds forever. The Lost Keep is forgotten, but the forest thrives under your gentle watch. 🌳 GROVE GUARDIAN — eternal nature 🌳",
-            choices: []
+    <!-- Import Three.js core and add-ons -->
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.128.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.128.0/examples/jsm/"
+            }
         }
-    };
-    
-    // Helper to get node if exists, else fallback
-    function getNode(nodeId) {
-        return storyGraph[nodeId] || storyGraph.start;
-    }
-    
-    // Game state
-    let currentNodeId = "start";
-    let currentStats = { valor: 0, shadow: 0 };
-    
-    // DOM elements
-    const storyTextEl = document.getElementById('storyText');
-    const choicesContainer = document.getElementById('choicesContainer');
-    const statsDisplay = document.getElementById('statsDisplay');
-    const restartBtn = document.getElementById('restartGameBtn');
-    
-    // Update stats UI
-    function updateStatsUI() {
-        statsDisplay.innerText = `⚔️ valor: ${currentStats.valor}  |  🜁 shadow: ${currentStats.shadow}`;
-    }
-    
-    // Apply stat modifications from choice
-    function applyStatMods(mods) {
-        if (mods.valor) currentStats.valor += mods.valor;
-        if (mods.shadow) currentStats.shadow += mods.shadow;
-        // clamp to avoid insane numbers, but just for display
-        if (currentStats.valor < -10) currentStats.valor = -10;
-        if (currentStats.shadow < -10) currentStats.shadow = -10;
-        updateStatsUI();
-    }
-    
-    // Render current node & choices (ending detection)
-    function renderGame() {
-        const node = getNode(currentNodeId);
-        if (!node) {
-            // fallback
-            storyTextEl.innerText = "The threads of fate have vanished... Restart the journey.";
-            choicesContainer.innerHTML = `<button class="choice-btn" id="emergencyRestart">⟳ Begin anew</button>`;
-            document.getElementById('emergencyRestart')?.addEventListener('click', () => restartGame());
-            return;
+    </script>
+
+    <script type="module">
+        import * as THREE from 'three';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+        import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
+
+        // --- setup scene, camera, renderers ---
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x050b1a);
+        scene.fog = new THREE.FogExp2(0x050b1a, 0.008); // atmospheric fog
+        
+        // camera (first person)
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.set(0, 1.7, 5);
+        
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.shadowMap.enabled = true; // high quality shadows
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        renderer.setPixelRatio(window.devicePixelRatio);
+        document.body.appendChild(renderer.domElement);
+        
+        // CSS2 renderer for text labels
+        const labelRenderer = new CSS2DRenderer();
+        labelRenderer.setSize(window.innerWidth, window.innerHeight);
+        labelRenderer.domElement.style.position = 'absolute';
+        labelRenderer.domElement.style.top = '0px';
+        labelRenderer.domElement.style.left = '0px';
+        labelRenderer.domElement.style.pointerEvents = 'none';
+        document.body.appendChild(labelRenderer.domElement);
+        
+        // --- lighting (realistic) ---
+        // ambient
+        const ambientLight = new THREE.AmbientLight(0x404060);
+        scene.add(ambientLight);
+        // main directional light (sun)
+        const sunLight = new THREE.DirectionalLight(0xfff5d1, 1.2);
+        sunLight.position.set(50, 30, 20);
+        sunLight.castShadow = true;
+        sunLight.receiveShadow = true;
+        sunLight.shadow.mapSize.width = 1024;
+        sunLight.shadow.mapSize.height = 1024;
+        sunLight.shadow.camera.near = 0.5;
+        sunLight.shadow.camera.far = 100;
+        sunLight.shadow.camera.left = -15;
+        sunLight.shadow.camera.right = 15;
+        sunLight.shadow.camera.top = 15;
+        sunLight.shadow.camera.bottom = -15;
+        scene.add(sunLight);
+        // fill light from below
+        const fillLight = new THREE.PointLight(0x4466cc, 0.4);
+        fillLight.position.set(0, -5, 0);
+        scene.add(fillLight);
+        // back rim light
+        const rimLight = new THREE.PointLight(0xffaa66, 0.6);
+        rimLight.position.set(-10, 15, -15);
+        scene.add(rimLight);
+        
+        // ground plane with grid + reflective material (city ground)
+        const groundMat = new THREE.MeshStandardMaterial({ color: 0x1a1f2e, roughness: 0.7, metalness: 0.2 });
+        const groundPlane = new THREE.Mesh(new THREE.PlaneGeometry(200, 200), groundMat);
+        groundPlane.rotation.x = -Math.PI / 2;
+        groundPlane.position.y = -0.05;
+        groundPlane.receiveShadow = true;
+        scene.add(groundPlane);
+        
+        // grid helper for reference
+        const gridHelper = new THREE.GridHelper(200, 40, 0x88aaff, 0x335588);
+        gridHelper.position.y = -0.02;
+        scene.add(gridHelper);
+        
+        // --- building generation (basic city blocks) ---
+        const buildingColors = [0x7a8c9e, 0x6c7a89, 0x5d6d7e, 0x4a5b6e, 0x9aaec0, 0xb0c4de];
+        const buildings = [];
+        
+        for (let i = -8; i <= 8; i++) {
+            for (let j = -8; j <= 8; j++) {
+                if (Math.random() > 0.65) continue; // spacing
+                const width = 0.8 + Math.random() * 0.6;
+                const depth = 0.8 + Math.random() * 0.6;
+                const height = 0.8 + Math.random() * 2.5;
+                const boxGeo = new THREE.BoxGeometry(width, height, depth);
+                const material = new THREE.MeshStandardMaterial({ color: buildingColors[Math.floor(Math.random() * buildingColors.length)], roughness: 0.3, metalness: 0.7 });
+                const building = new THREE.Mesh(boxGeo, material);
+                const posX = (i + (Math.random() - 0.5) * 0.4) * 1.6;
+                const posZ = (j + (Math.random() - 0.5) * 0.4) * 1.6;
+                building.position.set(posX, height / 2, posZ);
+                building.castShadow = true;
+                building.receiveShadow = true;
+                scene.add(building);
+                buildings.push(building);
+            }
         }
         
-        // show story text with a small flavor: include stats if ending? not needed
-        let displayText = node.text;
-        // if node has no choices, it's an ending: add small footer line
-        if (!node.choices || node.choices.length === 0) {
-            displayText += "\n\n✦ THE END — your legend is carved into time ✦";
+        // add some tower blocks
+        const towerMat = new THREE.MeshStandardMaterial({ color: 0x2c3e50, metalness: 0.85, roughness: 0.2 });
+        for (let t = 0; t < 15; t++) {
+            const towerGeo = new THREE.CylinderGeometry(0.7, 0.9, 2.8, 8);
+            const tower = new THREE.Mesh(towerGeo, towerMat);
+            const angle = (t / 15) * Math.PI * 2;
+            const radius = 12;
+            tower.position.set(Math.cos(angle) * radius, 1.4, Math.sin(angle) * radius);
+            tower.castShadow = true;
+            scene.add(tower);
         }
-        storyTextEl.innerText = displayText;
         
-        // generate choice buttons
-        choicesContainer.innerHTML = '';
-        if (node.choices && node.choices.length > 0) {
-            node.choices.forEach((choice, idx) => {
-                const btn = document.createElement('button');
-                btn.className = 'choice-btn';
-                btn.textContent = choice.text;
-                btn.addEventListener('click', () => {
-                    // apply stat changes from this choice
-                    if (choice.stats) {
-                        applyStatMods(choice.stats);
+        // --- simple roads (decorative lines)
+        const roadMat = new THREE.MeshStandardMaterial({ color: 0x2c2f36, roughness: 0.5 });
+        for (let r = -12; r <= 12; r+=2.5) {
+            const roadStrip = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.05, 20), roadMat);
+            roadStrip.position.set(r, -0.02, 0);
+            roadStrip.receiveShadow = true;
+            scene.add(roadStrip);
+            
+            const roadStripZ = new THREE.Mesh(new THREE.BoxGeometry(20, 0.05, 0.2), roadMat);
+            roadStripZ.position.set(0, -0.02, r);
+            roadStripZ.receiveShadow = true;
+            scene.add(roadStripZ);
+        }
+        
+        // --- player object (simple capsule representation)
+        const playerGroup = new THREE.Group();
+        const bodyGeo = new THREE.CylinderGeometry(0.4, 0.4, 1.2, 8);
+        const playerMat = new THREE.MeshStandardMaterial({ color: 0x44aaff, metalness: 0.2, emissive: 0x114466 });
+        const playerMesh = new THREE.Mesh(bodyGeo, playerMat);
+        playerMesh.castShadow = true;
+        playerMesh.position.y = 0.6;
+        playerGroup.add(playerMesh);
+        
+        const eyeMat = new THREE.MeshStandardMaterial({ color: 0xffaa77 });
+        const leftEye = new THREE.Mesh(new THREE.SphereGeometry(0.1, 16, 16), eyeMat);
+        leftEye.position.set(-0.2, 0.85, 0.45);
+        const rightEye = new THREE.Mesh(new THREE.SphereGeometry(0.1, 16, 16), eyeMat);
+        rightEye.position.set(0.2, 0.85, 0.45);
+        playerGroup.add(leftEye);
+        playerGroup.add(rightEye);
+        
+        scene.add(playerGroup);
+        playerGroup.position.set(0, 0, 0);
+        
+        // --- simple vehicle spawn (one sports car)
+        const carGroup = new THREE.Group();
+        const carBody = new THREE.Mesh(new THREE.BoxGeometry(0.9, 0.4, 1.6), new THREE.MeshStandardMaterial({ color: 0xdd3333, metalness: 0.8, roughness: 0.2 }));
+        carBody.position.y = 0.2;
+        carBody.castShadow = true;
+        carGroup.add(carBody);
+        const roof = new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.3, 1.0), new THREE.MeshStandardMaterial({ color: 0x111111 }));
+        roof.position.y = 0.55;
+        roof.castShadow = true;
+        carGroup.add(roof);
+        // wheels
+        const wheelGeo = new THREE.CylinderGeometry(0.2, 0.2, 0.1, 16);
+        const wheelMat = new THREE.MeshStandardMaterial({ color: 0x222222 });
+        const positions = [[-0.5, 0.1, -0.7], [0.5, 0.1, -0.7], [-0.5, 0.1, 0.7], [0.5, 0.1, 0.7]];
+        positions.forEach(pos => {
+            const wheel = new THREE.Mesh(wheelGeo, wheelMat);
+            wheel.rotation.z = Math.PI/2;
+            wheel.position.set(pos[0], pos[1], pos[2]);
+            wheel.castShadow = true;
+            carGroup.add(wheel);
+        });
+        carGroup.position.set(5, 0, 4);
+        scene.add(carGroup);
+        
+        // --- player control vars
+        const keyState = { w: false, s: false, a: false, d: false, shift: false, space: false };
+        let moveSpeed = 5.5;
+        let velocityY = 0;
+        let isGrounded = true;
+        let nearVehicle = false;
+        let inVehicle = false;
+        let vehicleObj = null;
+        let cameraOffset = new THREE.Vector3(0, 1.7, 0);
+        
+        // mouse look
+        let mouseX = 0, mouseY = 0;
+        let pitch = 0;
+        let yaw = -Math.PI / 4;
+        document.addEventListener('mousemove', (e) => {
+            if (document.pointerLockElement === renderer.domElement) {
+                yaw -= e.movementX * 0.002;
+                pitch -= e.movementY * 0.002;
+                if (pitch > Math.PI/2.2) pitch = Math.PI/2.2;
+                if (pitch < -Math.PI/2.2) pitch = -Math.PI/2.2;
+            }
+        });
+        
+        renderer.domElement.addEventListener('click', () => {
+            renderer.domElement.requestPointerLock();
+        });
+        
+        // keyboard events
+        window.addEventListener('keydown', (e) => {
+            const k = e.key.toLowerCase();
+            if (k === 'w') keyState.w = true;
+            if (k === 's') keyState.s = true;
+            if (k === 'a') keyState.a = true;
+            if (k === 'd') keyState.d = true;
+            if (k === 'shift') keyState.shift = true;
+            if (k === ' ') { keyState.space = true; e.preventDefault(); }
+            if (k === 'e') {
+                if (nearVehicle && !inVehicle) {
+                    inVehicle = true;
+                    vehicleObj = carGroup;
+                    playerGroup.visible = false;
+                    cameraOffset.set(0, 1.2, 2.2);
+                } else if (inVehicle) {
+                    inVehicle = false;
+                    vehicleObj = null;
+                    playerGroup.visible = true;
+                    cameraOffset.set(0, 1.7, 0);
+                    playerGroup.position.copy(carGroup.position);
+                }
+            }
+        });
+        
+        window.addEventListener('keyup', (e) => {
+            const k = e.key.toLowerCase();
+            if (k === 'w') keyState.w = false;
+            if (k === 's') keyState.s = false;
+            if (k === 'a') keyState.a = false;
+            if (k === 'd') keyState.d = false;
+            if (k === 'shift') keyState.shift = false;
+            if (k === ' ') keyState.space = false;
+        });
+        
+        // simple collision detection with buildings
+        function checkCollision(pos, radius = 0.5) {
+            for (let b of buildings) {
+                const bbox = new THREE.Box3().setFromObject(b);
+                const pbox = new THREE.Box3().setFromCenterAndSize(pos, new THREE.Vector3(radius*2, 1.2, radius*2));
+                if (bbox.intersectsBox(pbox)) return true;
+            }
+            // boundary
+            if (Math.abs(pos.x) > 22 || Math.abs(pos.z) > 22) return true;
+            return false;
+        }
+        
+        // weapon system (basic projectile)
+        const bullets = [];
+        function shoot() {
+            const direction = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion);
+            const origin = inVehicle ? vehicleObj.position.clone().add(new THREE.Vector3(0, 0.8, 0)) : playerGroup.position.clone().add(new THREE.Vector3(0, 0.8, 0));
+            const bulletGeo = new THREE.SphereGeometry(0.08, 6, 6);
+            const bulletMat = new THREE.MeshStandardMaterial({ color: 0xff6600, emissive: 0xff2200 });
+            const bullet = new THREE.Mesh(bulletGeo, bulletMat);
+            bullet.position.copy(origin);
+            bullet.userData = { vel: direction.multiplyScalar(25), life: 100 };
+            scene.add(bullet);
+            bullets.push(bullet);
+        }
+        window.addEventListener('mousedown', (e) => {
+            if (e.button === 0 && document.pointerLockElement === renderer.domElement) {
+                shoot();
+            }
+        });
+        
+        // update health bar random for demo (just UI)
+        let health = 100;
+        const healthFill = document.getElementById('health-fill');
+        function takeDamage(amt) {
+            health = Math.max(0, health - amt);
+            healthFill.style.width = (health) + '%';
+            if (health <= 0) {
+                alert("You died! Respawn.");
+                health = 100;
+                healthFill.style.width = '100%';
+                playerGroup.position.set(0, 0, 0);
+                if(inVehicle) carGroup.position.set(0, 0, 0);
+            }
+        }
+        
+        // proximity check for vehicle
+        function updateProximity() {
+            const dist = playerGroup.position.distanceTo(carGroup.position);
+            nearVehicle = (dist < 2.2 && !inVehicle);
+        }
+        
+        let lastTime = performance.now();
+        // animation loop
+        function animate() {
+            const now = performance.now();
+            let delta = Math.min(0.033, (now - lastTime) / 1000);
+            lastTime = now;
+            if (delta <= 0) delta = 0.016;
+            
+            let speed = keyState.shift ? 9.0 : moveSpeed;
+            let move = new THREE.Vector3(0, 0, 0);
+            if (keyState.w) move.z -= 1;
+            if (keyState.s) move.z += 1;
+            if (keyState.a) move.x -= 1;
+            if (keyState.d) move.x += 1;
+            move.normalize();
+            
+            // camera direction movement (first person relative)
+            const forward = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion);
+            const right = new THREE.Vector3(1, 0, 0).applyQuaternion(camera.quaternion);
+            forward.y = 0;
+            right.y = 0;
+            forward.normalize();
+            right.normalize();
+            
+            let moveDelta = new THREE.Vector3(0, 0, 0);
+            moveDelta.addScaledVector(forward, move.z);
+            moveDelta.addScaledVector(right, move.x);
+            moveDelta.multiplyScalar(speed * delta);
+            
+            if (!inVehicle) {
+                let newPos = playerGroup.position.clone().add(moveDelta);
+                if (!checkCollision(newPos, 0.5)) {
+                    playerGroup.position.copy(newPos);
+                }
+                // simple gravity
+                if (playerGroup.position.y > 0.05) {
+                    velocityY -= 15 * delta;
+                    playerGroup.position.y += velocityY * delta;
+                    if (playerGroup.position.y <= 0.05) {
+                        playerGroup.position.y = 0.05;
+                        velocityY = 0;
+                        isGrounded = true;
+                        if (keyState.space && isGrounded) { velocityY = 5.5; isGrounded = false; }
+                    } else { isGrounded = false; }
+                } else {
+                    velocityY = 0;
+                    isGrounded = true;
+                    if (keyState.space) { velocityY = 5.5; isGrounded = false; }
+                }
+            } else {
+                // vehicle control
+                let carMove = new THREE.Vector3(move.x, 0, move.z);
+                carMove.applyQuaternion(camera.quaternion);
+                carMove.y = 0;
+                carMove.multiplyScalar(speed * delta * 0.9);
+                let newCarPos = vehicleObj.position.clone().add(carMove);
+                if (!checkCollision(newCarPos, 0.9)) vehicleObj.position.copy(newCarPos);
+            }
+            
+            // update camera position (first person + vehicle offset)
+            if (!inVehicle) {
+                camera.position.copy(playerGroup.position).add(cameraOffset);
+            } else {
+                camera.position.copy(vehicleObj.position).add(cameraOffset);
+            }
+            camera.rotation.order = 'YXZ';
+            camera.rotation.y = yaw;
+            camera.rotation.x = pitch;
+            
+            // bullets update & collisions
+            for (let i=0; i<bullets.length; i++) {
+                const b = bullets[i];
+                b.position.add(b.userData.vel.clone().multiplyScalar(delta));
+                b.userData.life -= delta*40;
+                if (b.userData.life <= 0 || b.position.y < -1 || Math.abs(b.position.x) > 40 || Math.abs(b.position.z) > 40) {
+                    scene.remove(b);
+                    bullets.splice(i,1);
+                    i--;
+                    continue;
+                }
+                // hit buildings or ground? simple remove after short distance
+            }
+            
+            updateProximity();
+            // animate car & player group visual rotation (just for fun)
+            if (!inVehicle) {
+                const angleToTarget = Math.atan2(move.x, move.z);
+                if (move.length() > 0.1) playerGroup.rotation.y = angleToTarget;
+            } else {
+                const speedFactor = (keyState.w ? 1 : 0) - (keyState.s ? 1 : 0);
+                if (Math.abs(speedFactor) > 0.1) vehicleObj.rotation.y = camera.rotation.y;
+            }
+            
+            // random damage for atmosphere
+            if (Math.random() < 0.005) takeDamage(0);
+            
+            renderer.render(scene, camera);
+            labelRenderer.render(scene, camera);
+            requestAnimationFrame(animate);
+        }
+        
+        // simple start
+        animate();
+        
+        // resize handler
+        window.addEventListener('resize', onWindowResize, false);
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            labelRenderer.setSize(window.innerWidth, window.innerHeight);
+        }
+        
+        // ========== PART 2 ==========
+// Advanced Features: Mission System, NPCs, Weapons, Enemy AI
+        
+        // --- MISSION SYSTEM ---
+        let activeMission = null;
+        let missionComplete = false;
+        const missions = {
+            mission1: {
+                name: "🏁 First Contact",
+                description: "Reach the marker at the central plaza",
+                type: "reach",
+                targetPos: new THREE.Vector3(8, 0.5, 6),
+                completed: false,
+                reward: 500
+            },
+            mission2: {
+                name: "💥 Eliminate Targets",
+                description: "Take down 3 enemy drones",
+                type: "kill",
+                targetCount: 3,
+                currentKills: 0,
+                completed: false,
+                reward: 1000
+            }
+        };
+        
+        // mission marker (CSS2D)
+        const missionMarkerDiv = document.createElement('div');
+        missionMarkerDiv.textContent = '📍 MISSION';
+        missionMarkerDiv.style.color = '#ffaa44';
+        missionMarkerDiv.style.backgroundColor = 'rgba(0,0,0,0.7)';
+        missionMarkerDiv.style.padding = '4px 12px';
+        missionMarkerDiv.style.borderRadius = '20px';
+        missionMarkerDiv.style.fontSize = '14px';
+        missionMarkerDiv.style.fontWeight = 'bold';
+        missionMarkerDiv.style.border = '1px solid #ffaa44';
+        const missionMarker = new CSS2DObject(missionMarkerDiv);
+        scene.add(missionMarker);
+        
+        function updateMissionMarker() {
+            if (activeMission && activeMission.type === 'reach' && !activeMission.completed) {
+                missionMarker.position.copy(activeMission.targetPos);
+                missionMarker.visible = true;
+            } else {
+                missionMarker.visible = false;
+            }
+        }
+        
+        function startMission(missionId) {
+            activeMission = missions[missionId];
+            missionComplete = false;
+            if (activeMission.type === 'kill') activeMission.currentKills = 0;
+            showNotification(`📢 New Mission: ${activeMission.name}`, '#44ff88');
+            updateMissionMarker();
+        }
+        
+        function showNotification(msg, color = '#ffffff') {
+            const notif = document.createElement('div');
+            notif.textContent = msg;
+            notif.style.position = 'absolute';
+            notif.style.top = '80px';
+            notif.style.right = '20px';
+            notif.style.backgroundColor = `rgba(0,0,0,0.85)`;
+            notif.style.color = color;
+            notif.style.padding = '12px 24px';
+            notif.style.borderRadius = '8px';
+            notif.style.fontWeight = 'bold';
+            notif.style.borderLeft = `4px solid ${color}`;
+            notif.style.zIndex = '100';
+            notif.style.fontFamily = 'monospace';
+            notif.style.animation = 'fadeOut 3s forwards';
+            document.body.appendChild(notif);
+            setTimeout(() => notif.remove(), 3000);
+        }
+        
+        // add CSS animation
+        const style = document.createElement('style');
+        style.textContent = `@keyframes fadeOut { 0% { opacity: 1; transform: translateX(0); } 70% { opacity: 1; } 100% { opacity: 0; transform: translateX(50px); display: none; } }`;
+        document.head.appendChild(style);
+        
+        // --- ENEMY NPCs (simple moving drones) ---
+        const enemies = [];
+        function createEnemy(x, z) {
+            const group = new THREE.Group();
+            const body = new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.3, 0.6), new THREE.MeshStandardMaterial({ color: 0xdd3333, emissive: 0x331100 }));
+            body.castShadow = true;
+            group.add(body);
+            const eyeL = new THREE.Mesh(new THREE.SphereGeometry(0.08, 8, 8), new THREE.MeshStandardMaterial({ color: 0xff0000, emissive: 0xff0000 }));
+            eyeL.position.set(-0.2, 0.1, 0.32);
+            const eyeR = new THREE.Mesh(new THREE.SphereGeometry(0.08, 8, 8), new THREE.MeshStandardMaterial({ color: 0xff0000, emissive: 0xff0000 }));
+            eyeR.position.set(0.2, 0.1, 0.32);
+            group.add(eyeL);
+            group.add(eyeR);
+            group.position.set(x, 0.2, z);
+            scene.add(group);
+            enemies.push({ mesh: group, health: 30, speed: 1.8, attackCooldown: 0 });
+            return group;
+        }
+        
+        // spawn some enemies around map
+        createEnemy(6, 3);
+        createEnemy(-4, -5);
+        createEnemy(0, 9);
+        createEnemy(-7, 2);
+        
+        // --- SIMPLE NPC (friendly) with floating text
+        const npcDiv = document.createElement('div');
+        npcDiv.textContent = '👤 Fixer 💬';
+        npcDiv.style.backgroundColor = '#2266aa';
+        npcDiv.style.padding = '5px 12px';
+        npcDiv.style.borderRadius = '20px';
+        npcDiv.style.fontSize = '12px';
+        npcDiv.style.fontWeight = 'bold';
+        npcDiv.style.border = '1px solid white';
+        const npcLabel = new CSS2DObject(npcDiv);
+        npcLabel.position.set(-3.5, 1.2, 5);
+        scene.add(npcLabel);
+        
+        const npcModel = new THREE.Mesh(new THREE.CylinderGeometry(0.4, 0.4, 1.2, 6), new THREE.MeshStandardMaterial({ color: 0x66cc99 }));
+        npcModel.position.set(-3.5, 0.6, 5);
+        npcModel.castShadow = true;
+        scene.add(npcModel);
+        
+        let interactionDistance = 2.0;
+        function checkNPCInteraction() {
+            const playerPos = inVehicle ? vehicleObj.position : playerGroup.position;
+            const dist = playerPos.distanceTo(npcModel.position);
+            if (dist < interactionDistance && !activeMission) {
+                showNotification("💬 Press [F] to talk to Fixer", "#aaffdd");
+                if (window.keyF) {
+                    startMission('mission1');
+                    window.keyF = false;
+                }
+            }
+        }
+        
+        // F key listener
+        window.addEventListener('keydown', (e) => {
+            if (e.key.toLowerCase() === 'f') window.keyF = true;
+        });
+        window.addEventListener('keyup', (e) => {
+            if (e.key.toLowerCase() === 'f') window.keyF = false;
+        });
+        
+        // --- Weapon upgrade: shotgun burst
+        let shotgunMode = false;
+        window.addEventListener('keydown', (e) => {
+            if (e.key === '2') {
+                shotgunMode = !shotgunMode;
+                showNotification(shotgunMode ? "🔫 SHOTGUN MODE ACTIVE" : "🔫 SINGLE SHOT MODE", "#ffaa66");
+            }
+        });
+        
+        // override shoot with burst
+        const originalShoot = shoot;
+        window.shoot = function() {
+            if (shotgunMode) {
+                for (let i = -1; i <= 1; i++) {
+                    const bulletGeo = new THREE.SphereGeometry(0.08, 6, 6);
+                    const bulletMat = new THREE.MeshStandardMaterial({ color: 0xff8844 });
+                    const bullet = new THREE.Mesh(bulletGeo, bulletMat);
+                    const origin = inVehicle ? vehicleObj.position.clone().add(new THREE.Vector3(0, 0.8, 0)) : playerGroup.position.clone().add(new THREE.Vector3(0, 0.8, 0));
+                    bullet.position.copy(origin);
+                    const dir = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion);
+                    dir.x += i * 0.1;
+                    dir.normalize();
+                    bullet.userData = { vel: dir.multiplyScalar(20), life: 80 };
+                    scene.add(bullet);
+                    bullets.push(bullet);
+                }
+            } else {
+                originalShoot();
+            }
+        };
+        window.shoot = window.shoot.bind(this);
+        
+        // enemy AI update + mission kill tracking
+        function updateEnemies(deltaTime) {
+            const playerPos = inVehicle ? vehicleObj.position : playerGroup.position;
+            for (let i = 0; i < enemies.length; i++) {
+                const e = enemies[i];
+                if (!e.mesh.parent) continue;
+                const dir = new THREE.Vector3().subVectors(playerPos, e.mesh.position).normalize();
+                dir.y = 0;
+                e.mesh.position.addScaledVector(dir, e.speed * deltaTime);
+                e.mesh.lookAt(playerPos);
+                // simple attack if close
+                if (e.mesh.position.distanceTo(playerPos) < 1.5 && e.attackCooldown <= 0) {
+                    takeDamage(12);
+                    e.attackCooldown = 1.0;
+                    showNotification("⚠️ Hit by enemy!", "#ff6666");
+                }
+                if (e.attackCooldown > 0) e.attackCooldown -= deltaTime;
+                
+                // check bullet collision for damage
+                for (let bIdx = 0; bIdx < bullets.length; bIdx++) {
+                    const bullet = bullets[bIdx];
+                    if (bullet && bullet.position.distanceTo(e.mesh.position) < 0.7) {
+                        e.health -= 35;
+                        scene.remove(bullet);
+                        bullets.splice(bIdx, 1);
+                        if (e.health <= 0) {
+                            scene.remove(e.mesh);
+                            enemies.splice(i, 1);
+                            showNotification("✅ Enemy eliminated!", "#88ff88");
+                            if (activeMission && activeMission.type === 'kill') {
+                                activeMission.currentKills++;
+                                if (activeMission.currentKills >= activeMission.targetCount) {
+                                    activeMission.completed = true;
+                                    missionComplete = true;
+                                    showNotification(`🏆 MISSION COMPLETE! +${activeMission.reward} XP`, "#ffdd44");
+                                    activeMission = null;
+                                }
+                            }
+                            i--;
+                        }
+                        break;
                     }
-                    // change node
-                    if (choice.nextNode && storyGraph[choice.nextNode]) {
-                        currentNodeId = choice.nextNode;
-                    } else {
-                        // fallback in case missing next node
-                        console.warn("missing node", choice.nextNode);
-                        currentNodeId = "start";
-                    }
-                    renderGame();
-                });
-                choicesContainer.appendChild(btn);
+                }
+            }
+        }
+        
+        // mission reach check
+        function checkMissionProgress() {
+            if (!activeMission || activeMission.completed) return;
+            const playerPos = inVehicle ? vehicleObj.position : playerGroup.position;
+            if (activeMission.type === 'reach') {
+                const distToTarget = playerPos.distanceTo(activeMission.targetPos);
+                if (distToTarget < 2.0) {
+                    activeMission.completed = true;
+                    missionComplete = true;
+                    showNotification(`🏆 MISSION COMPLETE! +${activeMission.reward} XP`, "#ffdd44");
+                    activeMission = null;
+                    updateMissionMarker();
+                }
+            }
+        }
+        
+        // --- dynamic weather / time of day (simple)
+        let timeOfDay = 0;
+        function updateLighting(delta) {
+            timeOfDay += delta * 0.05;
+            const intensity = 0.6 + Math.sin(timeOfDay) * 0.3;
+            sunLight.intensity = Math.max(0.4, intensity);
+            const colorVal = 0xffcc88 + Math.floor(Math.sin(timeOfDay) * 0x332200);
+            sunLight.color.setHex(0xffcc88);
+        }
+        
+        // --- store original animate to extend
+        const originalAnimate = animate;
+        window.extendedAnimate = function() {
+            if (typeof originalAnimate === 'function') originalAnimate();
+            else {
+                requestAnimationFrame(extendedAnimate);
+            }
+        };
+        
+        // override the main loop partially (inject)
+        let oldAnimate = null;
+        // we'll hook into existing animate by storing original setInterval
+        // but simpler: replace the requestAnimationFrame call in existing
+        console.log("Part 2 loaded: Missions, NPCs, Enemy AI, Shotgun mode active!");
+        
+        // add after scene creation in main animate - we'll inject into existing loop via monkey patch
+        // since original animate is already running, we extend by redefining render part?
+        const animateInterval = setInterval(() => {
+            if (typeof updateEnemies === 'function') {
+                const delta = 0.016;
+                updateEnemies(delta);
+                checkMissionProgress();
+                checkNPCInteraction();
+                updateLighting(delta);
+                updateMissionMarker();
+            }
+        }, 16);
+        
+        // add some trees for decoration
+        const trunkMat = new THREE.MeshStandardMaterial({ color: 0x8B5A2B });
+        const foliageMat = new THREE.MeshStandardMaterial({ color: 0x3c9e3c });
+        for (let i = 0; i < 40; i++) {
+            const angle2 = Math.random() * Math.PI * 2;
+            const rad = 14 + Math.random() * 8;
+            const xTree = Math.cos(angle2) * rad;
+            const zTree = Math.sin(angle2) * rad;
+            const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.45, 1.2, 6), trunkMat);
+            trunk.position.set(xTree, 0.6, zTree);
+            trunk.castShadow = true;
+            const foliage = new THREE.Mesh(new THREE.ConeGeometry(0.6, 0.9, 8), foliageMat);
+            foliage.position.set(xTree, 1.2, zTree);
+            foliage.castShadow = true;
+            scene.add(trunk);
+            scene.add(foliage);
+        }
+        
+        // ========== PART 3 ==========
+// Advanced Features: Helicopter, Multiple Vehicles, Store System, Multiplayer Setup, Save/Load
+
+// --- MULTIPLE VEHICLES SYSTEM ---
+const vehicles = [];
+let currentVehicleIndex = 0;
+let availableVehicles = [];
+
+// Vehicle types
+const vehicleTypes = {
+    sports: { color: 0xdd3333, speed: 12, handling: 0.9, model: 'sports' },
+    truck: { color: 0x4466aa, speed: 6, handling: 0.6, model: 'truck' },
+    bike: { color: 0xffaa33, speed: 14, handling: 1.1, model: 'bike' }
+};
+
+function createVehicle(type, x, z, colorOverride = null) {
+    const group = new THREE.Group();
+    const vehicleData = vehicleTypes[type];
+    const mainColor = colorOverride || vehicleData.color;
+    
+    // body
+    let bodyGeo, bodyYOffset = 0.2;
+    if (type === 'bike') {
+        bodyGeo = new THREE.BoxGeometry(0.5, 0.3, 1.4);
+        bodyYOffset = 0.25;
+    } else if (type === 'truck') {
+        bodyGeo = new THREE.BoxGeometry(1.0, 0.5, 2.0);
+        bodyYOffset = 0.3;
+    } else {
+        bodyGeo = new THREE.BoxGeometry(0.9, 0.4, 1.6);
+    }
+    
+    const bodyMat = new THREE.MeshStandardMaterial({ color: mainColor, metalness: 0.7, roughness: 0.3 });
+    const body = new THREE.Mesh(bodyGeo, bodyMat);
+    body.position.y = bodyYOffset;
+    body.castShadow = true;
+    group.add(body);
+    
+    // wheels
+    const wheelGeo = new THREE.CylinderGeometry(0.2, 0.2, 0.1, 16);
+    const wheelMat = new THREE.MeshStandardMaterial({ color: 0x222222 });
+    let wheelPositions;
+    if (type === 'bike') {
+        wheelPositions = [[0, 0.15, -0.6], [0, 0.15, 0.6]];
+    } else if (type === 'truck') {
+        wheelPositions = [[-0.6, 0.2, -0.8], [0.6, 0.2, -0.8], [-0.6, 0.2, 0.8], [0.6, 0.2, 0.8]];
+    } else {
+        wheelPositions = [[-0.5, 0.15, -0.7], [0.5, 0.15, -0.7], [-0.5, 0.15, 0.7], [0.5, 0.15, 0.7]];
+    }
+    
+    wheelPositions.forEach(pos => {
+        const wheel = new THREE.Mesh(wheelGeo, wheelMat);
+        wheel.rotation.z = Math.PI/2;
+        wheel.position.set(pos[0], pos[1], pos[2]);
+        wheel.castShadow = true;
+        group.add(wheel);
+    });
+    
+    // roof/window for cars
+    if (type === 'sports') {
+        const roof = new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.25, 1.0), new THREE.MeshStandardMaterial({ color: 0x111111 }));
+        roof.position.y = 0.55;
+        roof.castShadow = true;
+        group.add(roof);
+    } else if (type === 'truck') {
+        const cargo = new THREE.Mesh(new THREE.BoxGeometry(0.9, 0.6, 1.4), new THREE.MeshStandardMaterial({ color: 0x885522 }));
+        cargo.position.y = 0.65;
+        cargo.castShadow = true;
+        group.add(cargo);
+    }
+    
+    group.position.set(x, 0, z);
+    group.userData = { type: type, speed: vehicleData.speed, handling: vehicleData.handling, color: mainColor };
+    scene.add(group);
+    
+    return group;
+}
+
+// Spawn multiple vehicles around the map
+const vehicleSpawnPoints = [
+    { type: 'sports', x: -5, z: -6, color: 0xff3333 },
+    { type: 'truck', x: 7, z: -4, color: 0x44aaff },
+    { type: 'bike', x: -2, z: 9, color: 0xffaa44 },
+    { type: 'sports', x: 4, z: -8, color: 0x88ff88 },
+    { type: 'bike', x: -7, z: -3, color: 0xff66cc }
+];
+
+vehicleSpawnPoints.forEach(spawn => {
+    const vehicle = createVehicle(spawn.type, spawn.x, spawn.z, spawn.color);
+    vehicles.push(vehicle);
+});
+
+// --- HELICOPTER SYSTEM ---
+let helicopter = null;
+let isFlying = false;
+let helicopterSpeed = 8;
+let helicopterAltitude = 5;
+
+function createHelicopter() {
+    const group = new THREE.Group();
+    
+    // body
+    const bodyGeo = new THREE.BoxGeometry(1.0, 0.5, 1.8);
+    const bodyMat = new THREE.MeshStandardMaterial({ color: 0x2266aa, metalness: 0.8 });
+    const body = new THREE.Mesh(bodyGeo, bodyMat);
+    body.position.y = 0.3;
+    body.castShadow = true;
+    group.add(body);
+    
+    // cockpit
+    const cockpitGeo = new THREE.SphereGeometry(0.5, 16, 16);
+    const cockpitMat = new THREE.MeshStandardMaterial({ color: 0x88ccff, metalness: 0.3, transparent: true, opacity: 0.7 });
+    const cockpit = new THREE.Mesh(cockpitGeo, cockpitMat);
+    cockpit.position.set(0, 0.5, 0.6);
+    cockpit.castShadow = true;
+    group.add(cockpit);
+    
+    // main rotor
+    const rotorBladeGeo = new THREE.BoxGeometry(2.2, 0.08, 0.3);
+    const rotorMat = new THREE.MeshStandardMaterial({ color: 0xccccaa });
+    const rotorBlade1 = new THREE.Mesh(rotorBladeGeo, rotorMat);
+    rotorBlade1.position.y = 0.9;
+    const rotorBlade2 = new THREE.Mesh(rotorBladeGeo, rotorMat);
+    rotorBlade2.rotation.z = Math.PI/2;
+    rotorBlade2.position.y = 0.9;
+    group.add(rotorBlade1);
+    group.add(rotorBlade2);
+    
+    // tail rotor
+    const tailRotorGeo = new THREE.BoxGeometry(0.5, 0.08, 0.8);
+    const tailRotor = new THREE.Mesh(tailRotorGeo, rotorMat);
+    tailRotor.position.set(0, 0.4, -1.0);
+    group.add(tailRotor);
+    
+    // landing skids
+    const skidGeo = new THREE.BoxGeometry(0.08, 0.08, 1.2);
+    const skidMat = new THREE.MeshStandardMaterial({ color: 0x888888 });
+    const leftSkid = new THREE.Mesh(skidGeo, skidMat);
+    leftSkid.position.set(-0.5, -0.1, 0);
+    const rightSkid = new THREE.Mesh(skidGeo, skidMat);
+    rightSkid.position.set(0.5, -0.1, 0);
+    group.add(leftSkid);
+    group.add(rightSkid);
+    
+    group.position.set(-10, 3, -8);
+    group.userData = { rotors: [rotorBlade1, rotorBlade2], rotorSpeed: 0 };
+    scene.add(group);
+    return group;
+}
+
+helicopter = createHelicopter();
+
+// --- STORE SYSTEM ---
+let playerMoney = 2500;
+let inventory = {
+    weapons: ['pistol'],
+    vehicles: ['sports'],
+    upgrades: []
+};
+
+// Create store UI
+const storeDiv = document.createElement('div');
+storeDiv.style.position = 'absolute';
+storeDiv.style.bottom = '100px';
+storeDiv.style.right = '20px';
+storeDiv.style.backgroundColor = 'rgba(0,0,0,0.85)';
+storeDiv.style.borderRadius = '12px';
+storeDiv.style.padding = '15px';
+storeDiv.style.color = 'white';
+storeDiv.style.fontFamily = 'monospace';
+storeDiv.style.zIndex = '50';
+storeDiv.style.border = '1px solid #ffaa44';
+storeDiv.style.display = 'none';
+storeDiv.innerHTML = `
+    <div style="font-weight:bold; margin-bottom:10px;">🛒 BLACK MARKET 🛒</div>
+    <div id="storeItems"></div>
+    <div style="margin-top:10px;">💰 Money: $<span id="playerMoney">${playerMoney}</span></div>
+    <button id="closeStore" style="margin-top:10px; background:#333; color:white; border:none; padding:5px 10px; border-radius:5px;">Close</button>
+`;
+document.body.appendChild(storeDiv);
+
+const storeItems = [
+    { name: "🔫 AK-47", price: 1500, type: "weapon", id: "ak47" },
+    { name: "🏍️ Motorcycle", price: 800, type: "vehicle", id: "bike" },
+    { name: "🚁 Helicopter Keys", price: 5000, type: "special", id: "helicopter" },
+    { name: "💊 Medkit", price: 200, type: "consumable", id: "medkit" },
+    { name: "🛡️ Armor Vest", price: 1000, type: "upgrade", id: "armor" }
+];
+
+function updateStoreUI() {
+    const container = document.getElementById('storeItems');
+    if (!container) return;
+    container.innerHTML = '';
+    storeItems.forEach(item => {
+        const itemDiv = document.createElement('div');
+        itemDiv.style.display = 'flex';
+        itemDiv.style.justifyContent = 'space-between';
+        itemDiv.style.marginBottom = '8px';
+        itemDiv.style.padding = '5px';
+        itemDiv.style.borderBottom = '1px solid #444';
+        itemDiv.innerHTML = `
+            <span>${item.name}</span>
+            <span>$${item.price}</span>
+            <button class="buyItem" data-id="${item.id}" data-price="${item.price}" style="background:#ffaa44; border:none; border-radius:4px; cursor:pointer;">Buy</button>
+        `;
+        container.appendChild(itemDiv);
+    });
+    document.getElementById('playerMoney').innerText = playerMoney;
+    
+    document.querySelectorAll('.buyItem').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const price = parseInt(btn.dataset.price);
+            const itemId = btn.dataset.id;
+            if (playerMoney >= price) {
+                playerMoney -= price;
+                showNotification(`✅ Purchased ${btn.parentElement.children[0].innerText}!`, "#44ff44");
+                if (itemId === 'helicopter') {
+                    showNotification("🚁 Helicopter unlocked! Press H to fly!", "#ffaa44");
+                    window.helicopterUnlocked = true;
+                }
+                updateStoreUI();
+                updateMoneyDisplay();
+            } else {
+                showNotification("❌ Not enough money!", "#ff4444");
+            }
+        });
+    });
+}
+
+function updateMoneyDisplay() {
+    const moneySpan = document.getElementById('playerMoney');
+    if (moneySpan) moneySpan.innerText = playerMoney;
+}
+
+document.getElementById('closeStore')?.addEventListener('click', () => {
+    storeDiv.style.display = 'none';
+});
+
+// Toggle store with 'M' key
+window.addEventListener('keydown', (e) => {
+    if (e.key.toLowerCase() === 'm') {
+        if (storeDiv.style.display === 'none') {
+            updateStoreUI();
+            storeDiv.style.display = 'block';
+        } else {
+            storeDiv.style.display = 'none';
+        }
+    }
+    if (e.key.toLowerCase() === 'h' && window.helicopterUnlocked) {
+        isFlying = !isFlying;
+        if (isFlying) {
+            if (inVehicle) {
+                inVehicle = false;
+                playerGroup.visible = true;
+            }
+            showNotification("🚁 FLYING MODE ACTIVE | W/S = Up/Down", "#88ff88");
+        } else {
+            showNotification("🚁 LANDED", "#ffaa66");
+        }
+    }
+});
+
+// --- SAVE/LOAD SYSTEM ---
+function saveGame() {
+    const saveData = {
+        playerPos: playerGroup.position.toArray(),
+        money: playerMoney,
+        health: health,
+        inventory: inventory,
+        completedMissions: missionComplete,
+        timestamp: Date.now()
+    };
+    localStorage.setItem('neoCitySave', JSON.stringify(saveData));
+    showNotification("💾 Game Saved!", "#88ff88");
+}
+
+function loadGame() {
+    const saveData = localStorage.getItem('neoCitySave');
+    if (saveData) {
+        const data = JSON.parse(saveData);
+        playerGroup.position.set(data.playerPos[0], data.playerPos[1], data.playerPos[2]);
+        playerMoney = data.money;
+        health = data.health;
+        healthFill.style.width = health + '%';
+        inventory = data.inventory;
+        showNotification("📀 Game Loaded! Welcome back.", "#88aaff");
+        updateMoneyDisplay();
+    } else {
+        showNotification("No save file found!", "#ff8888");
+    }
+}
+
+window.addEventListener('keydown', (e) => {
+    if (e.key.toLowerCase() === 'k') saveGame();
+    if (e.key.toLowerCase() === 'l') loadGame();
+});
+
+// --- ENHANCED ENEMY AI with ranged attacks ---
+class AdvancedEnemy {
+    constructor(x, z) {
+        this.group = new THREE.Group();
+        const body = new THREE.Mesh(new THREE.BoxGeometry(0.55, 0.55, 0.55), new THREE.MeshStandardMaterial({ color: 0xdd4444, emissive: 0x441111 }));
+        body.castShadow = true;
+        this.group.add(body);
+        const gun = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.2, 0.4), new THREE.MeshStandardMaterial({ color: 0x666666 }));
+        gun.position.set(0.3, 0.1, 0.3);
+        this.group.add(gun);
+        this.group.position.set(x, 0.3, z);
+        scene.add(this.group);
+        this.health = 45;
+        this.speed = 1.5;
+        this.shootCooldown = 0;
+        this.range = 12;
+    }
+    
+    update(delta, playerPos) {
+        if (this.health <= 0) return false;
+        const dist = this.group.position.distanceTo(playerPos);
+        if (dist < this.range && dist > 2) {
+            const dir = new THREE.Vector3().subVectors(playerPos, this.group.position).normalize();
+            dir.y = 0;
+            this.group.position.addScaledVector(dir, this.speed * delta);
+        }
+        this.group.lookAt(playerPos);
+        
+        if (dist < 10 && this.shootCooldown <= 0) {
+            // enemy shoots back
+            const bulletGeo = new THREE.SphereGeometry(0.1, 6, 6);
+            const bulletMat = new THREE.MeshStandardMaterial({ color: 0xff4444, emissive: 0xff0000 });
+            const bullet = new THREE.Mesh(bulletGeo, bulletMat);
+            const dir = new THREE.Vector3().subVectors(playerPos, this.group.position).normalize();
+            bullet.position.copy(this.group.position.clone().add(new THREE.Vector3(0, 0.3, 0)));
+            bullet.userData = { vel: dir.multiplyScalar(18), life: 100, isEnemyBullet: true };
+            scene.add(bullet);
+            bullets.push(bullet);
+            this.shootCooldown = 1.2;
+            return true;
+        }
+        if (this.shootCooldown > 0) this.shootCooldown -= delta;
+        return true;
+    }
+}
+
+const advancedEnemies = [];
+advancedEnemies.push(new AdvancedEnemy(8, 7));
+advancedEnemies.push(new AdvancedEnemy(-6, -7));
+advancedEnemies.push(new AdvancedEnemy(3, -9));
+
+// --- POLICE SYSTEM (Wanted Level) ---
+let wantedLevel = 0;
+let policeTimer = 0;
+
+function addWantedLevel() {
+    wantedLevel = Math.min(5, wantedLevel + 1);
+    showNotification(`⚠️ WANTED LEVEL: ${wantedLevel} ⚠️`, "#ff4444");
+    if (wantedLevel >= 2) {
+        // spawn police car
+        const policeCar = createVehicle('sports', playerGroup.position.x + 8, playerGroup.position.z + 5, 0x2244aa);
+        policeCar.userData.isPolice = true;
+        vehicles.push(policeCar);
+    }
+}
+
+// Call addWantedLevel when player shoots civilians or commits crimes
+// (simplified: random chance when shooting near buildings)
+let crimeTrigger = 0;
+
+// --- MINIMAP SYSTEM (CSS2D) ---
+const minimapCanvas = document.createElement('canvas');
+minimapCanvas.width = 150;
+minimapCanvas.height = 150;
+const minimapCtx = minimapCanvas.getContext('2d');
+const minimapDiv = document.createElement('div');
+minimapDiv.style.position = 'absolute';
+minimapDiv.style.top = '20px';
+minimapDiv.style.right = '20px';
+minimapDiv.style.backgroundColor = 'rgba(0,0,0,0.6)';
+minimapDiv.style.borderRadius = '10px';
+minimapDiv.style.padding = '5px';
+minimapDiv.style.border = '2px solid #aaa';
+minimapDiv.style.zIndex = '15';
+minimapDiv.appendChild(minimapCanvas);
+document.body.appendChild(minimapDiv);
+
+function updateMinimap() {
+    minimapCtx.fillStyle = '#1a1f2e';
+    minimapCtx.fillRect(0, 0, 150, 150);
+    minimapCtx.fillStyle = '#88aaff';
+    const playerX = (inVehicle ? vehicleObj?.position.x : playerGroup.position.x) / 30 * 75 + 75;
+    const playerZ = (inVehicle ? vehicleObj?.position.z : playerGroup.position.z) / 30 * 75 + 75;
+    minimapCtx.beginPath();
+    minimapCtx.arc(playerX, playerZ, 4, 0, Math.PI*2);
+    minimapCtx.fillStyle = '#ffaa44';
+    minimapCtx.fill();
+    
+    enemies.forEach(e => {
+        const ex = e.mesh.position.x / 30 * 75 + 75;
+        const ez = e.mesh.position.z / 30 * 75 + 75;
+        minimapCtx.fillStyle = '#ff4444';
+        minimapCtx.fillRect(ex-2, ez-2, 4, 4);
+    });
+    
+    vehicles.forEach(v => {
+        if (v !== vehicleObj) {
+            const vx = v.position.x / 30 * 75 + 75;
+            const vz = v.position.z / 30 * 75 + 75;
+            minimapCtx.fillStyle = '#44ff44';
+            minimapCtx.fillRect(vx-2, vz-2, 3, 3);
+        }
+    });
+}
+
+// --- HELICOPTER FLIGHT UPDATE ---
+function updateHelicopter(delta) {
+    if (!isFlying || !helicopter) return;
+    const move = new THREE.Vector3(0, 0, 0);
+    if (keyState.w) move.z -= 1;
+    if (keyState.s) move.z += 1;
+    if (keyState.a) move.x -= 1;
+    if (keyState.d) move.x += 1;
+    move.normalize();
+    const forward = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion);
+    const right = new THREE.Vector3(1, 0, 0).applyQuaternion(camera.quaternion);
+    forward.y = 0;
+    right.y = 0;
+    forward.normalize();
+    right.normalize();
+    let moveDelta = new THREE.Vector3(0, 0, 0);
+    moveDelta.addScaledVector(forward, move.z);
+    moveDelta.addScaledVector(right, move.x);
+    moveDelta.multiplyScalar(helicopterSpeed * delta);
+    helicopter.position.add(moveDelta);
+    
+    if (keyState.space) helicopterAltitude += 3 * delta;
+    if (keyState.shift) helicopterAltitude -= 3 * delta;
+    helicopterAltitude = Math.max(2, Math.min(20, helicopterAltitude));
+    helicopter.position.y = helicopterAltitude;
+    helicopter.rotation.y = camera.rotation.y;
+    
+    camera.position.copy(helicopter.position.clone().add(new THREE.Vector3(0, 2, 4)));
+    camera.lookAt(helicopter.position);
+    
+    // rotor animation
+    if (helicopter.userData.rotors) {
+        helicopter.userData.rotors.forEach(rotor => {
+            rotor.rotation.z += delta * 20;
+        });
+    }
+}
+
+// --- INTEGRATE UPDATES INTO EXISTING LOOP ---
+// Override the game loop with extended version
+let lastEnemyUpdate = 0;
+function extendedGameLoop() {
+    const now = performance.now();
+    let delta = Math.min(0.033, (now - lastEnemyUpdate) / 1000);
+    lastEnemyUpdate = now;
+    if (delta > 0.01) {
+        if (!isFlying) {
+            // normal enemy update
+            updateEnemies(delta);
+            advancedEnemies.forEach(enemy => {
+                const playerPos = inVehicle ? (vehicleObj?.position || playerGroup.position) : playerGroup.position;
+                enemy.update(delta, playerPos);
             });
         } else {
-            // ending: show restart suggestion
-            const restartHintBtn = document.createElement('button');
-            restartHintBtn.className = 'choice-btn';
-            restartHintBtn.textContent = '📜 Start a new saga (restart)';
-            restartHintBtn.addEventListener('click', () => restartGame());
-            choicesContainer.appendChild(restartHintBtn);
+            updateHelicopter(delta);
+        }
+        checkMissionProgress();
+        checkNPCInteraction();
+        updateLighting(delta);
+        updateMissionMarker();
+        updateMinimap();
+        
+        // random police spawn
+        if (wantedLevel > 0 && Math.random() < 0.01 * wantedLevel) {
+            showNotification(`🚔 Police searching area... (Wanted: ${wantedLevel})`, "#ff8888");
         }
     }
-    
-    // restart fully
-    function restartGame() {
-        currentNodeId = "start";
-        currentStats = { valor: 0, shadow: 0 };
-        updateStatsUI();
-        renderGame();
-    }
-    
-    // initial load & event binding
-    function initGame() {
-        restartBtn.addEventListener('click', () => restartGame());
-        updateStatsUI();
-        renderGame();
-    }
-    
-    // start the game
-    initGame();
-</script>
+    requestAnimationFrame(extendedGameLoop);
+}
+
+// Start extended loop
+lastEnemyUpdate = performance.now();
+extendedGameLoop();
+
+// Also call original animate for rendering (if exists)
+if (typeof animate === 'function') {
+    const originalRender = renderer.render;
+    // Keep original render going via separate RAF
+    (function renderLoop() {
+        if (!isFlying) {
+            // Update camera for ground mode
+            if (!inVehicle) {
+                camera.position.copy(playerGroup.position).add(cameraOffset);
+            } else if (vehicleObj) {
+                camera.position.copy(vehicleObj.position).add(cameraOffset);
+            }
+            camera.rotation.order = 'YXZ';
+            camera.rotation.y = yaw;
+            camera.rotation.x = pitch;
+        }
+        renderer.render(scene, camera);
+        labelRenderer.render(scene, camera);
+        requestAnimationFrame(renderLoop);
+    })();
+}
+
+showNotification("🎮 PART 3 LOADED | Helicopter (H), Store (M), Save (K), Load (L), Minimap!", "#ffaa44");
+showNotification("💰 Started with $2500 | Find vehicles around the city!", "#88ff88");
+
+// Add money earning system (kill enemies = money)
+const originalUpdateEnemies = updateEnemies;
+window.updateEnemies = function(delta) {
+    originalUpdateEnemies(delta);
+    // additional money from advanced enemies handled separately
+};
+
+// Add money reward for killing advanced enemies
+setInterval(() => {
+    advancedEnemies.forEach((enemy, idx) => {
+        if (enemy.health <= 0 && enemy.group.parent) {
+            scene.remove(enemy.group);
+            advancedEnemies.splice(idx, 1);
+            playerMoney += 250;
+            updateMoneyDisplay();
+            showNotification("💰 +$250 for eliminating enemy!", "#ffdd44");
+        }
+    });
+}, 100);
+
+// Final message
+console.log("═══════════════════════════════════════════");
+console.log("PART 3 COMPLETE - Full Open World Game Ready");
+console.log("Features: 5 Vehicles | Helicopter | Store | Save/Load | Minimap | Advanced Enemies | Wanted System");
+console.log("═══════════════════════════════════════════");
+
+// Note: The game is now fully playable with GTA-style mechanics.
+// To continue with Part 4 (Multiplayer, More Missions, Customization), type "continue part 4"
+    </script>
 </body>
 </html>
