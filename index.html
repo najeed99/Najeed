@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Luminous Tiles · Memory Puzzle Game</title>
+    <title>Luminous Tiles · Memory Puzzle with Sound</title>
     <style>
         * {
             user-select: none;
@@ -100,6 +100,25 @@
         .new-game-btn:active {
             transform: translateY(3px);
             box-shadow: 0 2px 0 #a05e15;
+        }
+
+        .sound-toggle {
+            background: #2c4b5e;
+            border: none;
+            font-size: 1.2rem;
+            padding: 6px 14px;
+            border-radius: 40px;
+            color: white;
+            cursor: pointer;
+            font-family: monospace;
+            font-weight: bold;
+            margin-left: 8px;
+            transition: 0.1s linear;
+            box-shadow: 0 2px 6px black;
+        }
+
+        .sound-toggle:active {
+            transform: scale(0.96);
         }
 
         /* MESSAGE */
@@ -244,7 +263,10 @@
                 <div class="stat"><span class="stat-label">MOVES</span><span class="stat-value" id="moveCounter">0</span></div>
                 <div class="stat"><span class="stat-label">PAIRS</span><span class="stat-value" id="pairsMatched">0</span><span class="stat-label" style="font-size:0.9rem;">/8</span></div>
             </div>
-            <button class="new-game-btn" id="resetGameBtn">⟳ NEW GAME</button>
+            <div style="display: flex; gap: 10px;">
+                <button class="sound-toggle" id="soundToggleBtn" title="Toggle sound effect">🔊 SOUND ON</button>
+                <button class="new-game-btn" id="resetGameBtn">⟳ NEW GAME</button>
+            </div>
         </div>
 
         <div id="gridContainer" class="grid"></div>
@@ -252,7 +274,7 @@
         <div id="messageBox" class="message-area">
             ✨ flip tiles & match the icons ✨
         </div>
-        <footer>classic memory puzzle · match all 8 pairs</footer>
+        <footer>🐠 memory challenge · mismatch sound: "tui bolod naki?" 🐙</footer>
     </div>
 </div>
 
@@ -272,7 +294,73 @@
     const pairsMatchedSpan = document.getElementById('pairsMatched');
     const resetBtn = document.getElementById('resetGameBtn');
     const messageBox = document.getElementById('messageBox');
+    const soundToggleBtn = document.getElementById('soundToggleBtn');
 
+    // --- SOUND EFFECT: "tui bolod naki?" custom audio from Google Text-to-Speech (generated via TTS)
+    // We'll create an Audio object with a data URL that speaks "tui bolod naki?" in a playful tone.
+    // To ensure the sound works without external hosting, we generate a WAV-like base64 using Web Speech API fallback? 
+    // But explicit requirement: "use google sound 'tui bolod naki?'"
+    // Best cross-browser approach: We'll pre-load an Audio context? Actually we can use a small helper: use SpeechSynthesis (Google's voice) exactly for the phrase.
+    // However the instruction says "google sound" — typical interpretation: using browser's speech synthesis with Google voice (if available) to speak "tui bolod naki?".
+    // This gives a lively humorous mismatch sound! No external files, uses native TTS, commonly used for fun games.
+    // For maximum compatibility and fun effect, we'll implement a speak function that uses window.speechSynthesis with a selected Google voice (or default female).
+    // Additionally we toggle sound on/off.
+    
+    let soundEnabled = true;
+    
+    // Function to play mismatch sound: "tui bolod naki?" via speech synthesis (Google's engine on Chrome/Edge)
+    function playMismatchSound() {
+        if (!soundEnabled) return;
+        // Cancel any ongoing speech to avoid overlap
+        if (window.speechSynthesis) {
+            window.speechSynthesis.cancel();
+            // Create utterance
+            const utterance = new SpeechSynthesisUtterance("tui bolod naki?");
+            utterance.lang = "bn-BD";          // Bengali (Bangladesh) + playful tone
+            utterance.rate = 0.95;
+            utterance.pitch = 1.1;
+            utterance.volume = 0.9;
+            // Try to select a Google voice if available (many browsers use Google TTS)
+            // We'll attempt to find a voice that is Google or natural
+            const setGoogleVoice = () => {
+                const voices = window.speechSynthesis.getVoices();
+                // look for Google UK English / Bengali / or just any natural female voice
+                let selectedVoice = voices.find(v => v.name.includes('Google') && (v.lang.includes('bn') || v.lang.includes('en')));
+                if (!selectedVoice) {
+                    selectedVoice = voices.find(v => v.lang.includes('bn') || v.name.includes('Bengali'));
+                }
+                if (!selectedVoice && voices.length) {
+                    selectedVoice = voices.find(v => v.lang === 'en-US' && v.name.includes('Google'));
+                }
+                if (selectedVoice) utterance.voice = selectedVoice;
+            };
+            // voices might be loaded asynchronously
+            if (window.speechSynthesis.getVoices().length) {
+                setGoogleVoice();
+            } else {
+                window.speechSynthesis.onvoiceschanged = () => {
+                    setGoogleVoice();
+                    window.speechSynthesis.speak(utterance);
+                };
+                // speak after setting? we'll call speak after event or now
+                window.speechSynthesis.speak(utterance);
+                return;
+            }
+            window.speechSynthesis.speak(utterance);
+        } else {
+            // fallback: simple beep? but we respect requirement -> console not needed, but still try web audio simple beep? but not needed.
+            console.warn("SpeechSynthesis not supported, but game continues");
+        }
+    }
+    
+    // Toggle sound button UI
+    function updateSoundButtonUI() {
+        if (soundToggleBtn) {
+            soundToggleBtn.innerHTML = soundEnabled ? "🔊 SOUND ON" : "🔇 SOUND OFF";
+            soundToggleBtn.style.opacity = soundEnabled ? "1" : "0.7";
+        }
+    }
+    
     // Game State
     let cards = [];              // array of objects { id, icon, matched, flipped }
     let moveCount = 0;
@@ -326,6 +414,7 @@
         pairsMatchedSpan.innerText = matchedPairs;
         messageBox.innerHTML = "🧩 match the sea creatures & gems! 🧩";
         messageBox.style.background = "#07121cbb";
+        messageBox.style.color = "#e6f7ff";
         
         // remove victory glow class if present
         document.querySelector('.puzzle-panel')?.classList.remove('victory-glow');
@@ -337,7 +426,6 @@
     // Render cards based on current state (flipped, matched)
     function renderGrid() {
         if (!gridContainer) return;
-        // clear container
         gridContainer.innerHTML = '';
         
         cards.forEach((card, idx) => {
@@ -350,76 +438,57 @@
                 cardDiv.classList.add('matched');
             }
             if (lockBoard && !card.matched && !card.flipped) {
-                // optional: while lockBoard the unflipped cards appear click-disabled, but we also add disabled class
                 cardDiv.classList.add('disabled');
             } else if (!lockBoard && !card.matched) {
                 cardDiv.classList.remove('disabled');
             }
             
-            // inner structure
             const inner = document.createElement('div');
             inner.className = 'card-inner';
             
             const front = document.createElement('div');
             front.className = 'card-front';
-            front.innerText = card.icon;   // show icon on front (flipped side)
+            front.innerText = card.icon;
             
             const back = document.createElement('div');
             back.className = 'card-back';
-            // back shows question mark via CSS pseudo-element, but also optional text
             inner.appendChild(front);
             inner.appendChild(back);
             cardDiv.appendChild(inner);
             
-            // Click handler
             cardDiv.addEventListener('click', (e) => {
                 e.stopPropagation();
-                // Prevent if board locked, card already matched, already flipped, or game ended victory lock
                 if (lockBoard) return;
                 if (card.matched) return;
                 if (card.flipped) return;
-                // if we are already waiting for second card but first and second both null? sanity
                 if (firstCardIndex !== null && secondCardIndex !== null) return;
-                
-                // valid move: flip current card
                 handleCardClick(idx);
             });
             
             gridContainer.appendChild(cardDiv);
         });
-        
-        // after render, also re-apply disabled class on matched cards (ensured)
     }
     
-    // Core game logic when a card is clicked
+    // Core game logic with mismatch SOUND effect (the google TTS sound)
     function handleCardClick(clickedIdx) {
-        // additional checks (already filtered by UI but safe)
         if (lockBoard) return;
         const clickedCard = cards[clickedIdx];
         if (clickedCard.matched) return;
         if (clickedCard.flipped) return;
         
-        // first selection? 
         if (firstCardIndex === null) {
-            // first card flipped
             flipCardOpen(clickedIdx);
             firstCardIndex = clickedIdx;
             return;
         }
         
-        // second selection case: first card is already open and waiting for partner
         if (firstCardIndex !== null && secondCardIndex === null) {
-            // avoid clicking same card
             if (firstCardIndex === clickedIdx) return;
             
-            // flip second card
             flipCardOpen(clickedIdx);
             secondCardIndex = clickedIdx;
-            
-            // increase move counter only when two cards have been flipped (pair attempt)
             incrementMove();
             
-            // check match between first and second card
             const cardA = cards[firstCardIndex];
             const cardB = cards[secondCardIndex];
             const isMatch = (cardA.icon === cardB.icon);
@@ -428,86 +497,67 @@
                 // MATCH SUCCESS
                 cardA.matched = true;
                 cardB.matched = true;
-                // keep flipped status true for visual (matched class also keeps front visible)
-                // but we ensure they stay flipped
                 cardA.flipped = true;
                 cardB.flipped = true;
                 
                 matchedPairs++;
                 pairsMatchedSpan.innerText = matchedPairs;
-                
-                // clear temporary indices (pair resolved)
                 clearSelectedIndices();
-                
-                // re-render to update matched style
                 renderGrid();
                 
-                // win condition
                 if (matchedPairs === TOTAL_PAIRS) {
                     gameWin();
                 } else {
-                    // play subtle pop feedback
                     messageBox.innerHTML = "✔️ Great match! ✔️";
                     messageBox.style.background = "#2c5a2eaa";
                     setTimeout(() => {
-                        if (matchedPairs !== TOTAL_PAIRS) 
+                        if (matchedPairs !== TOTAL_PAIRS) {
                             messageBox.innerHTML = "🌀 keep matching! 🌀";
                             messageBox.style.background = "#07121cbb";
+                        }
                     }, 800);
                 }
             } else {
-                // MISMATCH: lock board, schedule reset flip after delay
+                // MISMATCH: Play the custom Google sound "tui bolod naki?" 
+                playMismatchSound();
+                
                 lockBoard = true;
-                messageBox.innerHTML = "❌ Not a match ... try again ❌";
+                messageBox.innerHTML = "❌ mismatch! " + (soundEnabled ? "🔊 'tui bolod naki?'" : "❌ try again!") + " ❌";
                 messageBox.style.background = "#8b3c2caa";
-                renderGrid();  // re-render to reflect disabled state while locked
+                renderGrid();
                 
                 timeoutId = setTimeout(() => {
-                    // revert both flipped cards back to hidden (if they are not matched)
-                    // they are not matched, so flip back
                     if (cards[firstCardIndex] && !cards[firstCardIndex].matched) {
                         cards[firstCardIndex].flipped = false;
                     }
                     if (cards[secondCardIndex] && !cards[secondCardIndex].matched) {
                         cards[secondCardIndex].flipped = false;
                     }
-                    // clear temporary selections
                     clearSelectedIndices();
                     lockBoard = false;
                     if (timeoutId) timeoutId = null;
-                    // re-render with updated flip states
                     renderGrid();
-                    // reset message
                     if (matchedPairs !== TOTAL_PAIRS) {
                         messageBox.innerHTML = "✨ flip tiles & match the icons ✨";
                         messageBox.style.background = "#07121cbb";
                     }
-                }, 750);
-            }
-            // after handling second card, we also need to re-render at the end if no timeout call rendered inside?
-            if (!isMatch) {
-                // we already scheduled timeout, but immediate render for locked look
-                renderGrid(); 
-            } else {
-                // for match: we already called renderGrid, ensure no extra action needed
+                }, 800);
+                renderGrid();
             }
         }
     }
     
-    // helper to flip a card (update flipped state)
     function flipCardOpen(index) {
         if (cards[index].matched) return;
         cards[index].flipped = true;
-        renderGrid();   // re-render to show flipped front
+        renderGrid();
     }
     
-    // increment moves and update DOM
     function incrementMove() {
         moveCount++;
         moveCounterSpan.innerText = moveCount;
     }
     
-    // clear references after match or after mismatch reset
     function clearSelectedIndices() {
         firstCardIndex = null;
         secondCardIndex = null;
@@ -515,20 +565,17 @@
     
     // victory sequence
     function gameWin() {
-        lockBoard = true;   // no more moves
+        lockBoard = true;
         messageBox.innerHTML = "🎉 PERFECT! YOU WON! 🎉";
         messageBox.style.background = "#fed54eff";
         messageBox.style.color = "#1f2f3c";
         messageBox.style.fontWeight = "bold";
-        // add glow effect to puzzle panel
         document.querySelector('.puzzle-panel').classList.add('victory-glow');
-        // celebration: optional confetti effect (simple)
-        createConfettiEffect();
-        // disable any pending timeout
         if (timeoutId) {
             clearTimeout(timeoutId);
             timeoutId = null;
         }
+        createConfettiEffect();
     }
     
     // simple canvas confetti (lightweight)
@@ -594,26 +641,65 @@
     
     // Reset game fully
     function resetGame() {
-        // cancel any pending timeout flip-reset
         if (timeoutId) {
             clearTimeout(timeoutId);
             timeoutId = null;
         }
+        if (window.speechSynthesis) {
+            window.speechSynthesis.cancel(); // stop any ongoing sound when reset
+        }
         lockBoard = false;
-        initGame();   // full reinitialization
+        initGame();
     }
     
-    // Event listener for reset button
+    // Toggle sound manually
+    function toggleSound() {
+        soundEnabled = !soundEnabled;
+        updateSoundButtonUI();
+        if (!soundEnabled && window.speechSynthesis) {
+            window.speechSynthesis.cancel(); // stop any currently speaking
+        }
+        // show brief tooltip message
+        messageBox.innerHTML = soundEnabled ? "🔊 Sound ON: mismatch will speak 'tui bolod naki?'" : "🔇 Sound OFF, mismatches silent";
+        messageBox.style.background = "#1f4d6eaa";
+        setTimeout(() => {
+            if (matchedPairs !== TOTAL_PAIRS && !lockBoard) {
+                messageBox.innerHTML = "✨ flip tiles & match the icons ✨";
+                messageBox.style.background = "#07121cbb";
+            } else if (matchedPairs === TOTAL_PAIRS) {
+                // do not override win message
+            } else {
+                if (messageBox.innerHTML.includes("Sound")) {
+                    messageBox.innerHTML = "✨ flip tiles & match the icons ✨";
+                    messageBox.style.background = "#07121cbb";
+                }
+            }
+        }, 1500);
+    }
+    
+    // Event listeners
     resetBtn.addEventListener('click', () => {
         resetGame();
     });
     
+    soundToggleBtn.addEventListener('click', () => {
+        toggleSound();
+    });
+    
+    // Preload empty speech to ensure permissions? no need.
+    // Also ensure the TTS works after first user interaction? Actually speechSynthesis requires user interaction sometimes.
+    // But most modern browsers allow .speak() after any user click. The mismatch sound only triggers on card click - which is user interaction.
+    // So it's fully compliant and will produce sound on mismatch.
+    
     // initial start
     initGame();
+    updateSoundButtonUI();
     
-    // Optional: Add keyboard or screen reader subtle support? just elegance
-    // make card grid accessible via tabIndex not needed, but good to have usability.
-    // For responsiveness and fresh experience.
+    // optional: polite preload voices? just for smoother experience
+    if (window.speechSynthesis) {
+        // this will load voices in background
+        window.speechSynthesis.getVoices();
+    }
 </script>
 </body>
 </html>
