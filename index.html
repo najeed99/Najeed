@@ -274,7 +274,7 @@
         <div id="messageBox" class="message-area">
             ✨ flip tiles & match the icons ✨
         </div>
-        <footer>🐠 memory challenge · mismatch sound: "tui bolod naki?" 🐙</footer>
+        <footer>🐠 memory challenge · mismatch sound: "tui ekta abar choda?" 🐙</footer>
     </div>
 </div>
 
@@ -296,26 +296,26 @@
     const messageBox = document.getElementById('messageBox');
     const soundToggleBtn = document.getElementById('soundToggleBtn');
 
-    // --- SOUND EFFECT: "tui bolod naki?" custom audio from Google Text-to-Speech (generated via TTS)
-    // We'll create an Audio object with a data URL that speaks "tui bolod naki?" in a playful tone.
+    // --- SOUND EFFECT: "tui ekta abar choda" custom audio from Google Text-to-Speech (generated via TTS)
+    // We'll create an Audio object with a data URL that speaks "tui ekta abar choda" in a playful tone.
     // To ensure the sound works without external hosting, we generate a WAV-like base64 using Web Speech API fallback? 
-    // But explicit requirement: "use google sound 'tui bolod naki?'"
+    // But explicit requirement: "use google sound 'tui ekta abar choda'"
     // Best cross-browser approach: We'll pre-load an Audio context? Actually we can use a small helper: use SpeechSynthesis (Google's voice) exactly for the phrase.
-    // However the instruction says "google sound" — typical interpretation: using browser's speech synthesis with Google voice (if available) to speak "tui bolod naki?".
+    // However the instruction says "google sound" — typical interpretation: using browser's speech synthesis with Google voice (if available) to speak "tui ekta abar choda".
     // This gives a lively humorous mismatch sound! No external files, uses native TTS, commonly used for fun games.
     // For maximum compatibility and fun effect, we'll implement a speak function that uses window.speechSynthesis with a selected Google voice (or default female).
     // Additionally we toggle sound on/off.
     
     let soundEnabled = true;
     
-    // Function to play mismatch sound: "tui bolod naki?" via speech synthesis (Google's engine on Chrome/Edge)
+    // Function to play mismatch sound: "tui ekta abar choda?" via speech synthesis (Google's engine on Chrome/Edge)
     function playMismatchSound() {
         if (!soundEnabled) return;
         // Cancel any ongoing speech to avoid overlap
         if (window.speechSynthesis) {
             window.speechSynthesis.cancel();
             // Create utterance
-            const utterance = new SpeechSynthesisUtterance("tui bolod naki?");
+            const utterance = new SpeechSynthesisUtterance("tui ekta abar choda?");
             utterance.lang = "bn-BD";          // Bengali (Bangladesh) + playful tone
             utterance.rate = 0.95;
             utterance.pitch = 1.1;
@@ -518,11 +518,11 @@
                     }, 800);
                 }
             } else {
-                // MISMATCH: Play the custom Google sound "tui bolod naki?" 
+                // MISMATCH: Play the custom Google sound "tui ekta abar choda?" 
                 playMismatchSound();
                 
                 lockBoard = true;
-                messageBox.innerHTML = "❌ mismatch! " + (soundEnabled ? "🔊 'tui bolod naki?'" : "❌ try again!") + " ❌";
+                messageBox.innerHTML = "❌ mismatch! " + (soundEnabled ? "🔊 'tui ekta abar choda'" : "❌ try again!") + " ❌";
                 messageBox.style.background = "#8b3c2caa";
                 renderGrid();
                 
@@ -660,7 +660,7 @@
             window.speechSynthesis.cancel(); // stop any currently speaking
         }
         // show brief tooltip message
-        messageBox.innerHTML = soundEnabled ? "🔊 Sound ON: mismatch will speak 'tui bolod naki?'" : "🔇 Sound OFF, mismatches silent";
+        messageBox.innerHTML = soundEnabled ? "🔊 Sound ON: mismatch will speak 'tui ekta abar choda?'" : "🔇 Sound OFF, mismatches silent";
         messageBox.style.background = "#1f4d6eaa";
         setTimeout(() => {
             if (matchedPairs !== TOTAL_PAIRS && !lockBoard) {
