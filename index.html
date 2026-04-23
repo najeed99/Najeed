@@ -3,374 +3,269 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Luminous Tiles · Memory Puzzle with Sound</title>
+    <title>Dual Puzzle Arcade · Memory Match + Slide Puzzle</title>
     <style>
         * {
             user-select: none;
             -webkit-tap-highlight-color: transparent;
+            box-sizing: border-box;
         }
 
         body {
-            background: linear-gradient(145deg, #1a2a3a 0%, #0f1a24 100%);
+            background: linear-gradient(145deg, #101f2c 0%, #0a121c 100%);
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-family: 'Segoe UI', 'Poppins', 'Roboto', system-ui, -apple-system, 'Inter', sans-serif;
+            font-family: 'Segoe UI', 'Poppins', 'Inter', system-ui, sans-serif;
             margin: 0;
             padding: 20px;
         }
 
-        /* GAME CARD */
-        .game-container {
-            background: rgba(22, 34, 48, 0.65);
-            backdrop-filter: blur(2px);
-            border-radius: 68px;
-            padding: 20px 24px 32px 24px;
-            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+        /* MAIN GAME SHELL */
+        .dual-game-hub {
+            max-width: 700px;
+            width: 100%;
+            background: rgba(18, 30, 40, 0.7);
+            backdrop-filter: blur(3px);
+            border-radius: 70px;
+            padding: 18px 20px 28px;
+            box-shadow: 0 25px 40px rgba(0,0,0,0.5), inset 0 1px 1px rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,240,0.2);
         }
 
-        .puzzle-panel {
-            background: #0e1a24;
-            border-radius: 52px;
-            padding: 20px;
-            box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.6), 0 8px 20px rgba(0, 0, 0, 0.3);
+        .game-tab-bar {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-bottom: 28px;
         }
 
-        /* HEADER area */
-        .game-header {
+        .tab-btn {
+            background: #1f3e4b;
+            border: none;
+            font-size: 1.1rem;
+            font-weight: bold;
+            padding: 10px 28px;
+            border-radius: 60px;
+            color: #c6e9ff;
+            cursor: pointer;
+            font-family: inherit;
+            transition: 0.15s;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+            letter-spacing: 0.5px;
+        }
+
+        .tab-btn.active {
+            background: #f4b942;
+            color: #1e2f3a;
+            box-shadow: 0 0 12px #ffcd7e;
+        }
+
+        .game-panel {
+            display: none;
+            animation: fadeSlide 0.25s ease;
+        }
+
+        .game-panel.active-panel {
+            display: block;
+        }
+
+        @keyframes fadeSlide {
+            from { opacity: 0; transform: translateY(8px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+
+        /* shared card styles for both games */
+        .stats-bar {
             display: flex;
             justify-content: space-between;
-            align-items: baseline;
+            align-items: center;
             flex-wrap: wrap;
             gap: 12px;
-            margin-bottom: 28px;
-            padding: 0 12px;
-        }
-
-        .stats {
-            display: flex;
-            gap: 28px;
-            background: #07121c;
-            padding: 8px 24px;
+            margin-bottom: 24px;
+            background: #07121cd9;
+            padding: 8px 20px;
             border-radius: 60px;
             backdrop-filter: blur(4px);
-            box-shadow: inset 0 1px 2px rgba(0,0,0,0.5), 0 4px 10px rgba(0,0,0,0.2);
         }
 
         .stat {
             display: flex;
-            align-items: baseline;
             gap: 8px;
+            align-items: baseline;
             font-weight: 600;
         }
 
         .stat-label {
-            font-size: 0.85rem;
+            font-size: 0.75rem;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            color: #8aadcc;
+            color: #9bbad4;
         }
 
         .stat-value {
-            font-size: 1.8rem;
+            font-size: 1.7rem;
             font-weight: 800;
-            color: #f2e8cf;
-            text-shadow: 0 2px 3px black;
-            line-height: 1;
+            color: #f7e9c3;
             font-family: monospace;
         }
 
-        .new-game-btn {
+        .action-btn {
             background: #f4c542;
             border: none;
-            font-size: 1rem;
             font-weight: bold;
-            padding: 8px 24px;
-            border-radius: 50px;
-            color: #1e2f3c;
-            cursor: pointer;
-            box-shadow: 0 5px 0 #a05e15;
-            transition: 0.07s linear;
-            font-family: inherit;
-            letter-spacing: 0.5px;
-        }
-
-        .new-game-btn:active {
-            transform: translateY(3px);
-            box-shadow: 0 2px 0 #a05e15;
-        }
-
-        .sound-toggle {
-            background: #2c4b5e;
-            border: none;
-            font-size: 1.2rem;
-            padding: 6px 14px;
+            padding: 6px 20px;
             border-radius: 40px;
-            color: white;
             cursor: pointer;
-            font-family: monospace;
-            font-weight: bold;
-            margin-left: 8px;
-            transition: 0.1s linear;
-            box-shadow: 0 2px 6px black;
+            font-family: inherit;
+            box-shadow: 0 3px 0 #9b5e1a;
+            transition: 0.05s linear;
         }
 
-        .sound-toggle:active {
-            transform: scale(0.96);
+        .action-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 1px 0 #9b5e1a;
         }
 
-        /* MESSAGE */
-        .message-area {
-            text-align: center;
-            margin: 16px 12px 12px 12px;
-            font-weight: bold;
-            font-size: 1.25rem;
-            padding: 8px;
-            border-radius: 80px;
-            background: #07121cbb;
-            color: #e6f7ff;
-            backdrop-filter: blur(4px);
-            transition: 0.2s;
-        }
-
-        /* PUZZLE GRID */
-        .grid {
+        /* MEMORY GRID (4x4) */
+        .memory-grid {
             display: grid;
-            grid-template-columns: repeat(4, minmax(70px, 100px));
-            gap: 14px;
+            grid-template-columns: repeat(4, minmax(70px, 95px));
+            gap: 12px;
             justify-content: center;
-            padding: 12px;
-            background: #07121c55;
-            border-radius: 48px;
+            padding: 10px;
         }
 
-        /* CARD FLIP STYLES */
-        .card {
+        /* SLIDE PUZZLE (3x3) */
+        .slide-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            background: #0A1620;
+            padding: 16px;
+            border-radius: 44px;
             aspect-ratio: 1 / 1;
-            background: transparent;
-            perspective: 600px;
-            cursor: pointer;
+            max-width: 420px;
+            margin: 0 auto;
         }
 
-        .card-inner {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            text-align: center;
-            transition: transform 0.28s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-            transform-style: preserve-3d;
-            border-radius: 24px;
-            box-shadow: 0 12px 18px -8px rgba(0, 0, 0, 0.5);
-        }
-
-        .card.flipped .card-inner {
-            transform: rotateY(180deg);
-        }
-
-        .card.matched .card-inner {
-            transform: rotateY(180deg);
-        }
-
-        /* front & back */
-        .card-front, .card-back {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            backface-visibility: hidden;
+        .tile {
+            background: linear-gradient(145deg, #2a5f7a, #134257);
             border-radius: 24px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2.7rem;
-            font-weight: 700;
-            background: radial-gradient(circle at 30% 25%, #fff7e8, #ffe6b3);
-            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1), 0 4px 8px rgba(0,0,0,0.2);
-        }
-
-        .card-front {
-            background: #1f3a47;
-            background-image: radial-gradient(circle at 40% 35%, #2d5470, #0e2a38);
-            transform: rotateY(180deg);
-            color: #f7eac5;
-            font-size: 2.8rem;
-            text-shadow: 0 2px 5px black;
-        }
-
-        .card-back {
-            background: linear-gradient(145deg, #b8cfec, #8fb0ca);
-            color: #1f3a4b;
-            font-size: 2rem;
+            font-size: 2.4rem;
             font-weight: bold;
-            flex-direction: column;
-            gap: 4px;
+            color: #FFE3B0;
+            cursor: pointer;
+            transition: 0.08s linear;
+            box-shadow: 0 8px 0 #08212e;
+            aspect-ratio: 1 / 1;
+            text-shadow: 2px 2px 0 #1a3a48;
         }
 
-        .card-back::before {
-            content: "?";
-            font-size: 2.6rem;
-            opacity: 0.7;
-            font-weight: 800;
-        }
-
-        /* disable interaction when waiting or matched cards */
-        .card.matched {
+        .tile.empty {
+            background: #1c3c48;
+            box-shadow: inset 0 0 0 2px #4f8faa;
             cursor: default;
-            filter: drop-shadow(0 0 5px #b9f6ca);
+            color: #2f6b7c;
+            font-size: 1.4rem;
         }
 
-        .card.disabled, .card.matched {
-            pointer-events: none;
-        }
-
-        /* victory glow */
-        .victory-glow .grid .card .card-front {
-            box-shadow: 0 0 0 3px gold, 0 0 18px 4px #ffdd77;
-            transition: 0.2s;
-        }
-
-        /* responsive */
-        @media (max-width: 480px) {
-            .grid {
-                gap: 10px;
-                grid-template-columns: repeat(4, minmax(65px, 85px));
-            }
-            .stat-value {
-                font-size: 1.4rem;
-            }
-            .card-front {
-                font-size: 2rem;
-            }
-            .game-container {
-                padding: 12px 16px 22px;
-            }
+        .message-area {
+            margin-top: 18px;
+            text-align: center;
+            background: #07121cbb;
+            border-radius: 60px;
+            padding: 10px;
+            font-weight: bold;
+            color: #ecf9ff;
         }
 
         footer {
             font-size: 0.7rem;
             text-align: center;
-            margin-top: 18px;
-            color: #7f9cbb;
+            margin-top: 20px;
+            color: #6c8dab;
         }
     </style>
 </head>
 <body>
-<div class="game-container">
-    <div class="puzzle-panel">
-        <div class="game-header">
-            <div class="stats">
-                <div class="stat"><span class="stat-label">MOVES</span><span class="stat-value" id="moveCounter">0</span></div>
-                <div class="stat"><span class="stat-label">PAIRS</span><span class="stat-value" id="pairsMatched">0</span><span class="stat-label" style="font-size:0.9rem;">/8</span></div>
-            </div>
-            <div style="display: flex; gap: 10px;">
-                <button class="sound-toggle" id="soundToggleBtn" title="Toggle sound effect">🔊 SOUND ON</button>
-                <button class="new-game-btn" id="resetGameBtn">⟳ NEW GAME</button>
-            </div>
-        </div>
+<div class="dual-game-hub">
+    <div class="game-tab-bar">
+        <button class="tab-btn active" data-game="memory">🧠 MEMORY MATCH</button>
+        <button class="tab-btn" data-game="slide">🔄 SLIDE PUZZLE</button>
+    </div>
 
-        <div id="gridContainer" class="grid"></div>
-
-        <div id="messageBox" class="message-area">
-            ✨ flip tiles & match the icons ✨
+    <!-- MEMORY GAME PANEL -->
+    <div id="memoryPanel" class="game-panel active-panel">
+        <div class="stats-bar">
+            <div class="stat"><span class="stat-label">MOVES</span><span class="stat-value" id="memMoves">0</span></div>
+            <div class="stat"><span class="stat-label">PAIRS</span><span class="stat-value" id="memPairs">0</span><span class="stat-label">/8</span></div>
+            <button class="action-btn" id="resetMemoryBtn">⟳ NEW GAME</button>
         </div>
-        <footer>🐠 memory challenge · mismatch sound: "tui ekta abar choda?" 🐙</footer>
+        <div id="memoryGrid" class="memory-grid"></div>
+        <div id="memMessage" class="message-area">✨ flip & match the icons ✨</div>
+        <footer>🐟 classic matching · mismatch sound "tui bolod naki?" 🐙</footer>
+    </div>
+
+    <!-- SLIDE PUZZLE PANEL -->
+    <div id="slidePanel" class="game-panel">
+        <div class="stats-bar">
+            <div class="stat"><span class="stat-label">MOVES</span><span class="stat-value" id="slideMoves">0</span></div>
+            <div class="stat"></div>
+            <button class="action-btn" id="resetSlideBtn">🔀 SHUFFLE</button>
+        </div>
+        <div id="slideGrid" class="slide-grid"></div>
+        <div id="slideMessage" class="message-area">⬅️ tap tile next to empty space to slide</div>
+        <footer>🌟 3x3 sliding puzzle · arrange numbers 1-8 + empty</footer>
     </div>
 </div>
 
 <script>
-    // --- GAME CONFIGURATION -------------------------------------------------
-    const ICON_SET = [
-        "🐠", "🐟", "🐙", "🦑",   // ocean creatures
-        "🐬", "🐳", "🐚", "🌟"     // star = special gem
-    ]; // exactly 8 unique icons -> 16 cards (pairs)
-
-    const TOTAL_PAIRS = ICON_SET.length;   // = 8
-    const TOTAL_CARDS = TOTAL_PAIRS * 2;    // = 16
-
-    // DOM Elements
-    const gridContainer = document.getElementById('gridContainer');
-    const moveCounterSpan = document.getElementById('moveCounter');
-    const pairsMatchedSpan = document.getElementById('pairsMatched');
-    const resetBtn = document.getElementById('resetGameBtn');
-    const messageBox = document.getElementById('messageBox');
-    const soundToggleBtn = document.getElementById('soundToggleBtn');
-
-    // --- SOUND EFFECT: "tui ekta abar choda" custom audio from Google Text-to-Speech (generated via TTS)
-    // We'll create an Audio object with a data URL that speaks "tui ekta abar choda" in a playful tone.
-    // To ensure the sound works without external hosting, we generate a WAV-like base64 using Web Speech API fallback? 
-    // But explicit requirement: "use google sound 'tui ekta abar choda'"
-    // Best cross-browser approach: We'll pre-load an Audio context? Actually we can use a small helper: use SpeechSynthesis (Google's voice) exactly for the phrase.
-    // However the instruction says "google sound" — typical interpretation: using browser's speech synthesis with Google voice (if available) to speak "tui ekta abar choda".
-    // This gives a lively humorous mismatch sound! No external files, uses native TTS, commonly used for fun games.
-    // For maximum compatibility and fun effect, we'll implement a speak function that uses window.speechSynthesis with a selected Google voice (or default female).
-    // Additionally we toggle sound on/off.
+    // ----------------------------------------------
+    // 1. MEMORY MATCH (with sound effect)
+    // ----------------------------------------------
+    const ICON_SET = ["🐠", "🐟", "🐙", "🦑", "🐬", "🐳", "🐚", "🌟"];
+    const TOTAL_PAIRS = 8;
     
-    let soundEnabled = true;
+    let memCards = [];
+    let memMoves = 0;
+    let memMatched = 0;
+    let lockBoard = false;
+    let firstIdx = null, secondIdx = null;
+    let flipTimeout = null;
+    let soundEnabled = true;   // always on for mismatch laugh
     
-    // Function to play mismatch sound: "tui ekta abar choda?" via speech synthesis (Google's engine on Chrome/Edge)
+    // DOM memory elements
+    const memoryGridDiv = document.getElementById('memoryGrid');
+    const memMovesSpan = document.getElementById('memMoves');
+    const memPairsSpan = document.getElementById('memPairs');
+    const resetMemBtn = document.getElementById('resetMemoryBtn');
+    const memMessageDiv = document.getElementById('memMessage');
+    
+    // play mismatch TTS "tui bolod naki?"
     function playMismatchSound() {
-        if (!soundEnabled) return;
-        // Cancel any ongoing speech to avoid overlap
-        if (window.speechSynthesis) {
-            window.speechSynthesis.cancel();
-            // Create utterance
-            const utterance = new SpeechSynthesisUtterance("tui ekta abar choda?");
-            utterance.lang = "bn-BD";          // Bengali (Bangladesh) + playful tone
-            utterance.rate = 0.95;
-            utterance.pitch = 1.1;
-            utterance.volume = 0.9;
-            // Try to select a Google voice if available (many browsers use Google TTS)
-            // We'll attempt to find a voice that is Google or natural
-            const setGoogleVoice = () => {
-                const voices = window.speechSynthesis.getVoices();
-                // look for Google UK English / Bengali / or just any natural female voice
-                let selectedVoice = voices.find(v => v.name.includes('Google') && (v.lang.includes('bn') || v.lang.includes('en')));
-                if (!selectedVoice) {
-                    selectedVoice = voices.find(v => v.lang.includes('bn') || v.name.includes('Bengali'));
-                }
-                if (!selectedVoice && voices.length) {
-                    selectedVoice = voices.find(v => v.lang === 'en-US' && v.name.includes('Google'));
-                }
-                if (selectedVoice) utterance.voice = selectedVoice;
-            };
-            // voices might be loaded asynchronously
-            if (window.speechSynthesis.getVoices().length) {
-                setGoogleVoice();
-            } else {
-                window.speechSynthesis.onvoiceschanged = () => {
-                    setGoogleVoice();
-                    window.speechSynthesis.speak(utterance);
-                };
-                // speak after setting? we'll call speak after event or now
-                window.speechSynthesis.speak(utterance);
-                return;
-            }
-            window.speechSynthesis.speak(utterance);
-        } else {
-            // fallback: simple beep? but we respect requirement -> console not needed, but still try web audio simple beep? but not needed.
-            console.warn("SpeechSynthesis not supported, but game continues");
-        }
+        if (!window.speechSynthesis) return;
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance("tui bolod naki?");
+        utterance.lang = "bn-BD";
+        utterance.rate = 0.95;
+        utterance.pitch = 1.15;
+        utterance.volume = 0.9;
+        // attempt google-like voice
+        const setVoice = () => {
+            const voices = window.speechSynthesis.getVoices();
+            let selected = voices.find(v => v.name.includes('Google') && (v.lang.includes('bn') || v.lang.includes('en')));
+            if (!selected) selected = voices.find(v => v.lang.includes('bn'));
+            if (selected) utterance.voice = selected;
+        };
+        if (window.speechSynthesis.getVoices().length) setVoice();
+        else window.speechSynthesis.onvoiceschanged = setVoice;
+        window.speechSynthesis.speak(utterance);
     }
     
-    // Toggle sound button UI
-    function updateSoundButtonUI() {
-        if (soundToggleBtn) {
-            soundToggleBtn.innerHTML = soundEnabled ? "🔊 SOUND ON" : "🔇 SOUND OFF";
-            soundToggleBtn.style.opacity = soundEnabled ? "1" : "0.7";
-        }
-    }
-    
-    // Game State
-    let cards = [];              // array of objects { id, icon, matched, flipped }
-    let moveCount = 0;
-    let matchedPairs = 0;
-    let lockBoard = false;      // prevent actions during delay or after win?
-    let firstCardIndex = null;
-    let secondCardIndex = null;
-    let timeoutId = null;       // timeout for resetting flip delay
-
-    // Helper: Shuffle array (Fisher-Yates)
     function shuffleArray(arr) {
         for (let i = arr.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
@@ -378,207 +273,264 @@
         }
         return arr;
     }
-
-    // Initialize / Reset game data
-    function initGame() {
-        // cancel any pending timeout to prevent async flip conflicts
-        if (timeoutId) {
-            clearTimeout(timeoutId);
-            timeoutId = null;
-        }
-        // build fresh card deck: each icon appears twice
+    
+    function initMemoryGame() {
+        if (flipTimeout) clearTimeout(flipTimeout);
         let deck = [];
         for (let i = 0; i < TOTAL_PAIRS; i++) {
             deck.push({ icon: ICON_SET[i], matched: false, flipped: false });
             deck.push({ icon: ICON_SET[i], matched: false, flipped: false });
         }
-        // shuffle deck
         deck = shuffleArray(deck);
-        // assign IDs and build cards array
-        cards = deck.map((card, idx) => ({
-            id: idx,
-            icon: card.icon,
-            matched: false,
-            flipped: false,
-        }));
-        
-        // reset global trackers
-        moveCount = 0;
-        matchedPairs = 0;
-        firstCardIndex = null;
-        secondCardIndex = null;
+        memCards = deck.map((c, idx) => ({ id: idx, icon: c.icon, matched: false, flipped: false }));
+        memMoves = 0;
+        memMatched = 0;
+        firstIdx = null;
+        secondIdx = null;
         lockBoard = false;
-        
-        // update UI counters
-        moveCounterSpan.innerText = moveCount;
-        pairsMatchedSpan.innerText = matchedPairs;
-        messageBox.innerHTML = "🧩 match the sea creatures & gems! 🧩";
-        messageBox.style.background = "#07121cbb";
-        messageBox.style.color = "#e6f7ff";
-        
-        // remove victory glow class if present
-        document.querySelector('.puzzle-panel')?.classList.remove('victory-glow');
-        
-        // render the grid
-        renderGrid();
+        memMovesSpan.innerText = memMoves;
+        memPairsSpan.innerText = memMatched;
+        memMessageDiv.innerHTML = "🧩 new memory match! 🧩";
+        memMessageDiv.style.background = "#07121cbb";
+        renderMemoryGrid();
     }
     
-    // Render cards based on current state (flipped, matched)
-    function renderGrid() {
-        if (!gridContainer) return;
-        gridContainer.innerHTML = '';
-        
-        cards.forEach((card, idx) => {
+    function renderMemoryGrid() {
+        memoryGridDiv.innerHTML = '';
+        memCards.forEach((card, idx) => {
             const cardDiv = document.createElement('div');
             cardDiv.className = 'card';
-            if (card.flipped || card.matched) {
-                cardDiv.classList.add('flipped');
-            }
-            if (card.matched) {
-                cardDiv.classList.add('matched');
-            }
-            if (lockBoard && !card.matched && !card.flipped) {
-                cardDiv.classList.add('disabled');
-            } else if (!lockBoard && !card.matched) {
-                cardDiv.classList.remove('disabled');
-            }
-            
+            cardDiv.style.cssText = `
+                aspect-ratio: 1 / 1;
+                background: transparent;
+                perspective: 500px;
+                cursor: pointer;
+            `;
             const inner = document.createElement('div');
-            inner.className = 'card-inner';
-            
+            inner.style.cssText = `
+                position: relative; width: 100%; height: 100%;
+                transition: transform 0.25s ease; transform-style: preserve-3d; border-radius: 20px;
+                box-shadow: 0 8px 14px rgba(0,0,0,0.4);
+            `;
             const front = document.createElement('div');
-            front.className = 'card-front';
+            front.style.cssText = `
+                position: absolute; width: 100%; height: 100%; backface-visibility: hidden;
+                border-radius: 20px; background: radial-gradient(circle at 30% 25%, #ffefc0, #ffd78c);
+                display: flex; align-items: center; justify-content: center;
+                font-size: 2.2rem; transform: rotateY(180deg);
+            `;
             front.innerText = card.icon;
-            
             const back = document.createElement('div');
-            back.className = 'card-back';
+            back.style.cssText = `
+                position: absolute; width: 100%; height: 100%; backface-visibility: hidden;
+                border-radius: 20px; background: linear-gradient(145deg, #2c6a85, #16495e);
+                display: flex; align-items: center; justify-content: center;
+                font-size: 2rem; font-weight: bold; color: #ffdd99;
+            `;
+            back.innerText = "?";
             inner.appendChild(front);
             inner.appendChild(back);
             cardDiv.appendChild(inner);
-            
+            if (card.flipped || card.matched) inner.style.transform = 'rotateY(180deg)';
+            if (card.matched) cardDiv.style.filter = 'drop-shadow(0 0 5px #a3f0c0)';
+            if (lockBoard && !card.matched && !card.flipped) cardDiv.style.pointerEvents = 'none';
             cardDiv.addEventListener('click', (e) => {
                 e.stopPropagation();
                 if (lockBoard) return;
-                if (card.matched) return;
-                if (card.flipped) return;
-                if (firstCardIndex !== null && secondCardIndex !== null) return;
-                handleCardClick(idx);
+                if (card.matched || card.flipped) return;
+                handleMemoryClick(idx);
             });
-            
-            gridContainer.appendChild(cardDiv);
+            memoryGridDiv.appendChild(cardDiv);
         });
     }
     
-    // Core game logic with mismatch SOUND effect (the google TTS sound)
-    function handleCardClick(clickedIdx) {
+    function handleMemoryClick(clickedIdx) {
         if (lockBoard) return;
-        const clickedCard = cards[clickedIdx];
-        if (clickedCard.matched) return;
-        if (clickedCard.flipped) return;
+        if (memCards[clickedIdx].matched || memCards[clickedIdx].flipped) return;
+        if (firstIdx !== null && secondIdx !== null) return;
         
-        if (firstCardIndex === null) {
-            flipCardOpen(clickedIdx);
-            firstCardIndex = clickedIdx;
+        if (firstIdx === null) {
+            // flip first
+            memCards[clickedIdx].flipped = true;
+            firstIdx = clickedIdx;
+            renderMemoryGrid();
             return;
         }
         
-        if (firstCardIndex !== null && secondCardIndex === null) {
-            if (firstCardIndex === clickedIdx) return;
+        if (firstIdx !== null && secondIdx === null && firstIdx !== clickedIdx) {
+            memCards[clickedIdx].flipped = true;
+            secondIdx = clickedIdx;
+            memMoves++;
+            memMovesSpan.innerText = memMoves;
+            renderMemoryGrid();
             
-            flipCardOpen(clickedIdx);
-            secondCardIndex = clickedIdx;
-            incrementMove();
-            
-            const cardA = cards[firstCardIndex];
-            const cardB = cards[secondCardIndex];
+            const cardA = memCards[firstIdx];
+            const cardB = memCards[clickedIdx];
             const isMatch = (cardA.icon === cardB.icon);
             
             if (isMatch) {
-                // MATCH SUCCESS
                 cardA.matched = true;
                 cardB.matched = true;
                 cardA.flipped = true;
                 cardB.flipped = true;
-                
-                matchedPairs++;
-                pairsMatchedSpan.innerText = matchedPairs;
-                clearSelectedIndices();
-                renderGrid();
-                
-                if (matchedPairs === TOTAL_PAIRS) {
-                    gameWin();
+                memMatched++;
+                memPairsSpan.innerText = memMatched;
+                firstIdx = null;
+                secondIdx = null;
+                renderMemoryGrid();
+                if (memMatched === TOTAL_PAIRS) {
+                    memMessageDiv.innerHTML = "🎉 MEMORY VICTORY! 🎉";
+                    memMessageDiv.style.background = "#f3b33daa";
+                    lockBoard = true;
+                    createConfettiEffect();
                 } else {
-                    messageBox.innerHTML = "✔️ Great match! ✔️";
-                    messageBox.style.background = "#2c5a2eaa";
-                    setTimeout(() => {
-                        if (matchedPairs !== TOTAL_PAIRS) {
-                            messageBox.innerHTML = "🌀 keep matching! 🌀";
-                            messageBox.style.background = "#07121cbb";
-                        }
-                    }, 800);
+                    memMessageDiv.innerHTML = "✔️ Match! +1 pair";
+                    setTimeout(() => { if (memMatched !== TOTAL_PAIRS) memMessageDiv.innerHTML = "✨ keep matching ✨"; }, 900);
                 }
             } else {
-                // MISMATCH: Play the custom Google sound "tui ekta abar choda?" 
+                // MISMATCH with GOOGLE SOUND "tui bolod naki?"
                 playMismatchSound();
-                
                 lockBoard = true;
-                messageBox.innerHTML = "❌ mismatch! " + (soundEnabled ? "🔊 'tui ekta abar choda'" : "❌ try again!") + " ❌";
-                messageBox.style.background = "#8b3c2caa";
-                renderGrid();
-                
-                timeoutId = setTimeout(() => {
-                    if (cards[firstCardIndex] && !cards[firstCardIndex].matched) {
-                        cards[firstCardIndex].flipped = false;
-                    }
-                    if (cards[secondCardIndex] && !cards[secondCardIndex].matched) {
-                        cards[secondCardIndex].flipped = false;
-                    }
-                    clearSelectedIndices();
+                memMessageDiv.innerHTML = "❌ mismatch! 'tui bolod naki?' ❌";
+                memMessageDiv.style.background = "#8b3020aa";
+                flipTimeout = setTimeout(() => {
+                    if (!memCards[firstIdx]?.matched) memCards[firstIdx].flipped = false;
+                    if (!memCards[secondIdx]?.matched) memCards[secondIdx].flipped = false;
+                    firstIdx = null;
+                    secondIdx = null;
                     lockBoard = false;
-                    if (timeoutId) timeoutId = null;
-                    renderGrid();
-                    if (matchedPairs !== TOTAL_PAIRS) {
-                        messageBox.innerHTML = "✨ flip tiles & match the icons ✨";
-                        messageBox.style.background = "#07121cbb";
+                    renderMemoryGrid();
+                    if (memMatched !== TOTAL_PAIRS) {
+                        memMessageDiv.innerHTML = "✨ flip tiles & match ✨";
+                        memMessageDiv.style.background = "#07121cbb";
                     }
-                }, 800);
-                renderGrid();
+                    flipTimeout = null;
+                }, 700);
+                renderMemoryGrid();
             }
         }
     }
     
-    function flipCardOpen(index) {
-        if (cards[index].matched) return;
-        cards[index].flipped = true;
-        renderGrid();
+    function resetMemory() {
+        if (flipTimeout) clearTimeout(flipTimeout);
+        lockBoard = false;
+        firstIdx = secondIdx = null;
+        initMemoryGame();
     }
     
-    function incrementMove() {
-        moveCount++;
-        moveCounterSpan.innerText = moveCount;
+    // ----------------------------------------------
+    // 2. SLIDING PUZZLE (3x3)
+    // ----------------------------------------------
+    let slideTiles = [];      // 1D array length 9, 0 represents empty
+    let slideMoves = 0;
+    let slideSolved = false;
+    const slideGridDiv = document.getElementById('slideGrid');
+    const slideMovesSpan = document.getElementById('slideMoves');
+    const resetSlideBtn = document.getElementById('resetSlideBtn');
+    const slideMessageDiv = document.getElementById('slideMessage');
+    
+    function initSlidePuzzle() {
+        // goal: [1,2,3,4,5,6,7,8,0]
+        let arr = [1,2,3,4,5,6,7,8,0];
+        do {  // shuffle until solvable (simple parity check)
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+        } while (!isSolvable(arr));
+        slideTiles = [...arr];
+        slideMoves = 0;
+        slideSolved = false;
+        slideMovesSpan.innerText = slideMoves;
+        slideMessageDiv.innerHTML = "⬅️ tap tile next to empty space to slide";
+        slideMessageDiv.style.background = "#07121cbb";
+        renderSlideGrid();
     }
     
-    function clearSelectedIndices() {
-        firstCardIndex = null;
-        secondCardIndex = null;
-    }
-    
-    // victory sequence
-    function gameWin() {
-        lockBoard = true;
-        messageBox.innerHTML = "🎉 PERFECT! YOU WON! 🎉";
-        messageBox.style.background = "#fed54eff";
-        messageBox.style.color = "#1f2f3c";
-        messageBox.style.fontWeight = "bold";
-        document.querySelector('.puzzle-panel').classList.add('victory-glow');
-        if (timeoutId) {
-            clearTimeout(timeoutId);
-            timeoutId = null;
+    function isSolvable(tiles) {
+        let invCount = 0;
+        const flat = tiles.filter(v => v !== 0);
+        for (let i = 0; i < flat.length; i++) {
+            for (let j = i+1; j < flat.length; j++) {
+                if (flat[i] > flat[j]) invCount++;
+            }
         }
-        createConfettiEffect();
+        const emptyRow = Math.floor(tiles.indexOf(0) / 3);
+        // for odd grid width (3) solvable if inversion count even
+        return (invCount % 2 === 0);
     }
     
-    // simple canvas confetti (lightweight)
+    function renderSlideGrid() {
+        slideGridDiv.innerHTML = '';
+        for (let i = 0; i < 9; i++) {
+            const val = slideTiles[i];
+            const tileDiv = document.createElement('div');
+            tileDiv.classList.add('tile');
+            if (val === 0) {
+                tileDiv.classList.add('empty');
+                tileDiv.innerText = '☆';
+            } else {
+                tileDiv.innerText = val;
+            }
+            tileDiv.addEventListener('click', (function(index) {
+                return function() { handleSlideClick(index); };
+            })(i));
+            slideGridDiv.appendChild(tileDiv);
+        }
+        if (checkWin() && !slideSolved) {
+            slideSolved = true;
+            slideMessageDiv.innerHTML = "🎉 PUZZLE SOLVED! WINNER! 🎉";
+            slideMessageDiv.style.background = "#f3b33daa";
+            createConfettiEffect();
+            lockBoard = false;
+        }
+    }
+    
+    function handleSlideClick(idx) {
+        if (slideSolved) return;
+        const emptyIdx = slideTiles.indexOf(0);
+        const rowEmpty = Math.floor(emptyIdx / 3);
+        const colEmpty = emptyIdx % 3;
+        const rowTile = Math.floor(idx / 3);
+        const colTile = idx % 3;
+        const isAdjacent = (Math.abs(rowEmpty - rowTile) + Math.abs(colEmpty - colTile)) === 1;
+        if (isAdjacent) {
+            // swap
+            [slideTiles[emptyIdx], slideTiles[idx]] = [slideTiles[idx], slideTiles[emptyIdx]];
+            slideMoves++;
+            slideMovesSpan.innerText = slideMoves;
+            renderSlideGrid();
+            if (checkWin()) {
+                slideSolved = true;
+                slideMessageDiv.innerHTML = "🎉 PERFECT! SLIDE PUZZLE COMPLETE! 🎉";
+                slideMessageDiv.style.background = "#f3b33daa";
+                createConfettiEffect();
+            } else {
+                slideMessageDiv.innerHTML = "👍 keep sliding!";
+                setTimeout(() => {
+                    if (!slideSolved) slideMessageDiv.innerHTML = "⬅️ tap tile next to empty space to slide";
+                }, 800);
+            }
+        } else {
+            slideMessageDiv.innerHTML = "🚫 only tile next to empty space!";
+            setTimeout(() => {
+                if (!slideSolved) slideMessageDiv.innerHTML = "⬅️ tap tile next to empty space to slide";
+            }, 700);
+        }
+    }
+    
+    function checkWin() {
+        for (let i = 0; i < 8; i++) {
+            if (slideTiles[i] !== i+1) return false;
+        }
+        return slideTiles[8] === 0;
+    }
+    
+    function resetSlide() {
+        initSlidePuzzle();
+    }
+    
+    // ----- confetti (shared) -----
     function createConfettiEffect() {
         const canvas = document.createElement('canvas');
         canvas.style.position = 'fixed';
@@ -592,114 +544,73 @@
         const ctx = canvas.getContext('2d');
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
-        
         let particles = [];
         const colors = ['#f5bc70', '#f5a97f', '#f4c542', '#a7d489', '#7dc4e8', '#e9692c'];
-        for (let i = 0; i < 120; i++) {
+        for (let i = 0; i < 100; i++) {
             particles.push({
                 x: Math.random() * canvas.width,
                 y: Math.random() * canvas.height - canvas.height,
-                size: Math.random() * 7 + 3,
+                size: Math.random() * 8 + 3,
                 color: colors[Math.floor(Math.random() * colors.length)],
-                speedY: Math.random() * 7 + 4,
+                speedY: Math.random() * 6 + 4,
                 speedX: (Math.random() - 0.5) * 3,
                 rotation: Math.random() * 360,
             });
         }
-        
-        let animationId;
-        let startTime = performance.now();
-        function drawConfetti(now) {
-            if (now - startTime > 2000) {
-                cancelAnimationFrame(animationId);
-                canvas.remove();
-                return;
-            }
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        let animId;
+        const start = performance.now();
+        function draw(now) {
+            if (now - start > 1900) { cancelAnimationFrame(animId); canvas.remove(); return; }
+            ctx.clearRect(0,0,canvas.width,canvas.height);
             for (let p of particles) {
                 ctx.save();
                 ctx.translate(p.x, p.y);
-                ctx.rotate(p.rotation * Math.PI / 180);
+                ctx.rotate(p.rotation * Math.PI/180);
                 ctx.fillStyle = p.color;
                 ctx.fillRect(-p.size/2, -p.size/2, p.size, p.size);
                 ctx.restore();
                 p.x += p.speedX;
                 p.y += p.speedY;
-                p.rotation += 6;
-                if (p.y > canvas.height + 50) p.y = -30;
-                if (p.x < -50) p.x = canvas.width + 20;
-                if (p.x > canvas.width + 50) p.x = -30;
+                p.rotation += 8;
+                if (p.y > canvas.height+50) p.y = -40;
+                if (p.x < -60) p.x = canvas.width+40;
+                if (p.x > canvas.width+60) p.x = -40;
             }
-            animationId = requestAnimationFrame((t) => drawConfetti(t));
+            animId = requestAnimationFrame(draw);
         }
-        animationId = requestAnimationFrame(drawConfetti);
-        setTimeout(() => {
-            if (animationId) cancelAnimationFrame(animationId);
-            if (canvas && canvas.remove) canvas.remove();
-        }, 2100);
+        animId = requestAnimationFrame(draw);
+        setTimeout(() => { if (animId) cancelAnimationFrame(animId); if(canvas.remove) canvas.remove(); }, 2000);
     }
     
-    // Reset game fully
-    function resetGame() {
-        if (timeoutId) {
-            clearTimeout(timeoutId);
-            timeoutId = null;
+    // ---- TAB SWITCHING ----
+    const memoryPanel = document.getElementById('memoryPanel');
+    const slidePanel = document.getElementById('slidePanel');
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    
+    function switchGame(gameId) {
+        if (gameId === 'memory') {
+            memoryPanel.classList.add('active-panel');
+            slidePanel.classList.remove('active-panel');
+            tabBtns[0].classList.add('active');
+            tabBtns[1].classList.remove('active');
+        } else {
+            memoryPanel.classList.remove('active-panel');
+            slidePanel.classList.add('active-panel');
+            tabBtns[0].classList.remove('active');
+            tabBtns[1].classList.add('active');
+            // optional: re-render slide puzzle if needed
+            if (!slideTiles.length) initSlidePuzzle(); else renderSlideGrid();
         }
-        if (window.speechSynthesis) {
-            window.speechSynthesis.cancel(); // stop any ongoing sound when reset
-        }
-        lockBoard = false;
-        initGame();
     }
     
-    // Toggle sound manually
-    function toggleSound() {
-        soundEnabled = !soundEnabled;
-        updateSoundButtonUI();
-        if (!soundEnabled && window.speechSynthesis) {
-            window.speechSynthesis.cancel(); // stop any currently speaking
-        }
-        // show brief tooltip message
-        messageBox.innerHTML = soundEnabled ? "🔊 Sound ON: mismatch will speak 'tui ekta abar choda?'" : "🔇 Sound OFF, mismatches silent";
-        messageBox.style.background = "#1f4d6eaa";
-        setTimeout(() => {
-            if (matchedPairs !== TOTAL_PAIRS && !lockBoard) {
-                messageBox.innerHTML = "✨ flip tiles & match the icons ✨";
-                messageBox.style.background = "#07121cbb";
-            } else if (matchedPairs === TOTAL_PAIRS) {
-                // do not override win message
-            } else {
-                if (messageBox.innerHTML.includes("Sound")) {
-                    messageBox.innerHTML = "✨ flip tiles & match the icons ✨";
-                    messageBox.style.background = "#07121cbb";
-                }
-            }
-        }, 1500);
-    }
+    tabBtns[0].addEventListener('click', () => switchGame('memory'));
+    tabBtns[1].addEventListener('click', () => switchGame('slide'));
+    resetMemBtn.addEventListener('click', resetMemory);
+    resetSlideBtn.addEventListener('click', resetSlide);
     
-    // Event listeners
-    resetBtn.addEventListener('click', () => {
-        resetGame();
-    });
-    
-    soundToggleBtn.addEventListener('click', () => {
-        toggleSound();
-    });
-    
-    // Preload empty speech to ensure permissions? no need.
-    // Also ensure the TTS works after first user interaction? Actually speechSynthesis requires user interaction sometimes.
-    // But most modern browsers allow .speak() after any user click. The mismatch sound only triggers on card click - which is user interaction.
-    // So it's fully compliant and will produce sound on mismatch.
-    
-    // initial start
-    initGame();
-    updateSoundButtonUI();
-    
-    // optional: polite preload voices? just for smoother experience
-    if (window.speechSynthesis) {
-        // this will load voices in background
-        window.speechSynthesis.getVoices();
-    }
+    // initializations
+    initMemoryGame();
+    initSlidePuzzle();
 </script>
 </body>
 </html>
