@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Luminous Tiles · Memory Puzzle Game</title>
+    <style>
+        * {
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: linear-gradient(145deg, #1a2a3a 0%, #0f1a24 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Segoe UI', 'Poppins', 'Roboto', system-ui, -apple-system, 'Inter', sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+
+        /* GAME CARD */
+        .game-container {
+            background: rgba(22, 34, 48, 0.65);
+            backdrop-filter: blur(2px);
+            border-radius: 68px;
+            padding: 20px 24px 32px 24px;
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .puzzle-panel {
+            background: #0e1a24;
+            border-radius: 52px;
+            padding: 20px;
+            box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.6), 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        /* HEADER area */
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 28px;
+            padding: 0 12px;
+        }
+
+        .stats {
+            display: flex;
+            gap: 28px;
+            background: #07121c;
+            padding: 8px 24px;
+            border-radius: 60px;
+            backdrop-filter: blur(4px);
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.5), 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        .stat {
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+            font-weight: 600;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #8aadcc;
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #f2e8cf;
+            text-shadow: 0 2px 3px black;
+            line-height: 1;
+            font-family: monospace;
+        }
+
+        .new-game-btn {
+            background: #f4c542;
+            border: none;
+            font-size: 1rem;
+            font-weight: bold;
+            padding: 8px 24px;
+            border-radius: 50px;
+            color: #1e2f3c;
+            cursor: pointer;
+            box-shadow: 0 5px 0 #a05e15;
+            transition: 0.07s linear;
+            font-family: inherit;
+            letter-spacing: 0.5px;
+        }
+
+        .new-game-btn:active {
+            transform: translateY(3px);
+            box-shadow: 0 2px 0 #a05e15;
+        }
+
+        /* MESSAGE */
+        .message-area {
+            text-align: center;
+            margin: 16px 12px 12px 12px;
+            font-weight: bold;
+            font-size: 1.25rem;
+            padding: 8px;
+            border-radius: 80px;
+            background: #07121cbb;
+            color: #e6f7ff;
+            backdrop-filter: blur(4px);
+            transition: 0.2s;
+        }
+
+        /* PUZZLE GRID */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(70px, 100px));
+            gap: 14px;
+            justify-content: center;
+            padding: 12px;
+            background: #07121c55;
+            border-radius: 48px;
+        }
+
+        /* CARD FLIP STYLES */
+        .card {
+            aspect-ratio: 1 / 1;
+            background: transparent;
+            perspective: 600px;
+            cursor: pointer;
+        }
+
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.28s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            transform-style: preserve-3d;
+            border-radius: 24px;
+            box-shadow: 0 12px 18px -8px rgba(0, 0, 0, 0.5);
+        }
+
+        .card.flipped .card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .card.matched .card-inner {
+            transform: rotateY(180deg);
+        }
+
+        /* front & back */
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.7rem;
+            font-weight: 700;
+            background: radial-gradient(circle at 30% 25%, #fff7e8, #ffe6b3);
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1), 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .card-front {
+            background: #1f3a47;
+            background-image: radial-gradient(circle at 40% 35%, #2d5470, #0e2a38);
+            transform: rotateY(180deg);
+            color: #f7eac5;
+            font-size: 2.8rem;
+            text-shadow: 0 2px 5px black;
+        }
+
+        .card-back {
+            background: linear-gradient(145deg, #b8cfec, #8fb0ca);
+            color: #1f3a4b;
+            font-size: 2rem;
+            font-weight: bold;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .card-back::before {
+            content: "?";
+            font-size: 2.6rem;
+            opacity: 0.7;
+            font-weight: 800;
+        }
+
+        /* disable interaction when waiting or matched cards */
+        .card.matched {
+            cursor: default;
+            filter: drop-shadow(0 0 5px #b9f6ca);
+        }
+
+        .card.disabled, .card.matched {
+            pointer-events: none;
+        }
+
+        /* victory glow */
+        .victory-glow .grid .card .card-front {
+            box-shadow: 0 0 0 3px gold, 0 0 18px 4px #ffdd77;
+            transition: 0.2s;
+        }
+
+        /* responsive */
+        @media (max-width: 480px) {
+            .grid {
+                gap: 10px;
+                grid-template-columns: repeat(4, minmax(65px, 85px));
+            }
+            .stat-value {
+                font-size: 1.4rem;
+            }
+            .card-front {
+                font-size: 2rem;
+            }
+            .game-container {
+                padding: 12px 16px 22px;
+            }
+        }
+
+        footer {
+            font-size: 0.7rem;
+            text-align: center;
+            margin-top: 18px;
+            color: #7f9cbb;
+        }
+    </style>
+</head>
+<body>
+<div class="game-container">
+    <div class="puzzle-panel">
+        <div class="game-header">
+            <div class="stats">
+                <div class="stat"><span class="stat-label">MOVES</span><span class="stat-value" id="moveCounter">0</span></div>
+                <div class="stat"><span class="stat-label">PAIRS</span><span class="stat-value" id="pairsMatched">0</span><span class="stat-label" style="font-size:0.9rem;">/8</span></div>
+            </div>
+            <button class="new-game-btn" id="resetGameBtn">⟳ NEW GAME</button>
+        </div>
+
+        <div id="gridContainer" class="grid"></div>
+
+        <div id="messageBox" class="message-area">
+            ✨ flip tiles & match the icons ✨
+        </div>
+        <footer>classic memory puzzle · match all 8 pairs</footer>
+    </div>
+</div>
+
+<script>
+    // --- GAME CONFIGURATION -------------------------------------------------
+    const ICON_SET = [
+        "🐠", "🐟", "🐙", "🦑",   // ocean creatures
+        "🐬", "🐳", "🐚", "🌟"     // star = special gem
+    ]; // exactly 8 unique icons -> 16 cards (pairs)
+
+    const TOTAL_PAIRS = ICON_SET.length;   // = 8
+    const TOTAL_CARDS = TOTAL_PAIRS * 2;    // = 16
+
+    // DOM Elements
+    const gridContainer = document.getElementById('gridContainer');
+    const moveCounterSpan = document.getElementById('moveCounter');
+    const pairsMatchedSpan = document.getElementById('pairsMatched');
+    const resetBtn = document.getElementById('resetGameBtn');
+    const messageBox = document.getElementById('messageBox');
+
+    // Game State
+    let cards = [];              // array of objects { id, icon, matched, flipped }
+    let moveCount = 0;
+    let matchedPairs = 0;
+    let lockBoard = false;      // prevent actions during delay or after win?
+    let firstCardIndex = null;
+    let secondCardIndex = null;
+    let timeoutId = null;       // timeout for resetting flip delay
+
+    // Helper: Shuffle array (Fisher-Yates)
+    function shuffleArray(arr) {
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+    }
+
+    // Initialize / Reset game data
+    function initGame() {
+        // cancel any pending timeout to prevent async flip conflicts
+        if (timeoutId) {
+            clearTimeout(timeoutId);
+            timeoutId = null;
+        }
+        // build fresh card deck: each icon appears twice
+        let deck = [];
+        for (let i = 0; i < TOTAL_PAIRS; i++) {
+            deck.push({ icon: ICON_SET[i], matched: false, flipped: false });
+            deck.push({ icon: ICON_SET[i], matched: false, flipped: false });
+        }
+        // shuffle deck
+        deck = shuffleArray(deck);
+        // assign IDs and build cards array
+        cards = deck.map((card, idx) => ({
+            id: idx,
+            icon: card.icon,
+            matched: false,
+            flipped: false,
+        }));
+        
+        // reset global trackers
+        moveCount = 0;
+        matchedPairs = 0;
+        firstCardIndex = null;
+        secondCardIndex = null;
+        lockBoard = false;
+        
+        // update UI counters
+        moveCounterSpan.innerText = moveCount;
+        pairsMatchedSpan.innerText = matchedPairs;
+        messageBox.innerHTML = "🧩 match the sea creatures & gems! 🧩";
+        messageBox.style.background = "#07121cbb";
+        
+        // remove victory glow class if present
+        document.querySelector('.puzzle-panel')?.classList.remove('victory-glow');
+        
+        // render the grid
+        renderGrid();
+    }
+    
+    // Render cards based on current state (flipped, matched)
+    function renderGrid() {
+        if (!gridContainer) return;
+        // clear container
+        gridContainer.innerHTML = '';
+        
+        cards.forEach((card, idx) => {
+            const cardDiv = document.createElement('div');
+            cardDiv.className = 'card';
+            if (card.flipped || card.matched) {
+                cardDiv.classList.add('flipped');
+            }
+            if (card.matched) {
+                cardDiv.classList.add('matched');
+            }
+            if (lockBoard && !card.matched && !card.flipped) {
+                // optional: while lockBoard the unflipped cards appear click-disabled, but we also add disabled class
+                cardDiv.classList.add('disabled');
+            } else if (!lockBoard && !card.matched) {
+                cardDiv.classList.remove('disabled');
+            }
+            
+            // inner structure
+            const inner = document.createElement('div');
+            inner.className = 'card-inner';
+            
+            const front = document.createElement('div');
+            front.className = 'card-front';
+            front.innerText = card.icon;   // show icon on front (flipped side)
+            
+            const back = document.createElement('div');
+            back.className = 'card-back';
+            // back shows question mark via CSS pseudo-element, but also optional text
+            inner.appendChild(front);
+            inner.appendChild(back);
+            cardDiv.appendChild(inner);
+            
+            // Click handler
+            cardDiv.addEventListener('click', (e) => {
+                e.stopPropagation();
+                // Prevent if board locked, card already matched, already flipped, or game ended victory lock
+                if (lockBoard) return;
+                if (card.matched) return;
+                if (card.flipped) return;
+                // if we are already waiting for second card but first and second both null? sanity
+                if (firstCardIndex !== null && secondCardIndex !== null) return;
+                
+                // valid move: flip current card
+                handleCardClick(idx);
+            });
+            
+            gridContainer.appendChild(cardDiv);
+        });
+        
+        // after render, also re-apply disabled class on matched cards (ensured)
+    }
+    
+    // Core game logic when a card is clicked
+    function handleCardClick(clickedIdx) {
+        // additional checks (already filtered by UI but safe)
+        if (lockBoard) return;
+        const clickedCard = cards[clickedIdx];
+        if (clickedCard.matched) return;
+        if (clickedCard.flipped) return;
+        
+        // first selection? 
+        if (firstCardIndex === null) {
+            // first card flipped
+            flipCardOpen(clickedIdx);
+            firstCardIndex = clickedIdx;
+            return;
+        }
+        
+        // second selection case: first card is already open and waiting for partner
+        if (firstCardIndex !== null && secondCardIndex === null) {
+            // avoid clicking same card
+            if (firstCardIndex === clickedIdx) return;
+            
+            // flip second card
+            flipCardOpen(clickedIdx);
+            secondCardIndex = clickedIdx;
+            
+            // increase move counter only when two cards have been flipped (pair attempt)
+            incrementMove();
+            
+            // check match between first and second card
+            const cardA = cards[firstCardIndex];
+            const cardB = cards[secondCardIndex];
+            const isMatch = (cardA.icon === cardB.icon);
+            
+            if (isMatch) {
+                // MATCH SUCCESS
+                cardA.matched = true;
+                cardB.matched = true;
+                // keep flipped status true for visual (matched class also keeps front visible)
+                // but we ensure they stay flipped
+                cardA.flipped = true;
+                cardB.flipped = true;
+                
+                matchedPairs++;
+                pairsMatchedSpan.innerText = matchedPairs;
+                
+                // clear temporary indices (pair resolved)
+                clearSelectedIndices();
+                
+                // re-render to update matched style
+                renderGrid();
+                
+                // win condition
+                if (matchedPairs === TOTAL_PAIRS) {
+                    gameWin();
+                } else {
+                    // play subtle pop feedback
+                    messageBox.innerHTML = "✔️ Great match! ✔️";
+                    messageBox.style.background = "#2c5a2eaa";
+                    setTimeout(() => {
+                        if (matchedPairs !== TOTAL_PAIRS) 
+                            messageBox.innerHTML = "🌀 keep matching! 🌀";
+                            messageBox.style.background = "#07121cbb";
+                    }, 800);
+                }
+            } else {
+                // MISMATCH: lock board, schedule reset flip after delay
+                lockBoard = true;
+                messageBox.innerHTML = "❌ Not a match ... try again ❌";
+                messageBox.style.background = "#8b3c2caa";
+                renderGrid();  // re-render to reflect disabled state while locked
+                
+                timeoutId = setTimeout(() => {
+                    // revert both flipped cards back to hidden (if they are not matched)
+                    // they are not matched, so flip back
+                    if (cards[firstCardIndex] && !cards[firstCardIndex].matched) {
+                        cards[firstCardIndex].flipped = false;
+                    }
+                    if (cards[secondCardIndex] && !cards[secondCardIndex].matched) {
+                        cards[secondCardIndex].flipped = false;
+                    }
+                    // clear temporary selections
+                    clearSelectedIndices();
+                    lockBoard = false;
+                    if (timeoutId) timeoutId = null;
+                    // re-render with updated flip states
+                    renderGrid();
+                    // reset message
+                    if (matchedPairs !== TOTAL_PAIRS) {
+                        messageBox.innerHTML = "✨ flip tiles & match the icons ✨";
+                        messageBox.style.background = "#07121cbb";
+                    }
+                }, 750);
+            }
+            // after handling second card, we also need to re-render at the end if no timeout call rendered inside?
+            if (!isMatch) {
+                // we already scheduled timeout, but immediate render for locked look
+                renderGrid(); 
+            } else {
+                // for match: we already called renderGrid, ensure no extra action needed
+            }
+        }
+    }
+    
+    // helper to flip a card (update flipped state)
+    function flipCardOpen(index) {
+        if (cards[index].matched) return;
+        cards[index].flipped = true;
+        renderGrid();   // re-render to show flipped front
+    }
+    
+    // increment moves and update DOM
+    function incrementMove() {
+        moveCount++;
+        moveCounterSpan.innerText = moveCount;
+    }
+    
+    // clear references after match or after mismatch reset
+    function clearSelectedIndices() {
+        firstCardIndex = null;
+        secondCardIndex = null;
+    }
+    
+    // victory sequence
+    function gameWin() {
+        lockBoard = true;   // no more moves
+        messageBox.innerHTML = "🎉 PERFECT! YOU WON! 🎉";
+        messageBox.style.background = "#fed54eff";
+        messageBox.style.color = "#1f2f3c";
+        messageBox.style.fontWeight = "bold";
+        // add glow effect to puzzle panel
+        document.querySelector('.puzzle-panel').classList.add('victory-glow');
+        // celebration: optional confetti effect (simple)
+        createConfettiEffect();
+        // disable any pending timeout
+        if (timeoutId) {
+            clearTimeout(timeoutId);
+            timeoutId = null;
+        }
+    }
+    
+    // simple canvas confetti (lightweight)
+    function createConfettiEffect() {
+        const canvas = document.createElement('canvas');
+        canvas.style.position = 'fixed';
+        canvas.style.top = '0';
+        canvas.style.left = '0';
+        canvas.style.width = '100%';
+        canvas.style.height = '100%';
+        canvas.style.pointerEvents = 'none';
+        canvas.style.zIndex = '1000';
+        document.body.appendChild(canvas);
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        let particles = [];
+        const colors = ['#f5bc70', '#f5a97f', '#f4c542', '#a7d489', '#7dc4e8', '#e9692c'];
+        for (let i = 0; i < 120; i++) {
+            particles.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height - canvas.height,
+                size: Math.random() * 7 + 3,
+                color: colors[Math.floor(Math.random() * colors.length)],
+                speedY: Math.random() * 7 + 4,
+                speedX: (Math.random() - 0.5) * 3,
+                rotation: Math.random() * 360,
+            });
+        }
+        
+        let animationId;
+        let startTime = performance.now();
+        function drawConfetti(now) {
+            if (now - startTime > 2000) {
+                cancelAnimationFrame(animationId);
+                canvas.remove();
+                return;
+            }
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let p of particles) {
+                ctx.save();
+                ctx.translate(p.x, p.y);
+                ctx.rotate(p.rotation * Math.PI / 180);
+                ctx.fillStyle = p.color;
+                ctx.fillRect(-p.size/2, -p.size/2, p.size, p.size);
+                ctx.restore();
+                p.x += p.speedX;
+                p.y += p.speedY;
+                p.rotation += 6;
+                if (p.y > canvas.height + 50) p.y = -30;
+                if (p.x < -50) p.x = canvas.width + 20;
+                if (p.x > canvas.width + 50) p.x = -30;
+            }
+            animationId = requestAnimationFrame((t) => drawConfetti(t));
+        }
+        animationId = requestAnimationFrame(drawConfetti);
+        setTimeout(() => {
+            if (animationId) cancelAnimationFrame(animationId);
+            if (canvas && canvas.remove) canvas.remove();
+        }, 2100);
+    }
+    
+    // Reset game fully
+    function resetGame() {
+        // cancel any pending timeout flip-reset
+        if (timeoutId) {
+            clearTimeout(timeoutId);
+            timeoutId = null;
+        }
+        lockBoard = false;
+        initGame();   // full reinitialization
+    }
+    
+    // Event listener for reset button
+    resetBtn.addEventListener('click', () => {
+        resetGame();
+    });
+    
+    // initial start
+    initGame();
+    
+    // Optional: Add keyboard or screen reader subtle support? just elegance
+    // make card grid accessible via tabIndex not needed, but good to have usability.
+    // For responsiveness and fresh experience.
+</script>
+</body>
+</html>
